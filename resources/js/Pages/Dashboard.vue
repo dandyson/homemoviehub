@@ -26,12 +26,12 @@ import { Head } from '@inertiajs/vue3';
                     <div class="mt-8 flex flex-wrap gap-4 text-center">
                         <a href="#"
                             class="block w-full rounded bg-rose-600 px-12 py-3 text-sm font-medium text-white shadow hover:bg-rose-700 focus:outline-none focus:ring active:bg-rose-500 sm:w-auto">
-                            Play
+                            <font-awesome-icon icon="fa-solid fa-play" /> <span class="ml-1">Play</span>
                         </a>
 
                         <a href="#"
                             class="block w-full rounded bg-white px-12 py-3 text-sm font-medium text-rose-600 shadow hover:text-rose-700 focus:outline-none focus:ring active:text-rose-500 sm:w-auto">
-                            See Info
+                            <font-awesome-icon icon="fa-solid fa-circle-info" /> <span class="ml-1">See Info</span>
                         </a>
                     </div>
                 </div>
