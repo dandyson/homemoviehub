@@ -9,6 +9,8 @@ import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faPlay, faCircleInfo } from '@fortawesome/free-solid-svg-icons'
+import VuePlyr from 'vue-plyr'
+import 'vue-plyr/dist/vue-plyr.css'
 
 library.add(faPlay, faCircleInfo)
 
@@ -22,6 +24,9 @@ createInertiaApp({
             .component('font-awesome-icon', FontAwesomeIcon)
             .use(plugin)
             .use(ZiggyVue, Ziggy)
+            .use(VuePlyr, {
+                plyr: {}
+            })
             .mount(el);
     },
     progress: {
