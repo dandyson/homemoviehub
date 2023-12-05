@@ -3,6 +3,8 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import CollectionLatest from '@/Components/Collections/CollectionLatest.vue';
 
+const { videos } = defineProps(['videos']);
+
 </script>
 
 <template>
@@ -40,5 +42,5 @@ import CollectionLatest from '@/Components/Collections/CollectionLatest.vue';
         </section>
     </AuthenticatedLayout>
 
-    <CollectionLatest></CollectionLatest>
+    <CollectionLatest :videos="videos"></CollectionLatest>
 </template>
