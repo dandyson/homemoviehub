@@ -15,6 +15,7 @@ export default defineConfig({
                     includeAbsolute: false,
                 },
             },
+            refresh: true,
         }),
     ],
 });
