@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\VideoController;
+use App\Models\Video;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -26,17 +28,19 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+    $videos = Video::latest('created_at')->get();
 
-Route::get('/video-details', function () {
-    return Inertia::render('Video/VideoDetails');
-})->middleware(['auth', 'verified'])->name('video-details');
+    return Inertia::render('Dashboard', [
+        'videos' => $videos,
+    ]);
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::resource('video', VideoController::class)->middleware(['auth', 'verified']);
 });
 
 require __DIR__.'/auth.php';
