@@ -1,47 +1,138 @@
 <template>
     <AuthenticatedLayout>
-        <section class="relative h-[35rem]">
-            <vue-plyr>
-            <div class="plyr__video-embed" ref="videoPlayer">
-                <iframe
-                src="https://www.youtube.com/watch?v=J2UK7kRNRmY"
-                allowfullscreen
-                allowtransparency
-                allow="autoplay"
-                ></iframe>
+        <div class="h-screen flex flex-col items-center justify-center mx-4 sm:mx-12 lg:mx-60">
+            <h2 class="font-semibold text-4xl md:text-6xl text-gray-800 dark:text-gray-200 leading-tight font-bebas tracking-wider text-center">
+                <span v-if="edit">Edit Video</span>
+                <span v-else>Add New Video</span>
+            </h2>
+        <form @submit.prevent="submit" class="bg-gray-700 p-4 md:p-10 rounded mt-8 w-full">
+            <div>
+                <InputLabel for="title" value="Title" />
+
+                <TextInput
+                    id="title"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.title"
+                    required
+                    autofocus
+                    autocomplete="title"
+                />
+
+                <InputError class="mt-2" :message="form.errors.title" />
             </div>
-            </vue-plyr>
-        </section>
-      <section class="mt-8 mx-auto max-w-screen-xl p-4 grid md:grid-cols-3 gap-6 text-white">
-        <div class="video-page-description col-span-2">
-          <h1 class="text-3xl font-extrabold sm:text-5xl text-white">West Burton <br>October 2023</h1>
-  
-          <p class="mt-4 max-w-lg text-center sm:text-xl sm:text-left text-white">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nesciunt illo tenetur fuga ducimus numquam ea!
-          </p>
-        </div>
-        <div class="video-page-description">
-          <h6>People included:</h6>
-          <div class="flex flex-col">
-            <strong>Dan</strong>
-            <strong>Jim</strong>
-            <strong>Jaz</strong>
-            <strong>Mum</strong>
-          </div>
-        </div>
-      </section>
+
+            <div class="mt-4">
+                <InputLabel for="description" value="Description" />
+
+                <TextArea
+                    id="description"
+                    type="description"
+                    class="mt-1 block w-full"
+                    v-model="form.description"
+                    required
+                    autocomplete="username"
+                />
+
+                <InputError class="mt-2" :message="form.errors.description" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="youtube_url" value="YouTube Link" />
+
+                <TextInput
+                    id="youtube_url"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.youtube_url"
+                    required
+                    autofocus
+                    autocomplete="youtube_url"
+                />
+                <InputError class="mt-2" :message="form.errors.youtube_url" />
+            </div>
+
+            <!-- <div class="mt-4">
+                <InputLabel for="cover_image" value="Cover Image" />
+
+                <TextInput
+                    id="cover_image"
+                    type="file"
+                    class="mt-1 block w-full"
+                    v-model="form.cover_image"
+                    required
+                    autocomplete="new-password"
+                />
+
+                <InputError class="mt-2" :message="form.errors.cover_image" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="featured_users" value="Featured Users" />
+
+                <Dropdown
+                    id="featured_users"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.featured_users"
+                    required
+                    autocomplete="featured_users"
+                />
+
+                <InputError class="mt-2" :message="form.errors.cover_image" />
+            </div> -->
+
+            <div class="flex items-center justify-end mt-4">
+                <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                    Submit
+                </PrimaryButton>
+            </div>
+        </form>
+    </div>
     </AuthenticatedLayout>
-  </template>
-  
-  <script setup>
-  import { ref, onMounted } from 'vue';
-  import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+</template>
 
-//   onMounted(() => {
-//     this.$refs.plyr.player.on('ready', () => console.log('LETS GOOO'));
-//     this.$refs.plyr.player.on('play', () => console.log('PLAYIN!'));
-//   });
+<script setup>
+import { ref, onMounted } from 'vue';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import InputError from '@/Components/InputError.vue';
+import InputLabel from '@/Components/InputLabel.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import TextInput from '@/Components/TextInput.vue';
+import TextArea from '@/Components/TextArea.vue';
+import { Head, router, useForm } from '@inertiajs/vue3';
 
-  </script>
+const props = defineProps({
+  edit: {
+    type: Boolean,
+    default: false,
+  },
+  video: {
+    type: Object,
+    default: () => ({}),
+  },
+});
+
+const form = useForm({
+  title: ref(props.video.title ?? ''),
+  description: ref(props.video.description?? ''),
+  youtube_url: ref(props.video.youtube_url ?? ''),
+  cover_image: ref(''),
+  featured_users: ref(''),
+});
+
+const submit = () => {
+    if (props.edit) {
+        form.put(route('video.update', props.video.id), {
+            // onFinish: () => router.visit('/dashboard', { method: 'get' }),
+        });
+    } else {
+        form.post(route('video.store'), {
+            // onFinish: () => router.visit('/dashboard', { method: 'get' }),
+        });
+    }
+
+};
+</script>
   
   
