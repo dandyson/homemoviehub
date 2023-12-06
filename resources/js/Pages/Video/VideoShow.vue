@@ -13,14 +13,23 @@
             </vue-plyr>
         </section>
       <section class="mt-8 mx-auto max-w-screen-xl p-4 grid md:grid-cols-3 gap-6 text-white">
-        <div class="video-page-description col-span-2">
+        <div class="video-page-description col-span-2 me-10">
           <h1 class="text-3xl font-extrabold sm:text-5xl text-white">{{ video.title}}</h1>
   
-          <p class="mt-4 max-w-lg text-center sm:text-xl sm:text-left text-white">
+          <p class="my-4 max-w-lg text-center sm:text-xl sm:text-left text-white">
             {{ video.description }}
           </p>
+
+          <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600" :href="video.youtube_url">
+            <font-awesome-icon icon="fa-solid fa-square-arrow-up-right" class="me-2" /> 
+            See Video on YouTube
+          </a>
+
+          <div class="my-12 h-[30rem] bg-white text-black text-6xl flex justify-center items-center">
+            Map
+          </div>
         </div>
-        <div class="video-page-description">
+        <div class="video-page-description border-l border-opacity-50 border-slate-500 ps-6">
           <Link :href="route('video.edit', { video: video.id })" class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800">
             <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
               <font-awesome-icon icon="fa-solid fa-pencil" class="me-2" /> Edit Details
@@ -32,13 +41,15 @@
             </span>
           </button>
           
-          <h6>People included:</h6>
-          <div class="flex flex-col">
-            <strong>Dan</strong>
-            <strong>Jim</strong>
-            <strong>Jaz</strong>
-            <strong>Mum</strong>
-          </div>
+          <div class="mt-4">
+            <h4 class="text-2xl mb-3">People included:</h4>
+            <div class="flex flex-col">
+              <strong>Dan</strong>
+              <strong>Jim</strong>
+              <strong>Jaz</strong>
+              <strong>Mum</strong>
+            </div>
+         </div>
         </div>
       </section>
     </AuthenticatedLayout>

@@ -52,22 +52,22 @@
                 <InputError class="mt-2" :message="form.errors.youtube_url" />
             </div>
 
-            <!-- <div class="mt-4">
+            <div class="mt-4">
                 <InputLabel for="cover_image" value="Cover Image" />
 
-                <TextInput
+                <FileUpload
                     id="cover_image"
                     type="file"
                     class="mt-1 block w-full"
-                    v-model="form.cover_image"
-                    required
-                    autocomplete="new-password"
+                    v-model="coverImage"
+                    @change="handleCoverImageChange"
+                    autocomplete="cover-image"
                 />
 
-                <InputError class="mt-2" :message="form.errors.cover_image" />
+                <InputError class="mt-2" :message="form.errors.coverImage" />
             </div>
 
-            <div class="mt-4">
+            <!-- <div class="mt-4">
                 <InputLabel for="featured_users" value="Featured Users" />
 
                 <Dropdown
@@ -81,6 +81,10 @@
 
                 <InputError class="mt-2" :message="form.errors.cover_image" />
             </div> -->
+
+            <progress v-if="form.progress" :value="form.progress.percentage" max="100">
+            {{ form.progress.percentage }}%
+            </progress>
 
             <div class="flex items-center justify-end mt-4">
                 <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
@@ -100,7 +104,9 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import TextArea from '@/Components/TextArea.vue';
-import { Head, router, useForm } from '@inertiajs/vue3';
+import FileUpload from '@/Components/FileUpload.vue';
+import { useForm } from '@inertiajs/vue3';
+import axios from 'axios';
 
 const props = defineProps({
   edit: {
@@ -117,20 +123,48 @@ const form = useForm({
   title: ref(props.video.title ?? ''),
   description: ref(props.video.description?? ''),
   youtube_url: ref(props.video.youtube_url ?? ''),
-  cover_image: ref(''),
   featured_users: ref(''),
 });
 
+let coverImage = ref('');
+
+const handleCoverImageChange = (event) => {
+    coverImage = event.target.files[0];
+};
+
 const submit = () => {
-    if (props.edit) {
-        form.put(route('video.update', props.video.id), {
-            // onFinish: () => router.visit('/dashboard', { method: 'get' }),
-        });
+    debugger;
+    const imageUpload = 'none';
+
+    if (coverImage !== '') {
+        const formData = new FormData();
+        formData.append('cover_image', coverImage);
+
+        axios.post(`/api/video/${props.video.id}/cover-image-upload`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }).then(() => imageUpload = 'success')
+          .catch((error) => {
+            imageUpload = 'fail';
+            console.log({ error });
+            return;
+          });
+    }
+    if (imageUpload === 'none' || imageUpload === 'success') {
+        if (props.edit) {
+            form.put(route('video.update', props.video.id));
+        } else {
+            form.post(route('video.store'));
+        }
     } else {
-        form.post(route('video.store'), {
-            // onFinish: () => router.visit('/dashboard', { method: 'get' }),
+        swalWithBootstrapButtons.fire({
+          title: "Error",
+          text: "There was an issue uploading your image, please try again",
+          icon: "error"
         });
     }
+
 
 };
 </script>

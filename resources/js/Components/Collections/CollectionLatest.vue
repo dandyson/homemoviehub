@@ -1,5 +1,4 @@
 <script setup>
-import { ref } from 'vue';
 import { Link } from '@inertiajs/vue3';
 
 const { videos } = defineProps(['videos']);
@@ -21,21 +20,18 @@ const { videos } = defineProps(['videos']);
                     <div class="absolute inset-0 flex flex-col justify-between text-white px-4 py-6 z-10">
                         <div class="collection-button-container">
                             <p class="font-bold text-2xl">{{ item.title }}</p>
-                            <p>{{ item.description }}</p>
+                            <p>{{ item.description.slice(0, 60) + '...' }}</p>
                         </div>
                         <div class="collection-button-container">
-                            <a href="#" class="rounded bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring active:bg-indigo-500 px-3 py-2 text-sm font-medium me-4">
-                                <font-awesome-icon icon="fa-solid fa-play" /> <span class="ml-1">Play</span>
-                            </a>
-                            <Link :href="route('video.show', { video: item.id })" class="rounded bg-white px-3 py-2 text-sm font-medium text-indigo-600 shadow hover:text-indigo-700 focus:outline-none focus:ring active:text-indigo-500 sm:w-auto">
-                                <font-awesome-icon icon="fa-solid fa-circle-info" /> <span class="ml-1">Details</span>
+                            <Link :href="route('video.show', { video: item.id })"  class="rounded bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring active:bg-indigo-500 px-3 py-2 text-sm font-medium me-4">
+                                <font-awesome-icon icon="fa-solid fa-video" /> <span class="ml-1">See Video</span>
                             </Link>
                         </div>
                     </div>
 
                     <img
                         class="max-h-[160px] md:max-h-[200px] w-full object-cover rounded-xl"
-                        src="https://images.pexels.com/photos/17216084/pexels-photo-17216084/free-photo-of-nourriture-tasse-fruit-panier.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                        :src="item.cover_image"
                         alt="/"
                     />
                 </div>

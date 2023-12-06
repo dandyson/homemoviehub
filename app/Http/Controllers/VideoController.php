@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class VideoController extends Controller
@@ -53,25 +54,13 @@ class VideoController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'title' => 'required|string',
-            'description' => 'required|string',
-            'youtube_url' => 'required|url',
-            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'featured_users' => 'nullable|array',
-        ]);
+        $request->validate($this->getValidationRules($request));
 
-        // $coverImage = $request->file('cover_image')->store('covers', 'public');
+        $video = new Video($request->only(['title', 'description', 'youtube_url']));
+        $video->added_by = Auth::id();
 
-        $video = new Video([
-            'title' => $request->input('title'),
-            'description' => $request->input('description'),
-            'youtube_url' => $request->input('youtube_url'),
-            // 'cover_image' => $coverImage,
-            // 'featured_users' => json_encode($request->input('featured_users')),
-            'added_by' => Auth::id(),
-        ]);
-    
+        $this->handleCoverImageUpload($request, $video);
+
         $video->save();
 
         return Inertia::render('Video/VideoShow', [
@@ -86,27 +75,39 @@ class VideoController extends Controller
             'title' => 'required|string',
             'description' => 'required|string',
             'youtube_url' => 'required|url',
-            // 'cover_image' => 'nullable|string',
-            // 'featured_users' => 'nullable',
+            'featured_users' => 'nullable|array',
         ]);
 
-        // Update video attributes
-        $video->update([
-            'title' => $request->input('title'),
-            'description' => $request->input('description'),
-            'youtube_url' => $request->input('youtube_url'),
-            // 'cover_image' => $request->input('cover_image'),
-            // 'featured_users' => $request->input('featured_users'),
-        ]);
-
+        $video->update($request->only(['title', 'description', 'youtube_url']));
+        $video->save();
         return Inertia::render('Video/VideoShow', [
-            'video' => $video->only('id', 'title', 'description', 'youtube_url', 'cover_image', 'featured_users'),
+            'video' => $video->only('id', 'title', 'description', 'youtube_url', 'featured_users'),
             'message' => ['type' => 'Success', 'text' => 'Video updated successfully'],
         ])->withViewData(['url' => route('video.show', ['video' => $video->id])]);
-        
-        
     }
 
+    private function handleCoverImageUpload(Request $request, Video $video = null)
+    {
+        $request->validate([
+            'cover-image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        $path = "cover-images/{$video->id} - {$video->title}";
+        $name = $request->file('avatar')->getClientOriginalName();
+
+        $request->file('avatar')->storeAs(
+            $path,
+            $name,
+            'cover_images'
+        );
+
+        $video->cover_image = Storage::disk('cover_images')->url("{$path}/{$name}");
+        $video->save();
+
+        return response()->json([
+            'message' => 'Image uploaded successfully',
+        ]);
+    }
     public function destroy(Video $video)
     {
         $video->delete();
