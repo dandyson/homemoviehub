@@ -30,13 +30,11 @@ const latestVideoBgStyle = ref({
     <Head title="Dashboard" />
 
     <AuthenticatedLayout>
-        <section
-            class="relative h-screen" :style="latestVideoBgStyle">
-            <div class="absolute inset-0 bg-black/50">
-            </div>
-            <div class="relative mx-auto max-w-screen-xl px-4 py-32 sm:px-6 lg:flex lg:h-screen lg:items-center lg:px-8">
+        <section class="relative lg:h-screen" :style="latestVideoBgStyle">
+            <div class="absolute inset-0 bg-black/50"></div>
+            <div class="relative mx-auto max-w-screen-xl px-4 py-16 sm:px-6 flex justify-center items-center lg:justify-start h-[30rem] lg:h-screen lg:px-8">
                 <div class="max-w-xl text-center sm:text-left max-w-xl text-center sm:text-left px-4 sm:px-0">
-                    <h1 class="text-3xl font-extrabold sm:text-5xl text-white">
+                    <h1 class="text-2xl sm:text-3xl md:text-5xl font-extrabold text-white">
                         {{ latestVideo.title }}
                     </h1>
 
@@ -44,14 +42,15 @@ const latestVideoBgStyle = ref({
                         {{ latestVideo.description }}
                     </p>
 
-                    <div class="mt-8 flex flex-wrap gap-4 text-center">
-                        <Link :href="route('video.show', { video: latestVideo.id })"  class="rounded bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring active:bg-indigo-500 px-3 py-2 text-sm text-white font-medium me-4">
+                    <div class="mt-8 flex justify-center sm:justify-start flex-wrap gap-4 text-center">
+                        <Link :href="route('video.show', { video: latestVideo.id })" class="rounded bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring active:bg-indigo-500 px-3 py-2 text-sm text-white font-medium me-4">
                             <font-awesome-icon icon="fa-solid fa-video" /> <span class="ml-1">See Video</span>
                         </Link>
                     </div>
                 </div>
             </div>
         </section>
+
     </AuthenticatedLayout>
 
     <CollectionLatest :videos="collectionVideos"></CollectionLatest>

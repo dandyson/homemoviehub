@@ -25,7 +25,9 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue, Ziggy)
             .use(VuePlyr, {
-                plyr: {}
+                plyr: {
+                    ratio: '21:9',
+                }
             })
             .mount(el);
     },

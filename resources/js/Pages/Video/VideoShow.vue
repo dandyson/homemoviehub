@@ -20,7 +20,7 @@
             {{ video.description }}
           </p>
 
-          <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600" :href="video.youtube_url">
+          <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600" target="_blank" :href="video.youtube_url">
             <font-awesome-icon icon="fa-solid fa-square-arrow-up-right" class="me-2" /> 
             See Video on YouTube
           </a>
@@ -132,4 +132,5 @@
 
   </script>
   
-  
+  <style>
+</style>
