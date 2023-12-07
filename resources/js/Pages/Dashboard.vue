@@ -30,9 +30,9 @@ const latestVideoBgStyle = ref({
     <Head title="Dashboard" />
 
     <AuthenticatedLayout>
-        <section class="relative lg:h-screen" :style="latestVideoBgStyle">
+        <section class="relative lg:h-[45rem]" :style="latestVideoBgStyle">
             <div class="absolute inset-0 bg-black/50"></div>
-            <div class="relative mx-auto max-w-screen-xl px-4 py-16 sm:px-6 flex justify-center items-center lg:justify-start h-[30rem] lg:h-screen lg:px-8">
+            <div class="relative mx-auto max-w-screen-xl px-4 py-16 sm:px-6 flex justify-center items-center lg:justify-start h-[30rem] lg:h-full lg:px-8">
                 <div class="max-w-xl text-center sm:text-left max-w-xl text-center sm:text-left px-4 sm:px-0">
                     <h1 class="text-2xl sm:text-3xl md:text-5xl font-extrabold text-white">
                         {{ latestVideo.title }}
