@@ -11,6 +11,9 @@ use Inertia\Inertia;
 
 class VideoController extends Controller
 {
+
+    private $defaultCoverImage = 'https://images.unsplash.com/photo-1550399504-8953e1a6ac87?q=80&w=2829&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
+    
     public function index()
     {
         $videos = Video::all();
@@ -47,27 +50,39 @@ class VideoController extends Controller
         });
 
         return Inertia::render('Video/VideoDetails', [
-            'edit' => true,
+            'updateMode' => true,
             'video' => $video,
         ]);
     }
 
     public function store(Request $request)
     {
-        $request->validate($this->getValidationRules($request));
+        $request->validate([
+            'title' => 'required|string',
+            'description' => 'required|string',
+            'youtube_url' => 'required|url',
+            'featured_users' => 'nullable|array',
+        ]);
 
-        $video = new Video($request->only(['title', 'description', 'youtube_url']));
-        $video->added_by = Auth::id();
+        $video = new Video([
+            'title' => $request->input('title'),
+            'description' => $request->input('description'),
+            'youtube_url' => $request->input('youtube_url'),
+            'added_by' => Auth::id(),
+        ]);
 
-        $this->handleCoverImageUpload($request, $video);
+        if ($request->cover_image) {
+            $video->cover_image = $this->defaultCoverImage;
+        }
 
         $video->save();
 
-        return Inertia::render('Video/VideoShow', [
-            'video' => $video->only('id', 'title', 'description', 'youtube_url', 'cover_image', 'featured_users'),
+        return response()->json([
+            'video' => $video->only('id', 'title', 'description', 'youtube_url', 'featured_users'),
             'message' => ['type' => 'Success', 'text' => 'Video created successfully'],
-        ])->with(['url' => route('video.show', ['video' => $video->id])]);
+        ]);
     }
+
 
     public function update(Request $request, Video $video)
     {
