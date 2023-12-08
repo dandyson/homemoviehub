@@ -147,6 +147,7 @@ const submit = async () => {
 
             await form.put(route('video.update', props.video.id));            
         } catch (error) {
+            console.log({error});
             Swal.fire({
                 title: "Error",
                 text: `There was an issue uploading your image (${error?.response?.data?.message ? error.response.data.message : 'please try again'})`,
