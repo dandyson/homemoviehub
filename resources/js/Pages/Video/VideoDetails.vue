@@ -134,19 +134,18 @@ const submit = async () => {
 
     if (props.updateMode) {
         try {
-            axios.get('/test').then(res => console.log(res));
-            // const formData = new FormData();
-            // formData.append('cover_image', coverImage);
+            const formData = new FormData();
+            formData.append('cover_image', coverImage);
 
-            // if (coverImageHasChanged.value) {
-            //     await axios.post(`/api/video/${props.video.id}/cover-image-upload`, formData, {
-            //         headers: {
-            //             "Content-Type": "multipart/form-data",
-            //         },
-            //     });
-            // }
+            if (coverImageHasChanged.value) {
+                await axios.post(`/video/${props.video.id}/cover-image-upload`, formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                });
+            }
 
-            // await form.put(route('video.update', props.video.id));            
+            await form.put(route('video.update', props.video.id));            
         } catch (error) {
             console.log({error});
             Swal.fire({

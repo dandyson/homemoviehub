@@ -19,11 +19,6 @@ class VideoController extends Controller
         $videos = Video::all();
     }
 
-    public function test() 
-    {
-        return response()->json(['message' => 'test successful']);
-    }
-
     public function show(Video $video)
     {
         $video->featured_users = collect($video->featured_users)->map(function ($userId) {
@@ -86,6 +81,23 @@ class VideoController extends Controller
             'video' => $video->only('id', 'title', 'description', 'youtube_url', 'featured_users'),
             'message' => ['type' => 'Success', 'text' => 'Video created successfully'],
         ]);
+    }
+
+    public function update(Request $request, Video $video)
+    {
+        $request->validate([
+            'title' => 'required|string',
+            'description' => 'required|string',
+            'youtube_url' => 'required|url',
+            'featured_users' => 'nullable|array',
+        ]);
+
+        $video->update($request->only(['title', 'description', 'youtube_url']));
+        $video->save();
+        return Inertia::render('Video/VideoShow', [
+            'video' => $video->only('id', 'title', 'description', 'youtube_url', 'featured_users'),
+            'message' => ['type' => 'Success', 'text' => 'Video updated successfully'],
+        ])->withViewData(['url' => route('video.show', ['video' => $video->id])]);
     }
 
     public function destroy(Video $video)
