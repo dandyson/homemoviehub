@@ -83,46 +83,6 @@ class VideoController extends Controller
         ]);
     }
 
-
-    public function update(Request $request, Video $video)
-    {
-        $request->validate([
-            'title' => 'required|string',
-            'description' => 'required|string',
-            'youtube_url' => 'required|url',
-            'featured_users' => 'nullable|array',
-        ]);
-
-        $video->update($request->only(['title', 'description', 'youtube_url']));
-        $video->save();
-        return Inertia::render('Video/VideoShow', [
-            'video' => $video->only('id', 'title', 'description', 'youtube_url', 'featured_users'),
-            'message' => ['type' => 'Success', 'text' => 'Video updated successfully'],
-        ])->withViewData(['url' => route('video.show', ['video' => $video->id])]);
-    }
-
-    private function handleCoverImageUpload(Request $request, Video $video = null)
-    {
-        $request->validate([
-            'cover-image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-        ]);
-
-        $path = "cover-images/{$video->id} - {$video->title}";
-        $name = $request->file('cover-image')->getClientOriginalName();
-
-        $request->file('cover-image')->storeAs(
-            $path,
-            $name,
-            'cover_images'
-        );
-
-        $video->cover_image = Storage::disk('s3')->url("{$path}/{$name}");
-        $video->save();
-
-        return response()->json([
-            'message' => 'Image uploaded successfully',
-        ]);
-    }
     public function destroy(Video $video)
     {
         $video->delete();

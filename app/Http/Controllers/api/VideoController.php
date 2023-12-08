@@ -3,12 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Models\Video;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Inertia\Inertia;
 
 class VideoController extends Controller
 {
@@ -20,6 +17,13 @@ class VideoController extends Controller
 
         $path = "cover-images/{$video->id} - {$video->title}";
         $name = $request->file('cover_image')->getClientOriginalName();
+
+        // Use the Filesystem instance to generate the URL
+        $url = Storage::disk('s3')->url("{$path}/{$name}");
+
+        // Store the URL in the database
+        $video->cover_image = $url;
+        $video->save();
 
         $request->file('cover_image')->storeAs(
             $path,
