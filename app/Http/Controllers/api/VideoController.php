@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Storage;
 
 class VideoController extends Controller
 {
+    public function test()
+    {
+        return response()->json(['message' => 'Test route works']);
+    }
     public function handleCoverImageUpload(Request $request, Video $video = null)
     {
         $request->validate([
