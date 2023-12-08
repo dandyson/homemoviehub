@@ -60,9 +60,10 @@ const latestVideoBgStyle = ref({
         </div>
       </div>
     </section>
+    <div v-if="videos.length > 1">
+      <CollectionLatest :videos="collectionVideos"></CollectionLatest>
+    </div>
   </AuthenticatedLayout>
 
-  <div v-if="videos.value">
-    <CollectionLatest :videos="collectionVideos.value"></CollectionLatest>
-</div>
+
 </template>
