@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\VideoController;
+use App\Http\Controllers\Api\VideoController as ApiVideoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +19,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('video/{video}/cover-image-upload', [VideoController::class, 'handleCoverImageUpload'])->name('video.cover-image-upload');
+Route::post('video/{video}/cover-image-upload', [ApiVideoController::class, 'handleCoverImageUpload'])->name('video.cover-image-upload');
 
-Route::get('/test', [VideoController::class, 'test']);
+Route::get('/test', [ApiVideoController::class, 'test']);

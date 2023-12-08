@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Video;
 use Illuminate\Http\Request;
+use App\Models\Video;
 use Illuminate\Support\Facades\Storage;
 
 class VideoController extends Controller
