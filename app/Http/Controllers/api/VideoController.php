@@ -20,7 +20,6 @@ class VideoController extends Controller
 
         try {
             $url = Storage::disk('s3')->url("{$path}/{$name}");
-
             $video->cover_image = $url;
             $video->save();
 
