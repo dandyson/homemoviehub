@@ -108,15 +108,15 @@ class VideoController extends Controller
         ]);
 
         $path = "cover-images/{$video->id} - {$video->title}";
-        $name = $request->file('avatar')->getClientOriginalName();
+        $name = $request->file('cover-image')->getClientOriginalName();
 
-        $request->file('avatar')->storeAs(
+        $request->file('cover-image')->storeAs(
             $path,
             $name,
             'cover_images'
         );
 
-        $video->cover_image = Storage::disk('cover_images')->url("{$path}/{$name}");
+        $video->cover_image = Storage::disk('s3')->url("{$path}/{$name}");
         $video->save();
 
         return response()->json([
