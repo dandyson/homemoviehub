@@ -3,7 +3,9 @@
       <img v-if="selectedImage" :src="selectedImage" alt="Selected Cover Image" class="w-full h-full object-cover rounded-md" />
       <img v-else-if="coverImage !== ''" :src="coverImage" alt="Cover Image" class="w-full h-full object-cover rounded-md" />
   </div>
-
+  <div v-else class="w-80 h-60 overflow-hidden rounded-md mt-1">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/681px-Placeholder_view_vector.svg.png" alt="Cover Image" class="w-full h-full object-cover rounded-md w-80 h-60 overflow-hidden rounded-md mt-1" />
+  </div>
   <div class="mt-1">
     <input
       type="file"
