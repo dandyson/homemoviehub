@@ -174,7 +174,7 @@ const submit = async () => {
                 const formData = new FormData();
                 formData.append('cover_image', coverImage);
 
-                await axios.post(`/api/video/${videoId}/cover-image-upload`, formData, {
+                await axios.post(`/video/${videoId}/cover-image-upload`, formData, {
                     headers: {
                         "Content-Type": "multipart/form-data",
                     },
