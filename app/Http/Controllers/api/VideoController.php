@@ -18,25 +18,29 @@ class VideoController extends Controller
         $path = "cover-images/{$video->id} - {$video->title}";
         $name = $request->file('cover_image')->getClientOriginalName();
 
-        // Use the Filesystem instance to generate the URL
-        $url = Storage::disk('s3')->url("{$path}/{$name}");
+        try {
+            $url = Storage::disk('s3')->url("{$path}/{$name}");
 
-        // Store the URL in the database
-        $video->cover_image = $url;
-        $video->save();
+            $video->cover_image = $url;
+            $video->save();
 
-        $request->file('cover_image')->storeAs(
-            $path,
-            $name,
-            's3'
-        );
+            $request->file('cover_image')->storeAs(
+                $path,
+                $name,
+                's3'
+            );
 
-        $video->cover_image = Storage::disk('s3')->url("{$path}/{$name}");
-        $video->save();
+            $video->cover_image = Storage::disk('s3')->url("{$path}/{$name}");
+            $video->save();
 
-        return response()->json([
-            'message' => 'Image uploaded successfully',
-        ]);
+            return response()->json([
+                'message' => 'Image uploaded successfully',
+            ]);
+        } catch (\Exception $e) {
+            dd($e);
+            \Log::error('Error uploading cover image: ' . $e->getMessage());
+            return response()->json(['error' => 'Internal Server Error'], 500);
+        }
     }
     public function destroy(Video $video)
     {
