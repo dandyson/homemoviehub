@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\VideoController as WebVideoController;
+use App\Http\Controllers\VideoController;
 use App\Models\Video;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -40,7 +40,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::resource('video', WebVideoController::class)->middleware(['auth', 'verified']);
+    Route::resource('video', VideoController::class)->middleware(['auth', 'verified']);
+    Route::post('video/{video}/cover-image-upload', [VideoController::class, 'handleCoverImageUpload'])->name('video.cover-image-upload');
+    Route::get('/test', [VideoController::class, 'test']);
 });
 
 require __DIR__.'/auth.php';

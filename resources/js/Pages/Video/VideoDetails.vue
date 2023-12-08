@@ -134,7 +134,7 @@ const submit = async () => {
 
     if (props.updateMode) {
         try {
-            axios.get('/api/test').then(res => console.log(res));
+            axios.get('/test').then(res => console.log(res));
             // const formData = new FormData();
             // formData.append('cover_image', coverImage);
 

@@ -18,7 +18,3 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
-Route::post('video/{video}/cover-image-upload', [ApiVideoController::class, 'handleCoverImageUpload'])->name('video.cover-image-upload');
-
-Route::get('/test', [ApiVideoController::class, 'test']);
