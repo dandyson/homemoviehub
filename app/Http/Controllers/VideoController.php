@@ -136,7 +136,7 @@ class VideoController extends Controller
             ]);
         } catch (\Exception $e) {
             \Log::error('Error uploading cover image: ' . $e->getMessage());
-            return response()->json(['error' => 'Internal Server Error'], 500);
+            return response()->json(['error' => 'Internal Server Error', 'message' => $e], 500);
         }
     }
 }
