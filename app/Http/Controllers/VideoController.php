@@ -89,11 +89,16 @@ class VideoController extends Controller
         $request->validate([
             'title' => 'required|string',
             'description' => 'required|string',
-            'youtube_url' => 'required|url',
+            'youtube_url' => ['required', 'regex:/^[a-zA-Z0-9_-]{11}$/'],
             'featured_users' => 'nullable|array',
         ]);
-
-        $video->update($request->only(['title', 'description', 'youtube_url']));
+    
+        // Update video with extracted YouTube video ID
+        $video->update([
+            'title' => $request->input('title'),
+            'description' => $request->input('description'),
+            'youtube_url' => $request->input('youtube_url'),
+        ]);
         $video->save();
         return Inertia::render('Video/VideoShow', [
             'video' => $video->only('id', 'title', 'description', 'youtube_url', 'featured_users'),

@@ -26,7 +26,8 @@
                 </div>
 
                 <div class="mt-4">
-                    <InputLabel for="youtube_url" value="YouTube Link" />
+                    <InputLabel for="youtube_url" value="YouTube Video Id" />
+                    <p class="my-2 text-xs text-white italic">This will be the bundle of letters & numbers at the end of the link <br>e.g the 'HUWqeq_H9mc' in https://www.youtube.com/watch?v=HUWqeq_H9mc</p>
 
                     <TextInput id="youtube_url" type="text" class="mt-1 block w-full" v-model="form.youtube_url" required
                         autofocus autocomplete="youtube_url" />

@@ -2,7 +2,7 @@
   <AuthenticatedLayout>
     <section class="aspect-w-16 aspect-h-9 sm:aspect-h-8 md:aspect-h-7 lg:aspect-h-6 xl:aspect-h-5">
       <vue-plyr>
-        <div data-plyr-provider="youtube" data-plyr-embed-id="bTqVqk7FSmY"></div>
+        <div data-plyr-provider="youtube" :data-plyr-embed-id="video.youtube_url"></div>
       </vue-plyr>
     </section>
     <section class="mt-8 mx-auto max-w-screen-xl p-4 grid md:grid-cols-3 gap-6 text-white">
@@ -60,44 +60,6 @@ import axios from 'axios';
 import { Link } from '@inertiajs/vue3';
 import Swal from 'sweetalert2'
 import { router } from '@inertiajs/vue3'
-
-document.addEventListener('DOMContentLoaded', () => {
-  // This is the bare minimum JavaScript. You can opt to pass no arguments to setup.
-  const player = new Plyr('#player');
-
-  // Expose
-  window.player = player;
-
-  // Bind event listener
-  function on(selector, type, callback) {
-    document.querySelector(selector).addEventListener(type, callback, false);
-  }
-
-  // Play
-  on('.js-play', 'click', () => {
-    player.play();
-  });
-
-  // Pause
-  on('.js-pause', 'click', () => {
-    player.pause();
-  });
-
-  // Stop
-  on('.js-stop', 'click', () => {
-    player.stop();
-  });
-
-  // Rewind
-  on('.js-rewind', 'click', () => {
-    player.rewind();
-  });
-
-  // Forward
-  on('.js-forward', 'click', () => {
-    player.forward();
-  });
-});
 
 const { video, message } = defineProps(['video', 'message']);
 
