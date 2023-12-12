@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use Illuminate\Validation\Rules\File;
 
 class VideoController extends Controller
 {
@@ -111,7 +112,12 @@ class VideoController extends Controller
     public function handleCoverImageUpload(Request $request, Video $video = null)
     {
         $request->validate([
-            'cover_image' => 'required|image|mimes:jpeg,png,jpg',
+            'cover_image' => [
+                'required',
+                File::types(['jpeg', 'png', 'jpg'])
+                    ->min(1024)
+                    ->max(12 * 1024),
+            ]
         ]);
 
         $path = "cover-images/{$video->id} - {$video->title}";
