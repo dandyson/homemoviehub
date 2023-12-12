@@ -120,7 +120,6 @@ class VideoController extends Controller
             'cover_image' => [
                 'required',
                 File::types(['jpeg', 'png', 'jpg'])
-                    ->min(1024)
                     ->max(12 * 1024),
             ]
         ]);

@@ -15,7 +15,7 @@ const latestVideoBgStyle = ref({
   backgroundSize: 'cover',
   backgroundPosition: 'center',
   backgroundRepeat: 'no-repeat',
-  height: !latestVideo ? '45rem' : '100vh',
+  height: !latestVideo ? '45rem' : '80vh',
 });
 </script>
 
@@ -25,7 +25,7 @@ const latestVideoBgStyle = ref({
   <AuthenticatedLayout>
     <section class="relative" :style="latestVideoBgStyle">
       <div class="absolute inset-0 bg-black/50"></div>
-      <div v-if="latestVideo" class="relative mx-auto max-w-screen-xl px-4 py-16 sm:px-6 flex justify-center items-center lg:justify-start h-[30rem] lg:h-full lg:px-8">
+      <div v-if="latestVideo" class="relative mx-auto max-w-screen-xl px-4 py-16 sm:px-6 flex justify-center items-center lg:justify-start h-full lg:px-8">
         <div class="max-w-xl text-center sm:text-left max-w-xl text-center sm:text-left px-4 sm:px-0">
           <h1 class="text-2xl sm:text-3xl md:text-5xl font-extrabold text-white">
             {{ latestVideo?.title }}
@@ -38,7 +38,7 @@ const latestVideoBgStyle = ref({
           <div class="mt-8 flex justify-center sm:justify-start flex-wrap gap-4 text-center">
             <Link
               :href="route('video.show', { video: latestVideo?.id })"
-              class="rounded bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring active:bg-indigo-500 px-3 py-2 text-sm text-white font-medium me-4"
+              class="rounded bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring active:bg-indigo-500 px-3 py-2 text-sm text-white font-medium"
             >
               <font-awesome-icon icon="fa-solid fa-video" /> <span class="ml-1">See Video</span>
             </Link>
