@@ -1,6 +1,6 @@
 <template>
   <AuthenticatedLayout>
-    <section class="aspect-w-16 aspect-h-9 sm:aspect-h-8 md:aspect-h-7 lg:aspect-h-6 xl:aspect-h-5">
+    <section class="h-[25rem] sm:h-auto">
       <vue-plyr>
         <div data-plyr-provider="youtube" :data-plyr-embed-id="video.youtube_url"></div>
       </vue-plyr>
