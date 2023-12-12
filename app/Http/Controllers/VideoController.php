@@ -111,7 +111,7 @@ class VideoController extends Controller
     public function handleCoverImageUpload(Request $request, Video $video = null)
     {
         $request->validate([
-            'cover_image' => 'required|image|mimes:jpeg,png,jpg|max:10000',
+            'cover_image' => 'required|image|mimes:jpeg,png,jpg',
         ]);
 
         $path = "cover-images/{$video->id} - {$video->title}";
