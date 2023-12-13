@@ -12,7 +12,7 @@ class Video extends Model
     protected $fillable = [
         'title',
         'description',
-        'added_by',
+        'user_id',
         'youtube_url',
         'cover_image',
         'featured_users',

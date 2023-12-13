@@ -22,6 +22,11 @@ class VideoController extends Controller
 
     public function show(Video $video)
     {
+        // Ensure the user can only view their own video
+        if ($video->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+    
         $video->featured_users = collect($video->featured_users)->map(function ($userId) {
             $user = optional(User::find($userId));
             return [
@@ -29,7 +34,7 @@ class VideoController extends Controller
                 'name' => $user->name,
             ];
         });
-
+    
         return Inertia::render('Video/VideoShow', [
             'video' => $video,
         ]);
@@ -69,7 +74,7 @@ class VideoController extends Controller
             'title' => $request->input('title'),
             'description' => $request->input('description'),
             'youtube_url' => $request->input('youtube_url'),
-            'added_by' => Auth::id(),
+            'user_id' => Auth::id(),
         ]);
 
         if ($request->cover_image) {

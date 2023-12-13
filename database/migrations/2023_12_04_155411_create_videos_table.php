@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description');
-            $table->foreignId('added_by')->constrained('users');
+            $table->foreignId('user_id')->constrained('users');
             $table->string('youtube_url');
             $table->string('cover_image')->nullable();
             $table->json('featured_users')->nullable();
