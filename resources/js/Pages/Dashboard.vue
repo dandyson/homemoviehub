@@ -3,15 +3,15 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import CollectionLatest from '@/Components/Collections/CollectionLatest.vue';
 import { Link } from '@inertiajs/vue3';
-import { ref, defineProps } from 'vue';
+import { ref, defineProps, reactive } from 'vue';
 
 const { videos } = defineProps(['videos']);
 
-const latestVideo = ref(videos.length > 0 ? videos[0] : null);
-const collectionVideos = ref(videos.slice(1));
+const latestVideo = Object.values(videos)[0] ?? null;
+const collectionVideos = ref(Object.values(videos).slice(1) || []);
 
 const latestVideoBgStyle = ref({
-  backgroundImage: `url('${latestVideo.value?.cover_image || ''}')`,
+  backgroundImage: `url('${latestVideo?.cover_image || ''}')`,
   backgroundSize: 'cover',
   backgroundPosition: 'center',
   backgroundRepeat: 'no-repeat',

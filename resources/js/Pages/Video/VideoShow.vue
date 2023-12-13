@@ -9,7 +9,7 @@
       <div class="video-page-description col-span-2 me-10">
         <h1 class="text-3xl font-extrabold sm:text-5xl text-white">{{ video.title }}</h1>
 
-        <p class="my-4 max-w-lg sm:text-xl text-left text-white">
+        <p class="my-4 sm:text-xl text-left text-white">
           {{ video.description }}
         </p>
 
