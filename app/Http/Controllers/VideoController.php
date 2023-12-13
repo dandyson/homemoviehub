@@ -61,7 +61,7 @@ class VideoController extends Controller
         $request->validate([
             'title' => 'required|string',
             'description' => 'required|string',
-            'youtube_url' => 'required|url',
+            'youtube_url' => ['required', 'string', 'regex:/^[a-zA-Z0-9_-]{11}$/'],
             'featured_users' => 'nullable|array',
         ]);
 
@@ -89,7 +89,7 @@ class VideoController extends Controller
         $request->validate([
             'title' => 'required|string',
             'description' => 'required|string',
-            'youtube_url' => ['required', 'regex:/^[a-zA-Z0-9_-]{11}$/'],
+            'youtube_url' => ['required', 'string', 'regex:/^[a-zA-Z0-9_-]{11}$/'],
             'featured_users' => 'nullable|array',
         ]);
     

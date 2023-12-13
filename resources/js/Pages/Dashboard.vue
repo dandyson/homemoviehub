@@ -15,8 +15,9 @@ const latestVideoBgStyle = ref({
   backgroundSize: 'cover',
   backgroundPosition: 'center',
   backgroundRepeat: 'no-repeat',
-  height: !latestVideo ? '45rem' : '80vh',
+  height: videos.length > 1 ? '80vh' : '100vh',
 });
+
 </script>
 
 <template>
