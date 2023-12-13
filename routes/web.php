@@ -31,7 +31,7 @@ Route::get('/dashboard', function () {
     $videos = Video::latest('created_at')->get();
 
     return Inertia::render('Dashboard', [
-        'videos' => $videos,
+        'videos' => $videos->where('user_id', Auth::id()),
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
