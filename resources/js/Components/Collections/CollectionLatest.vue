@@ -11,7 +11,7 @@ const { videos } = defineProps(['videos']);
         <!-- Section -->
         <div class="absolute inset-0 bg-black/50">
         </div>
-        <div class="relative mx-auto max-w-screen-xl p-4 py-12 grid md:grid-cols-3 gap-6">
+        <div class="relative mx-auto max-w-screen-xl p-4 py-12 grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div v-for="(item, index) in videos" :key="index" class="relative">
                 <div class="max-h-[160px] md:max-h-[200px] w-full object-cover rounded-xl relative">
                     <!-- Card Overlays -->
