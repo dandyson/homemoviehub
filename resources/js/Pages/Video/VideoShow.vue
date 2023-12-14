@@ -5,11 +5,11 @@
         <div data-plyr-provider="youtube" :data-plyr-embed-id="video.youtube_url"></div>
       </vue-plyr>
     </section>
-    <section class="mt-8 mx-auto max-w-screen-xl p-4 grid md:grid-cols-3 gap-6 text-white pb-20">
+    <section class="mt-8 mx-auto max-w-screen-xl p-4 grid md:grid-cols-3 gap-6 text-gray-100 dark:text-white pb-20">
       <div class="video-page-description col-span-2 me-10">
-        <h1 class="text-3xl font-extrabold sm:text-5xl text-white">{{ video.title }}</h1>
+        <h1 class="text-3xl font-extrabold sm:text-5xl text-gray-700 dark:text-white">{{ video.title }}</h1>
 
-        <p class="my-4 sm:text-xl text-left text-white">
+        <p class="my-4 sm:text-xl text-left text-gray-700 dark:text-white">
           {{ video.description }}
         </p>
 
@@ -39,7 +39,7 @@
           </span>
         </button>
 
-        <div class="mt-4">
+        <div class="mt-4 text-gray-700 dark:text-white">
           <h4 class="text-2xl mb-3">People included:</h4>
           <div class="flex flex-col">
             <strong>Dan</strong>
