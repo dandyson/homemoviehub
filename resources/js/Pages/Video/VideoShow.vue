@@ -5,7 +5,7 @@
         <div data-plyr-provider="youtube" :data-plyr-embed-id="video.youtube_url"></div>
       </vue-plyr>
     </section>
-    <section class="mt-8 mx-auto max-w-screen-xl p-4 grid md:grid-cols-3 gap-6 text-white">
+    <section class="mt-8 mx-auto max-w-screen-xl p-4 grid md:grid-cols-3 gap-6 text-white pb-20">
       <div class="video-page-description col-span-2 me-10">
         <h1 class="text-3xl font-extrabold sm:text-5xl text-white">{{ video.title }}</h1>
 
@@ -19,9 +19,9 @@
           See Video on YouTube
         </a>
 
-        <div class="my-12 h-[30rem] bg-white text-black text-6xl flex justify-center items-center">
+        <!-- <div class="my-12 h-[30rem] bg-white text-black text-6xl flex justify-center items-center">
           Map
-        </div>
+        </div> -->
       </div>
       <div class="video-page-description border-l border-opacity-50 border-slate-500 ps-6">
         <Link :href="route('video.edit', { video: video.id })"
@@ -61,7 +61,7 @@ import { Link } from '@inertiajs/vue3';
 import Swal from 'sweetalert2'
 import { router } from '@inertiajs/vue3'
 
-const { video, message } = defineProps(['video', 'message']);
+const { video, message, people } = defineProps(['video', 'message', 'people']);
 
 onMounted(() => {
   if (message) {
