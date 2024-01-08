@@ -49,7 +49,9 @@ class PersonController extends Controller
      */
     public function edit(Person $person)
     {
-        //
+        return Inertia::render('People/Edit', [
+            'person' => $person,
+        ]);
     }
 
     /**

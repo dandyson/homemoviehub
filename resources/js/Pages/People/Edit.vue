@@ -4,7 +4,7 @@
         <div>
             <h2
                 class="mt-16 font-semibold text-4xl md:text-6xl text-gray-800 dark:text-gray-200 leading-tight font-bebas tracking-wider text-center">
-                <span>{{ person.name }}</span>
+                <span>Edit {{ person.name }}</span>
             </h2>
         </div>
 
@@ -15,7 +15,11 @@
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                         <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                            <p v-for="(detail, index) in person" class="text-white">{{ detail }}</p>
+                            <UpdatePersonInformationForm
+                                :must-verify-email="mustVerifyEmail"
+                                :person="person"
+                                class="max-w-xl"
+                            />
                         </div>
                     </div>
                 </div>
@@ -29,6 +33,7 @@
 <script setup>
 import { ref } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import UpdatePersonInformationForm from './Partials/UpdatePersonInformationForm.vue';
 
 const props = defineProps({
     person: {

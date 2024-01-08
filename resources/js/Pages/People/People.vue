@@ -45,8 +45,8 @@
                                             5
                                         </td>
                                         <td class="flex justify-center px-6 py-4 whitespace-nowrap">
-                                            <Link :href="route('people.show', { person: person })" @click="closeModal" :class="buttonClasses"> <font-awesome-icon icon="fa-solid fa-eye" class="me-2" /> View </Link>
-                                            <Link @click="closeModal" :class="buttonClasses"> <font-awesome-icon icon="fa-solid fa-pencil" class="me-2" /> Edit </Link>
+                                            <Link :href="route('people.show', { person: person })" :class="buttonClasses"> <font-awesome-icon icon="fa-solid fa-eye" class="me-2" /> View </Link>
+                                            <Link :href="route('people.edit', { person: person })" :class="buttonClasses"> <font-awesome-icon icon="fa-solid fa-pencil" class="me-2" /> Edit </Link>
                                             <DangerButton @click="closeModal" class="me-2"> <font-awesome-icon icon="fa-solid fa-trash" class="me-2" /> Delete </DangerButton>
                                         </td>
                                     </tr>
