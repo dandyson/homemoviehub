@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\PersonController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VideoController;
+use App\Models\Person;
 use App\Models\Video;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -37,6 +39,16 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('video', VideoController::class)->middleware(['auth', 'verified']);
     Route::post('video/{video}/cover-image-upload', [VideoController::class, 'handleCoverImageUpload'])->name('video.cover-image-upload');
+
+    Route::get('/people', function () {
+        $people = Person::all();
+    
+        return Inertia::render('People/People', [
+            'people' => $people,
+        ]);
+    })->middleware(['auth', 'verified'])->name('people');
+
+    Route::resource('people', PersonController::class)->middleware(['auth', 'verified'])->except('index');
 });
 
 require __DIR__.'/auth.php';

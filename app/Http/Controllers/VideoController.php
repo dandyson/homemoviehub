@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Person;
 use App\Models\User;
 use App\Models\Video;
 use Illuminate\Http\Request;
@@ -28,15 +29,19 @@ class VideoController extends Controller
         }
     
         $video->featured_users = collect($video->featured_users)->map(function ($userId) {
-            $user = optional(User::find($userId));
+            $person = optional(Person::find($userId));
+        
             return [
-                'id' => $user->id,
-                'name' => $user->name,
+                'id'   => $person->id,
+                'name' => $person->name,
+                'family' => $person->family,
+                'avatar' => $person->avatar,
             ];
-        });
+        })->toArray();
     
         return Inertia::render('Video/VideoShow', [
             'video' => $video,
+            'people' => Person::all(),
         ]);
     }
 
@@ -48,16 +53,20 @@ class VideoController extends Controller
     public function edit(Video $video)
     {
         $video->featured_users = collect($video->featured_users)->map(function ($userId) {
-            $user = optional(User::find($userId));
+            $person = optional(Person::find($userId));
+        
             return [
-                'id' => $user->id,
-                'name' => $user->name,
+                'id'   => $person->id,
+                'name' => $person->name,
+                'family' => $person->family,
+                'avatar' => $person->avatar,
             ];
-        });
+        })->toArray();
 
         return Inertia::render('Video/VideoDetails', [
             'updateMode' => true,
             'video' => $video,
+            'people' => Person::all(),
         ]);
     }
 
@@ -74,6 +83,7 @@ class VideoController extends Controller
             'title' => $request->input('title'),
             'description' => $request->input('description'),
             'youtube_url' => $request->input('youtube_url'),
+            'featured_users' => array_column($request->input('featured_users'), 'id'),
             'user_id' => Auth::id(),
         ]);
 
@@ -103,6 +113,7 @@ class VideoController extends Controller
             'title' => $request->input('title'),
             'description' => $request->input('description'),
             'youtube_url' => $request->input('youtube_url'),
+            'featured_users' => array_column($request->input('featured_users'), 'id'),
         ]);
         $video->save();
         return Inertia::render('Video/VideoShow', [

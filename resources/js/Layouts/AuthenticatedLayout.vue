@@ -20,7 +20,7 @@ const showingNavigationDropdown = ref(false);
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center logo-title">
                                 <Link :href="route('dashboard')" class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight font-bebas tracking-wider text-2xl mt-1">
-                                    DYSONFLIX
+                                    HOMEMOVIEHUB
                                 </Link>
                             </div>
 
@@ -28,6 +28,9 @@ const showingNavigationDropdown = ref(false);
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
+                                </NavLink>
+                                <NavLink :href="route('people')" :active="route().current('people')">
+                                    People
                                 </NavLink>
                             </div>
                         </div>

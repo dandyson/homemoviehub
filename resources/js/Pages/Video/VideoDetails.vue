@@ -27,7 +27,8 @@
 
                 <div class="mt-4">
                     <InputLabel for="youtube_url" value="YouTube Video Id" />
-                    <p class="my-2 text-xs text-white italic">This will be the bundle of letters & numbers at the end of the link <br>e.g the 'HUWqeq_H9mc' in https://www.youtube.com/watch?v=HUWqeq_H9mc</p>
+                    <p class="my-2 text-xs text-white italic">This will be the bundle of letters & numbers at the end of the
+                        link <br>e.g the 'HUWqeq_H9mc' in https://www.youtube.com/watch?v=HUWqeq_H9mc</p>
 
                     <TextInput id="youtube_url" type="text" class="mt-1 block w-full" v-model="form.youtube_url" required
                         autofocus autocomplete="youtube_url" />
@@ -37,32 +38,48 @@
                 <div class="mt-4">
                     <InputLabel for="cover_image" value="Cover Image" />
 
-                    <CoverImageUploader :coverImage="coverImage" @imageChanged="onImageChange" @invalidFile="handleInvalidFile"  />
+                    <CoverImageUploader :coverImage="coverImage" @imageChanged="onImageChange"
+                        @invalidFile="handleInvalidFile" />
 
                     <InputError class="mt-2" :message="form.errors.coverImage" />
                 </div>
 
-                <!-- <div class="mt-4">
-                <InputLabel for="featured_users" value="Featured Users" />
+                <div class="mt-4">
+                    <InputLabel for="featured_users" value="Featured Users" />
 
-                <Dropdown
-                    id="featured_users"
-                    type="text"
-                    class="mt-1 block w-full"
-                    v-model="form.featured_users"
-                    required
-                    autocomplete="featured_users"
-                />
+                    <div class="flex flex-wrap justify-start align-center">
+                        <a 
+                            v-for="(person, index) in people" 
+                            :key="index" 
+                            class="cursor-pointer w-64 bg-[#20354b] hover:bg-indigo-600 hover:border-blue-600 hover:border rounded-2xl px-8 py-6 shadow-lg me-4 my-4 transition-all relative group overflow-hidden"
+                            :class="{ 'bg-green-600': selectedPeople.some(user => user.id === person.id) }"
+                            @click="togglePersonSelection(person)"
+                        >
+                            <div class="mt-6 w-fit mx-auto">
+                                <img src="https://api.lorem.space/image/face?w=120&h=120&hash=bart89fe" class="rounded-full w-28" alt="profile picture">
+                            </div>
 
-                <InputError class="mt-2" :message="form.errors.cover_image" />
-            </div> -->
+                            <div class="mt-8">
+                                <h2 class="text-white text-center font-bold text-2xl tracking-wide">{{ person.name }}</h2>
+                            </div>
+
+                            <div class="mt-3 text-white text-sm text-center">
+                                <span>{{ person.family }}</span>
+                            </div>
+                        </a>
+
+                    </div>
+
+                    <InputError class="mt-2" :message="form.errors.cover_image" />
+                </div>
 
                 <progress v-if="form.progress" :value="form.progress.percentage" max="100">
                     {{ form.progress.percentage }}%
                 </progress>
 
                 <div class="flex items-center justify-end mt-4">
-                    <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing || invalidFile }" :disabled="form.processing || invalidFile">
+                    <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing || invalidFile }"
+                        :disabled="form.processing || invalidFile">
                         Submit
                     </PrimaryButton>
                 </div>
@@ -72,7 +89,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
@@ -93,13 +110,17 @@ const props = defineProps({
         type: Object,
         default: () => ({}),
     },
+    people: {
+        type: Object,
+        default: () => ({}),
+    }
 });
 
 const form = useForm({
     title: ref(props.video.title ?? ''),
     description: ref(props.video.description ?? ''),
     youtube_url: ref(props.video.youtube_url ?? ''),
-    featured_users: ref(''),
+    featured_users: ref(ref(props.video.featured_users ?? ''),),
 });
 
 let coverImage = ref(props.video.cover_image ?? '');
@@ -107,7 +128,7 @@ let coverImageHasChanged = ref(false);
 let invalidFile = ref(false);
 
 const handleInvalidFile = (value) => {
-  invalidFile.value = value;
+    invalidFile.value = value;
 };
 
 const emit = defineEmits();
@@ -115,6 +136,20 @@ const emit = defineEmits();
 const onImageChange = (newImage) => {
     coverImage = newImage;
     coverImageHasChanged.value = true;
+};
+
+const selectedPeople = ref(form.featured_users);
+
+const togglePersonSelection = (person) => {
+  const index = selectedPeople.value.findIndex((selectedPerson) => selectedPerson.id === person.id);
+
+  if (index === -1) {
+    selectedPeople.value.push(person);
+  } else {
+    selectedPeople.value.splice(index, 1);
+  }
+
+  form.featured_users = selectedPeople.value;
 };
 
 const submit = async () => {
@@ -146,9 +181,9 @@ const submit = async () => {
                 });
             }
 
-            await form.put(route('video.update', props.video.id));            
+            await form.put(route('video.update', props.video.id));
         } catch (error) {
-            console.log({error});
+            console.log({ error });
             Swal.fire({
                 title: "Error",
                 text: `There was an issue uploading your image (${error?.response?.data?.message ? error.response.data.message : 'please try again'})`,
@@ -199,7 +234,7 @@ const submit = async () => {
 
 
         } catch (error) {
-            console.log({error});
+            console.log({ error });
             Swal.fire({
                 title: "Error",
                 text: `There was an issue uploading your image (${error?.response?.data?.message ? error.response.data.message : 'please try again'})`,
@@ -209,7 +244,7 @@ const submit = async () => {
             throw error;
         }
 
-       
+
     }
 };
 
