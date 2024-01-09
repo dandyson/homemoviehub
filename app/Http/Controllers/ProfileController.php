@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Services\AvatarService;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,6 +14,20 @@ use Inertia\Response;
 
 class ProfileController extends Controller
 {
+    protected $avatarService;
+
+    public function __construct(AvatarService $avatarService)
+    {
+        $this->avatarService = $avatarService;
+    }
+
+    public function handleAvatarUpload($request, $user)
+    {
+        // Use the avatar service
+        $this->avatarService->handleAvatarUpload($request, $user);
+
+        // Your other logic here
+    }
     /**
      * Display the user's profile form.
      */

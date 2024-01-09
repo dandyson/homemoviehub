@@ -6,7 +6,7 @@
                 <span v-if="updateMode">Edit Video</span>
                 <span v-else>Add New Video</span>
             </h2>
-            <form @submit.prevent="submit" class="bg-gray-700 p-4 md:p-10 rounded my-8 w-full">
+            <form @submit.prevent="submit" class="bg-gray-800 p-4 md:p-10 rounded my-8 w-full">
                 <div>
                     <InputLabel for="title" value="Title" />
 

@@ -40,15 +40,18 @@ Route::middleware('auth')->group(function () {
     Route::resource('video', VideoController::class)->middleware(['auth', 'verified']);
     Route::post('video/{video}/cover-image-upload', [VideoController::class, 'handleCoverImageUpload'])->name('video.cover-image-upload');
 
-    Route::get('/people', function () {
+    Route::get('/person', function () {
         $people = Person::all();
     
-        return Inertia::render('People/People', [
+        return Inertia::render('Person/PersonIndex', [
             'people' => $people,
         ]);
-    })->middleware(['auth', 'verified'])->name('people');
+    })->middleware(['auth', 'verified'])->name('person');
 
-    Route::resource('people', PersonController::class)->middleware(['auth', 'verified'])->except('index');
+    Route::resource('person', PersonController::class)->middleware(['auth', 'verified'])->except('index');
+
+    Route::post('person/{person}/avatar-upload', [PersonController::class, 'handleAvatarUpload'])
+        ->name('avatar-upload');
 });
 
 require __DIR__.'/auth.php';

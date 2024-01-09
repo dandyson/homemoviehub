@@ -14,6 +14,13 @@
             <div class="flex flex-col mt-6 w-11/12 md:w-8/12">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                        <div class="w-full flex justify-start">
+                            <Link :href="route('person.create')" class="relative inline-flex items-center justify-center p-0.5 me-2 mb-4 overflow-hidden text-xs font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800">
+                                <span class="relative px-2 py-1.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+                                    <font-awesome-icon icon="fa-solid fa-file-video" size="xl" class="me-1" /> + Add Person
+                                </span>
+                            </Link>
+                        </div>
                         <div class="shadow overflow-hidden sm:rounded-lg">
                             <table class="min-w-full text-sm text-gray-400">
                                 <thead class="bg-gray-800 text-xs uppercase font-medium">
@@ -45,9 +52,9 @@
                                             5
                                         </td>
                                         <td class="flex justify-center px-6 py-4 whitespace-nowrap">
-                                            <Link :href="route('people.show', { person: person })" :class="buttonClasses"> <font-awesome-icon icon="fa-solid fa-eye" class="me-2" /> View </Link>
-                                            <Link :href="route('people.edit', { person: person })" :class="buttonClasses"> <font-awesome-icon icon="fa-solid fa-pencil" class="me-2" /> Edit </Link>
-                                            <DangerButton @click="closeModal" class="me-2"> <font-awesome-icon icon="fa-solid fa-trash" class="me-2" /> Delete </DangerButton>
+                                            <Link :href="route('person.show', { person: person })" :class="buttonClasses"> <font-awesome-icon icon="fa-solid fa-eye" class="me-2" /> View </Link>
+                                            <Link :href="route('person.edit', { person: person })" :class="buttonClasses"> <font-awesome-icon icon="fa-solid fa-pencil" class="me-2" /> Edit </Link>
+                                            <DangerButton class="me-2"> <font-awesome-icon icon="fa-solid fa-trash" class="me-2" /> Delete </DangerButton>
                                         </td>
                                     </tr>
                             </tbody>
@@ -65,7 +72,7 @@
 <script setup>
 import { ref } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Link } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import DangerButton from '@/Components/DangerButton.vue';
 
 const props = defineProps({

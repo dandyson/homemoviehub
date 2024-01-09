@@ -27,17 +27,35 @@
 </AuthenticatedLayout></template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import { Head } from '@inertiajs/vue3';
+import Swal from 'sweetalert2';
 
 const props = defineProps({
     person: {
         type: Object,
         default: () => ({}),
-    }
+    },
+    message: {
+        type: Object,
+    },
 });
 
 const buttonClasses = ref('me-2 inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded-md font-semibold text-xs text-gray-700 dark:text-gray-300 uppercase tracking-widest shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-25 transition ease-in-out duration-150');
+
+onMounted(() => {
+  if (props.message) {
+    Swal.fire({
+      title: props.message?.type,
+      text: props.message?.text,
+      icon: props.message?.type.toLowerCase(),
+      timer: 2000,
+      timerProgressBar: true,
+      showConfirmButton: false,
+    });
+  }
+});
 
 </script>
   
