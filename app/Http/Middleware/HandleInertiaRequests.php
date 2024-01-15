@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 use Inertia\Middleware;
 use Tightenco\Ziggy\Ziggy;
 
@@ -39,6 +40,13 @@ class HandleInertiaRequests extends Middleware
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
             ],
+            'previous' => function () {
+                $previousUrl = URL::previous();
+                $parsedUrl = parse_url($previousUrl);
+    
+                // Check if 'path' exists in the parsed URL and return it, otherwise, return the original URL
+                return isset($parsedUrl['path']) ? $parsedUrl['path'] : $previousUrl;
+            },
         ];
     }
 }
