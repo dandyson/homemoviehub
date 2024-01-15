@@ -8,11 +8,11 @@ import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 /* fontawesome */
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faPlay, faFileVideo, faVideo, faPlus, faEye, faPencil, faTrash, faSquareArrowUpRight } from '@fortawesome/free-solid-svg-icons'
+import { faPlay, faFileVideo, faVideo, faPlus, faEye, faPencil, faTrash, faSquareArrowUpRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import VuePlyr from 'vue-plyr'
 import 'vue-plyr/dist/vue-plyr.css'
 
-library.add(faPlay, faFileVideo, faVideo, faPlus, faEye, faPencil, faTrash, faSquareArrowUpRight)
+library.add(faPlay, faFileVideo, faVideo, faPlus, faEye, faPencil, faTrash, faSquareArrowUpRight, faArrowLeft)
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 

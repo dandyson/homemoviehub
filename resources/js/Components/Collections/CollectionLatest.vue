@@ -3,14 +3,11 @@ import { Link } from '@inertiajs/vue3';
 
 const { videos } = defineProps(['videos']);
 
-
 </script>
 
 <template>
-    <section class="relative bg-white dark:bg-gray-600">
+    <section class="relative bg-white dark:bg-gray-800">
         <!-- Section -->
-        <div class="absolute inset-0 bg-black/50">
-        </div>
         <div class="relative mx-auto max-w-screen-xl p-4 py-12 grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div v-for="(item, index) in videos" :key="index" class="relative">
                 <div class="max-h-[160px] md:max-h-[200px] w-full object-cover rounded-xl relative">

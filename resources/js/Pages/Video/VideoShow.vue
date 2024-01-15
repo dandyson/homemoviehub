@@ -41,11 +41,25 @@
 
         <div class="mt-4 text-gray-700 dark:text-white">
           <h4 class="text-2xl mb-3">People included:</h4>
-          <div class="flex flex-col">
-            <strong>Dan</strong>
-            <strong>Jim</strong>
-            <strong>Jaz</strong>
-            <strong>Mum</strong>
+          <div class="flex flex-wrap">
+            <a 
+              v-for="(person, index) in people"
+              :href="route('person.show', { person: person })"
+              :key="index" 
+              class="cursor-pointer w-32 bg-[#20354b] hover:bg-indigo-600 hover:border-blue-600 hover:border rounded-2xl px-8 py-6 shadow-lg me-4 my-4 transition-all relative group overflow-hidden"
+          >
+              <div class="mx-auto">
+                  <img :src="person.avatar !== '' ? person.avatar : 'https://api.lorem.space/image/face?w=120&h=120&hash=bart89fe'" class="rounded-full w-28" alt="profile picture">
+              </div>
+
+              <div class="mt-8">
+                  <h2 class="text-white text-center font-bold text-2xl tracking-wide">{{ person.name }}</h2>
+              </div>
+
+              <div class="mt-3 text-white text-sm text-center">
+                  <span>{{ person.family }}</span>
+              </div>
+          </a>
           </div>
         </div>
       </div>
@@ -108,13 +122,6 @@ const deleteVideo = () => {
           // Handle any errors or show a notification
           console.error('Error deleting video:', error);
         })
-
-
-
-
-
-
-
     } else if (
       /* Read more about handling dismissals below */
       result.dismiss === Swal.DismissReason.cancel

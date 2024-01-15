@@ -45,7 +45,7 @@
                 </div>
 
                 <div class="mt-4">
-                    <InputLabel for="featured_users" value="Featured Users" />
+                    <InputLabel for="featured_people" value="Featured People" />
 
                     <div class="flex flex-wrap justify-start align-center">
                         <a 
@@ -56,7 +56,7 @@
                             @click="togglePersonSelection(person)"
                         >
                             <div class="mt-6 w-fit mx-auto">
-                                <img src="https://api.lorem.space/image/face?w=120&h=120&hash=bart89fe" class="rounded-full w-28" alt="profile picture">
+                                <img :src="person.avatar !== '' ? person.avatar : 'https://api.lorem.space/image/face?w=120&h=120&hash=bart89fe'" class="rounded-full w-28" alt="profile picture">
                             </div>
 
                             <div class="mt-8">
@@ -120,7 +120,7 @@ const form = useForm({
     title: ref(props.video.title ?? ''),
     description: ref(props.video.description ?? ''),
     youtube_url: ref(props.video.youtube_url ?? ''),
-    featured_users: ref(ref(props.video.featured_users ?? ''),),
+    featured_people: ref(ref(props.video.people ?? [])),
 });
 
 let coverImage = ref(props.video.cover_image ?? '');
@@ -138,7 +138,7 @@ const onImageChange = (newImage) => {
     coverImageHasChanged.value = true;
 };
 
-const selectedPeople = ref(form.featured_users);
+const selectedPeople = ref(form.featured_people ?? []);
 
 const togglePersonSelection = (person) => {
   const index = selectedPeople.value.findIndex((selectedPerson) => selectedPerson.id === person.id);
@@ -149,7 +149,7 @@ const togglePersonSelection = (person) => {
     selectedPeople.value.splice(index, 1);
   }
 
-  form.featured_users = selectedPeople.value;
+  form.featured_people = selectedPeople.value;
 };
 
 const submit = async () => {
@@ -205,7 +205,7 @@ const submit = async () => {
             const response = await axios.post(route('video.store', requestData));
             videoId = response.data.video.id;
             message = response.data.message;
-
+            
             if (coverImage.value !== '') {
                 const formData = new FormData();
                 formData.append('cover_image', coverImage);
@@ -237,7 +237,7 @@ const submit = async () => {
             console.log({ error });
             Swal.fire({
                 title: "Error",
-                text: `There was an issue uploading your image (${error?.response?.data?.message ? error.response.data.message : 'please try again'})`,
+                text: `There was an issue (${error?.response?.data?.message ? error.response.data.message : 'please try again'})`,
                 icon: "error",
             });
 

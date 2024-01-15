@@ -17,7 +17,7 @@
                 </div>
 
                 <div class="mt-4">
-                    <InputLabel for="cover_image" value="Cover Image" />
+                    <InputLabel for="avatar" value="Avatar" />
 
                     <AvatarUploader :avatarImage="avatarImage" @imageChanged="onImageChange"
                         @invalidFile="handleInvalidFile" />
@@ -48,7 +48,7 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import AvatarUploader from '@/Components/AvatarUploader.vue';
-import { useForm, router } from '@inertiajs/vue3';
+import { useForm, router, usePage } from '@inertiajs/vue3';
 import axios from 'axios';
 import Swal from 'sweetalert2'
 
@@ -62,6 +62,9 @@ const props = defineProps({
         default: () => ({}),
     },
 });
+
+
+const previousUrl = ref(usePage().props.previous);
 
 const form = useForm({
     name: ref(props.person.name ?? ''),
@@ -115,7 +118,33 @@ const submit = async () => {
 
             }
 
-            await form.put(route('person.update', props.person.id));
+            try {
+                const response = await form.put(route('person.update', props.person.id));
+
+                Swal.fire({
+                    title: response?.data?.message?.type,
+                    text: response?.data?.message?.text,
+                    icon: response?.data?.message?.type.toLowerCase(),
+                    timer: 2000,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                }).then(() => {
+                    router.visit(previousUrl.value, { preserveState: true });
+                });
+
+            } catch (error) {
+                // Handle error with Swal
+                Swal.fire({
+                    title: 'Error',
+                    text: 'An error occurred',
+                    icon: 'error',
+                    timer: 2000,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                });
+                console.error(error);
+            }
+
 
         } catch (error) {
             console.log({ error });
@@ -133,7 +162,7 @@ const submit = async () => {
             let message;
 
             // Create a separate request item for avatar only if avatarImage is blank
-            const avatarImageValue = avatarImage.value !== '' ? {} : { cover_image: 'default_avatar' };
+            const avatarImageValue = avatarImage.value !== '' ? {} : { avatar: 'default_avatar' };
 
             const requestData = { ...form, ...avatarImageValue };
 
@@ -145,7 +174,7 @@ const submit = async () => {
                 const formData = new FormData();
                 formData.append('avatar', avatarImage);
 
-                await axios.post(`/profile}/${props.profileId}/avatar-upload`, formData, {
+                await axios.post(`/person/${personId}/avatar-upload`, formData, {
                     headers: {
                         "Content-Type": "multipart/form-data",
                     },
