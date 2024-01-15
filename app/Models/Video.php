@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Video extends Model
 {
@@ -12,13 +13,16 @@ class Video extends Model
     protected $fillable = [
         'title',
         'description',
-        'user_id',
+        'family_id',
         'youtube_url',
         'cover_image',
-        'featured_users',
     ];
 
-    protected $casts = [
-        'featured_users' => 'json',
-    ];
+     /**
+     * Get the people associated with the video.
+     */ 
+    public function people()
+    {
+        return $this->belongsToMany(Person::class);
+    }
 }

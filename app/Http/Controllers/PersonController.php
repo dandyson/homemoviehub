@@ -55,10 +55,6 @@ class PersonController extends Controller
             'family' => 'Dyson',
         ]);
 
-        if ($request->avatar) {
-            $person->avatar = $this->defaultAvatar;
-        }
-
         $person->save();
 
         return response()->json([
@@ -72,8 +68,9 @@ class PersonController extends Controller
      */
     public function show(Person $person)
     {
-        return Inertia::render('Person/View', [
+        return Inertia::render('Person/PersonShow', [
             'person' => $person,
+            'videos' => $person->videos,
         ]);
     }
 
@@ -97,17 +94,20 @@ class PersonController extends Controller
             'name' => 'required|string',
         ]);
     
-        // Update video with extracted YouTube video ID
         $person->update([
             'name' => $request->input('name'),
         ]);
         
         $person->save();
 
-        return Inertia::render('Person/PersonShow', [
+        return redirect()->back()->with([
             'person' => $person,
             'message' => ['type' => 'Success', 'text' => $person->name . ' updated successfully'],
         ]);
+        // return Inertia::render('Person/PersonShow', [
+        //     'person' => $person,
+        //     'message' => ['type' => 'Success', 'text' => $person->name . ' updated successfully'],
+        // ]);
     }
 
     /**

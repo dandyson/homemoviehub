@@ -23,44 +23,26 @@ class VideoController extends Controller
     public function show(Video $video)
     {
         // Ensure the user can only view their own video
-        if ($video->user_id !== Auth::id()) {
+        if ($video->family_id !== Auth::id()) {
             abort(403, 'Unauthorized action.');
         }
-    
-        $video->featured_users = collect($video->featured_users)->map(function ($userId) {
-            $person = optional(Person::find($userId));
-        
-            return [
-                'id'   => $person->id,
-                'name' => $person->name,
-                'family' => $person->family,
-                'avatar' => $person->avatar,
-            ];
-        })->toArray();
-    
+
         return Inertia::render('Video/VideoShow', [
             'video' => $video,
-            'people' => Person::all(),
+            'people' => $video->people,
         ]);
     }
 
     public function create()
     {
-        return Inertia::render('Video/VideoDetails');
+        return Inertia::render('Video/VideoDetails', [
+            'people' => Person::all(),
+        ]);
     }
 
     public function edit(Video $video)
     {
-        $video->featured_users = collect($video->featured_users)->map(function ($userId) {
-            $person = optional(Person::find($userId));
-        
-            return [
-                'id'   => $person->id,
-                'name' => $person->name,
-                'family' => $person->family,
-                'avatar' => $person->avatar,
-            ];
-        })->toArray();
+        $video->load('people');
 
         return Inertia::render('Video/VideoDetails', [
             'updateMode' => true,
@@ -75,17 +57,23 @@ class VideoController extends Controller
             'title' => 'required|string',
             'description' => 'required|string',
             'youtube_url' => ['required', 'string', 'regex:/^[a-zA-Z0-9_-]{11}$/'],
-            'featured_users' => 'nullable|array',
+            'featured_people' => 'nullable|array',
         ]);
 
         $video = new Video([
             'title' => $request->input('title'),
             'description' => $request->input('description'),
             'youtube_url' => $request->input('youtube_url'),
-            'featured_users' => array_column($request->input('featured_users'), 'id'),
-            'user_id' => Auth::id(),
+            'family_id' => Auth::id(),
         ]);
+        
+        $video->save();
 
+        // Attach the validated user IDs to the video
+        foreach ($request->featured_people as $person) {
+            $video->people()->attach($person['id']);
+        }
+        
         if ($request->cover_image) {
             $video->cover_image = $this->defaultCoverImage;
         }
@@ -93,7 +81,7 @@ class VideoController extends Controller
         $video->save();
 
         return response()->json([
-            'video' => $video->only('id', 'title', 'description', 'youtube_url', 'featured_users'),
+            'video' => $video->only('id', 'title', 'description', 'youtube_url'),
             'message' => ['type' => 'Success', 'text' => 'Video created successfully'],
         ]);
     }
@@ -104,7 +92,7 @@ class VideoController extends Controller
             'title' => 'required|string',
             'description' => 'required|string',
             'youtube_url' => ['required', 'string', 'regex:/^[a-zA-Z0-9_-]{11}$/'],
-            'featured_users' => 'nullable|array',
+            'featured_people' => 'nullable|array',
         ]);
     
         // Update video with extracted YouTube video ID
@@ -112,11 +100,18 @@ class VideoController extends Controller
             'title' => $request->input('title'),
             'description' => $request->input('description'),
             'youtube_url' => $request->input('youtube_url'),
-            'featured_users' => array_column($request->input('featured_users'), 'id'),
         ]);
+
         $video->save();
+
+        // Get the array of person IDs from the request
+        $featuredPeopleIds = collect($request->featured_people)->pluck('id')->toArray();
+
+        // Sync the person IDs with the video's people relationship
+        $video->people()->sync($featuredPeopleIds);
+
         return Inertia::render('Video/VideoShow', [
-            'video' => $video->only('id', 'title', 'description', 'youtube_url', 'featured_users'),
+            'video' => $video->only('id', 'title', 'description', 'youtube_url', 'featured_people'),
             'message' => ['type' => 'Success', 'text' => 'Video updated successfully'],
         ])->withViewData(['url' => route('video.show', ['video' => $video->id])]);
     }

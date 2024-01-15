@@ -22,15 +22,12 @@ class AvatarService
             ]
         ]);
 
-        // Determine the type of the $person object
         if ($person instanceof User) {
-            // If $person is an instance of User
             $path = "avatars/users/{$person->id} - {$person->name}";
         } elseif ($person instanceof Person) {
-            // If $person is an instance of Person
-            $path = "avatars/people/{$person->id} - {$person->title}";
+            $path = "avatars/people/{$person->id} - {$person->name}";
         } else {
-            // Handle other cases or provide a default path
+            // Default path
             $path = "avatars/default/{$person->id}";
         }
 
