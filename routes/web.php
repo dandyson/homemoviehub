@@ -25,10 +25,10 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    $videos = Video::latest('created_at')->get();
+    $videos = Video::where('family_id', Auth::id())->latest('created_at')->get();
 
     return Inertia::render('Dashboard', [
-        'videos' => $videos->where('user_id', Auth::id()),
+        'videos' => $videos,
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
