@@ -23,7 +23,7 @@ class VideoController extends Controller
     public function show(Video $video)
     {
         // Ensure the user can only view their own video
-        if ($video->family_id !== Auth::id()) {
+        if ($video->user_id !== Auth::id()) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -64,7 +64,7 @@ class VideoController extends Controller
             'title' => $request->input('title'),
             'description' => $request->input('description'),
             'youtube_url' => $request->input('youtube_url'),
-            'family_id' => Auth::id(),
+            'user_id' => Auth::id(),
         ]);
         
         $video->save();

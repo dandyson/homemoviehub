@@ -25,7 +25,7 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    $videos = Video::where('family_id', Auth::id())->latest('created_at')->get();
+    $videos = Video::where('user_id', Auth::id())->latest('created_at')->get();
 
     return Inertia::render('Dashboard', [
         'videos' => $videos,
