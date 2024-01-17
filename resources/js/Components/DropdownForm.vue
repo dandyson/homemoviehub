@@ -4,7 +4,7 @@
       <div ref="dropdownRef" v-if="families && families.length > 0 && !addFamily" class="flex flex-col sm:flex-row items-start">
         <div class="relative flex-grow inline-block">
           <button @click="toggleDropdown(!isOpen)" type="button" class="flex-grow px-4 py-2 inline-flex justify-center w-full rounded-md border border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block w-full text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500">
-            {{ familySelection ? familySelection.name : "Choose Family" }}
+            {{ familySelection && typeof familySelection !== 'string' ? familySelection.name : "Choose Family" }}
             <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
             </svg>
@@ -19,14 +19,13 @@
         <button @click="addNewFamily" class="px-4 py-2 ms-0 mt-2 sm:mt-0 sm:ms-2 text-sm text-white border border-gray-700 rounded-md">+ Add New Family</button>
       </div>
 
-
       <div v-if="addFamily" class="flex flex-col justify-center sm:flex-row items-start sm:items-center">
         <input
           v-model="familySelection"
           class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm w-full"
           @input="updateModelValue"
         />
-        <button @click="goBack" class="text-sm text-white border border-gray-700 px-4 py-2 rounded-md mt-2 ms-0 sm:ms-2 sm:mt-0"> Back</button>
+        <button v-if="families && families.length > 0" @click="goBack" class="text-sm text-white border border-gray-700 px-4 py-2 rounded-md mt-2 ms-0 sm:ms-2 sm:mt-0"> Back</button>
       </div>
     </div>
   </div>
@@ -50,7 +49,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue']);
 
-const addFamily = ref(false);
+const addFamily = ref(props.families && props.families.length == 0);
 const familySelection = ref(props.modelValue ?? '');
 const isOpen = ref(false);
 const dropdownRef = ref(null);
