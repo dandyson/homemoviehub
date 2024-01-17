@@ -41,7 +41,7 @@ Route::middleware('auth')->group(function () {
     Route::post('video/{video}/cover-image-upload', [VideoController::class, 'handleCoverImageUpload'])->name('video.cover-image-upload');
 
     Route::get('/person', function () {
-        $people = Person::all();
+        $people = Person::with('family')->get();
     
         return Inertia::render('Person/PersonIndex', [
             'people' => $people,

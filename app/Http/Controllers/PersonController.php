@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Family;
 use App\Models\Person;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -28,8 +29,7 @@ class PersonController extends Controller
      */
     public function index()
     {
-        $people = Person::all();
-
+        $people = Person::with('family')->get();
         return response()->json(['people' => $people]);
     }
 
@@ -38,7 +38,9 @@ class PersonController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Person/PersonDetails');
+        return Inertia::render('Person/PersonDetails', [
+            'families' => Family::orderBy('name')->get(['id', 'name']),
+        ]);
     }
 
     /**
@@ -48,13 +50,34 @@ class PersonController extends Controller
     {
         $request->validate([
             'name' => 'required|string',
+            'family' => 'required',
         ]);
 
+        $familyName = $request->input('family');
+        
+        if (is_array($request->family))
+        {
+            $familyName = $request->input('family')['name'];
+        }
+        
+        // Check if the family already exists
+        $existingFamily = Family::where('name', $familyName)->first();
+        
+        if ($existingFamily) {
+            // If the family exists, use its ID
+            $familyId = $existingFamily->id;
+        } else {
+            // If the family doesn't exist, create a new one and use its ID
+            $newFamily = new Family(['name' => $familyName]);
+            $newFamily->save();
+            $familyId = $newFamily->id;
+        }
+        
         $person = new Person([
             'name' => $request->input('name'),
-            'family' => 'Dyson',
+            'family_id' => $familyId,
         ]);
-
+        
         $person->save();
 
         return response()->json([
@@ -79,8 +102,11 @@ class PersonController extends Controller
      */
     public function edit(Person $person)
     {
+        $person->load('family');
+
         return Inertia::render('Person/PersonDetails', [
             'person' => $person,
+            'families' => Family::orderBy('name')->get(['id', 'name']),
             'updateMode' => true,
         ]);
     }
@@ -92,10 +118,32 @@ class PersonController extends Controller
     {
         $request->validate([
             'name' => 'required|string',
+            'family' => 'required',
         ]);
+
+        $familyName = $request->input('family');
+        
+        if (is_array($request->family))
+        {
+            $familyName = $request->input('family')['name'];
+        }
+        
+        // Check if the family already exists
+        $existingFamily = Family::where('name', $familyName)->first();
+        
+        if ($existingFamily) {
+            // If the family exists, use its ID
+            $familyId = $existingFamily->id;
+        } else {
+            // If the family doesn't exist, create a new one and use its ID
+            $newFamily = new Family(['name' => $familyName]);
+            $newFamily->save();
+            $familyId = $newFamily->id;
+        }
     
         $person->update([
             'name' => $request->input('name'),
+            'family_id' => $familyId,
         ]);
         
         $person->save();

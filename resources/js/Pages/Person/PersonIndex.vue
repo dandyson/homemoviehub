@@ -45,8 +45,11 @@
                                                 alt="">
                                             <span class="ml-2 font-medium">{{ person.name }}</span>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            {{ person.family }}
+                                        <td v-if="person.family" class="px-6 py-4 whitespace-nowrap">
+                                            {{ person.family.name }}
+                                        </td>
+                                        <td v-else class="px-6 py-4 whitespace-nowrap">
+                                            -
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             5

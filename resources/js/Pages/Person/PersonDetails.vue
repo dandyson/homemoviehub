@@ -7,13 +7,20 @@
                 <span v-else>Add New Person</span>
             </h2>
             <form @submit.prevent="submit" class="bg-gray-800 p-4 md:p-10 rounded my-8 w-full">
-                <div>
+                <div class="mb-4">
                     <InputLabel for="name" value="Name" />
 
                     <TextInput id="name" type="text" class="mt-1 block w-full" v-model="form.name" required autofocus
                         autocomplete="name" />
 
                     <InputError class="mt-2" :message="form.errors.name" />
+                </div>
+
+                
+                <div class="mb-4">
+                    <InputLabel for="family" value="Family" />
+                    <DropdownForm label="Choose Family" id="family" :families="families" v-model="form.family" @update:modelValue="handleFamilyUpdate" required autofocus
+                        autocomplete="family"></DropdownForm>
                 </div>
 
                 <div class="mt-4">
@@ -51,6 +58,7 @@ import AvatarUploader from '@/Components/AvatarUploader.vue';
 import { useForm, router, usePage } from '@inertiajs/vue3';
 import axios from 'axios';
 import Swal from 'sweetalert2'
+import DropdownForm from '@/Components/DropdownForm.vue';
 
 const props = defineProps({
     updateMode: {
@@ -61,6 +69,10 @@ const props = defineProps({
         type: Object,
         default: () => ({}),
     },
+    families: {
+        type: Object,
+        default: () => ({}),
+    }
 });
 
 
@@ -68,6 +80,7 @@ const previousUrl = ref(usePage().props.previous);
 
 const form = useForm({
     name: ref(props.person.name ?? ''),
+    family: ref(props.person.family ?? ''),
 });
 
 let avatarImage = ref(props.person.avatar ?? '');
@@ -83,6 +96,10 @@ const emit = defineEmits();
 const onImageChange = (newImage) => {
     avatarImage = newImage;
     avatarImageHasChanged.value = true;
+};
+
+const handleFamilyUpdate = (newValue) => {
+    form.family = newValue;
 };
 
 const submit = async () => {
