@@ -41,15 +41,15 @@
 
         <div class="mt-4 text-gray-700 dark:text-white">
           <h4 class="text-2xl mb-3">People included:</h4>
-          <div class="flex flex-wrap">
+          <div v-if="people && people.length" class="flex flex-wrap">
             <a 
               v-for="(person, index) in people"
               :href="route('person.show', { person: person })"
               :key="index" 
-              class="cursor-pointer w-32 bg-[#20354b] hover:bg-indigo-600 hover:border-blue-600 hover:border rounded-2xl px-8 py-6 shadow-lg me-4 my-4 transition-all relative group overflow-hidden"
+              class="cursor-pointer w-32 bg-[#20354b] hover:bg-indigo-600 hover:border-blue-600 hover:border rounded-2xl px-4 py-6 shadow-lg me-4 my-4 transition-all relative group overflow-hidden"
           >
               <div class="mx-auto">
-                  <img :src="person.avatar !== '' ? person.avatar : 'https://api.lorem.space/image/face?w=120&h=120&hash=bart89fe'" class="rounded-full w-28" alt="profile picture">
+                  <img :src="person.avatar !== null ? person.avatar : 'https://cdn.pixabay.com/photo/2021/12/17/08/27/silhouette-6875954_1280.png'" class="rounded-full w-28" alt="profile picture">
               </div>
 
               <div class="mt-8">
@@ -60,6 +60,9 @@
                   <span>{{ person.family }}</span>
               </div>
           </a>
+          </div>
+          <div v-else>
+            <p>There is no one currently associated with this video.</p>
           </div>
         </div>
       </div>

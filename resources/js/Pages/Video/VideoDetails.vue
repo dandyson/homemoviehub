@@ -56,7 +56,7 @@
                             @click="togglePersonSelection(person)"
                         >
                             <div class="mt-6 w-fit mx-auto">
-                                <img :src="person.avatar !== '' ? person.avatar : 'https://api.lorem.space/image/face?w=120&h=120&hash=bart89fe'" class="rounded-full w-28" alt="profile picture">
+                                <img :src="person.avatar !== null ? person.avatar : 'https://cdn.pixabay.com/photo/2021/12/17/08/27/silhouette-6875954_1280.png'" class="rounded-full w-28" alt="profile picture">
                             </div>
 
                             <div class="mt-8">
@@ -237,7 +237,7 @@ const submit = async () => {
             console.log({ error });
             Swal.fire({
                 title: "Error",
-                text: `There was an issue (${error?.response?.data?.message ? error.response.data.message : 'please try again'})`,
+                text: `There was an issue: (${error?.response?.data?.message ? error.response.data.message : 'please try again'})`,
                 icon: "error",
             });
 

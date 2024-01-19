@@ -14,6 +14,7 @@ class Person extends Model
 
     protected $fillable = [
         'name',
+        'user_id',
         'family_id',
         'avatar',
     ];
@@ -32,5 +33,10 @@ class Person extends Model
     public function videos(): BelongsToMany
     {
         return $this->belongsToMany(Video::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

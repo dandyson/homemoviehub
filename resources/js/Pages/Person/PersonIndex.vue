@@ -37,13 +37,16 @@
                                         <th></th>
                                     </tr>
                                 </thead>
-                                <tbody class="bg-gray-800">
+  
+                                <tbody v-if="people && people.length > 0" class="bg-gray-800">
                                     <tr v-for="(person, index) in people" :key="index" class="bg-black bg-opacity-20">
-                                        <td class="flex px-6 py-4 whitespace-nowrap">
-                                            <img class="w-5"
-                                                src="https://ssl.gstatic.com/onebox/media/sports/logos/udQ6ns69PctCv143h-GeYw_48x48.png"
-                                                alt="">
-                                            <span class="ml-2 font-medium">{{ person.name }}</span>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex">
+                                                <img class="w-5 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
+                                                    :src="person.avatar !== null ? person.avatar : 'https://cdn.pixabay.com/photo/2021/12/17/08/27/silhouette-6875954_1280.png'"
+                                                    alt="">
+                                                <span class="ml-3 font-medium">{{ person.name }}</span>
+                                            </div>
                                         </td>
                                         <td v-if="person.family" class="px-6 py-4 whitespace-nowrap">
                                             {{ person.family.name }}
@@ -52,7 +55,7 @@
                                             -
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            5
+                                            {{ person.videos_count }}
                                         </td>
                                         <td class="flex justify-center px-6 py-4 whitespace-nowrap">
                                             <Link :href="route('person.show', { person: person })" :class="buttonClasses"> <font-awesome-icon icon="fa-solid fa-eye" class="me-2" /> View </Link>
@@ -60,17 +63,23 @@
                                             <DangerButton class="me-2"> <font-awesome-icon icon="fa-solid fa-trash" class="me-2" /> Delete </DangerButton>
                                         </td>
                                     </tr>
-                            </tbody>
-                        </table>
+                                </tbody>
+                                <tbody v-else class="bg-gray-800">
+                                    <tr class="bg-black bg-opacity-20">
+                                        <td colspan="4" class="text-center py-5">
+                                            No People have been added
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-
         <!-- Component End  -->
-
-    </div>
-</AuthenticatedLayout></template>
+        </div>
+    </AuthenticatedLayout>
+</template>
 
 <script setup>
 import { ref } from 'vue';

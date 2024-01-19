@@ -47,7 +47,7 @@ class VideoController extends Controller
         return Inertia::render('Video/VideoDetails', [
             'updateMode' => true,
             'video' => $video,
-            'people' => Person::all(),
+            'people' => Auth::user()->people,
         ]);
     }
 

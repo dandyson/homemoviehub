@@ -167,7 +167,7 @@ const submit = async () => {
             console.log({ error });
             Swal.fire({
                 title: "Error",
-                text: `There was an issue uploading your image (${error?.response?.data?.message ? error.response.data.message : 'please try again'})`,
+                text: `There was an issue: (${error?.response?.data?.message ? error.response.data.message : 'please try again'})`,
                 icon: "error",
             });
 
@@ -218,7 +218,7 @@ const submit = async () => {
             console.log({ error });
             Swal.fire({
                 title: "Error",
-                text: `There was an issue uploading your image (${error?.response?.data?.message ? error.response.data.message : 'please try again'})`,
+                text: `There was an issue: (${error?.response?.data?.message ? error.response.data.message : 'please try again'})`,
                 icon: "error",
             });
 

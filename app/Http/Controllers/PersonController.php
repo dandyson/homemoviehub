@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Family;
 use App\Models\Person;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use App\Services\AvatarService;
 
@@ -29,8 +30,11 @@ class PersonController extends Controller
      */
     public function index()
     {
-        $people = Person::with('family')->get();
-        return response()->json(['people' => $people]);
+        $people = Auth::user()->people()->with('family')->withCount('videos')->get();
+    
+        return Inertia::render('Person/PersonIndex', [
+            'people' => $people,
+        ]);
     }
 
     /**
@@ -68,13 +72,14 @@ class PersonController extends Controller
             $familyId = $existingFamily->id;
         } else {
             // If the family doesn't exist, create a new one and use its ID
-            $newFamily = new Family(['name' => $familyName]);
+            $newFamily = new Family(['name' => $familyName, 'user_id' => Auth::id()]);
             $newFamily->save();
             $familyId = $newFamily->id;
         }
-        
+
         $person = new Person([
             'name' => $request->input('name'),
+            'user_id' => Auth::id(),
             'family_id' => $familyId,
         ]);
         
@@ -106,7 +111,7 @@ class PersonController extends Controller
 
         return Inertia::render('Person/PersonDetails', [
             'person' => $person,
-            'families' => Family::orderBy('name')->get(['id', 'name']),
+            'families' => Auth::user()->families()->orderBy('name')->get(['id', 'name']),
             'updateMode' => true,
         ]);
     }
@@ -136,7 +141,7 @@ class PersonController extends Controller
             $familyId = $existingFamily->id;
         } else {
             // If the family doesn't exist, create a new one and use its ID
-            $newFamily = new Family(['name' => $familyName]);
+            $newFamily = new Family(['name' => $familyName, 'user_id' => Auth::id()]);
             $newFamily->save();
             $familyId = $newFamily->id;
         }

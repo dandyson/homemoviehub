@@ -40,15 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('video', VideoController::class)->middleware(['auth', 'verified']);
     Route::post('video/{video}/cover-image-upload', [VideoController::class, 'handleCoverImageUpload'])->name('video.cover-image-upload');
 
-    Route::get('/person', function () {
-        $people = Person::with('family')->get();
-    
-        return Inertia::render('Person/PersonIndex', [
-            'people' => $people,
-        ]);
-    })->middleware(['auth', 'verified'])->name('person');
-
-    Route::resource('person', PersonController::class)->middleware(['auth', 'verified'])->except('index');
+    Route::resource('person', PersonController::class)->middleware(['auth', 'verified']);
 
     Route::post('person/{person}/avatar-upload', [PersonController::class, 'handleAvatarUpload'])
         ->name('avatar-upload');
