@@ -110,10 +110,13 @@ class VideoController extends Controller
         // Sync the person IDs with the video's people relationship
         $video->people()->sync($featuredPeopleIds);
 
+        $video->save();
+
         return Inertia::render('Video/VideoShow', [
             'video' => $video->only('id', 'title', 'description', 'youtube_url', 'featured_people'),
+            'people' => $video->people,
             'message' => ['type' => 'Success', 'text' => 'Video updated successfully'],
-        ])->withViewData(['url' => route('video.show', ['video' => $video->id])]);
+        ]);
     }
 
     public function destroy(Video $video)

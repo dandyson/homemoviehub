@@ -46,6 +46,10 @@ import Swal from 'sweetalert2';
 import CollectionLatest from '@/Components/Collections/CollectionLatest.vue';
 
 const props = defineProps({
+    message: {
+        type: Object,
+        default: () => ({}),
+    },
     person: {
         type: Object,
         default: () => ({}),
@@ -56,6 +60,20 @@ const props = defineProps({
     },
 });
 
+onMounted(() => {
+  if (Object.values(props.message).length > 0) {
+    console.log(props.message);
+    Swal.fire({
+      title: props.message?.type,
+      text: props.message?.text,
+      icon: props.message?.type?.toLowerCase(),
+      timer: 2000,
+      timerProgressBar: true,
+      showConfirmButton: false,
+    });
+  }
+});
+
 const previousUrl = ref(usePage().props.previous);
 
 const featuredVideos = ref(Object.values(props.videos) || []);
@@ -64,20 +82,6 @@ const buttonClasses = ref('me-2 inline-flex items-center px-4 py-2 bg-white dark
 const goBack = () => {
     router.visit(previousUrl.value, { preserveState: true });
 }
-
-onMounted(() => {
-  if (props.message) {
-    Swal.fire({
-      title: props.message?.type,
-      text: props.message?.text,
-      icon: props.message?.type.toLowerCase(),
-      timer: 2000,
-      timerProgressBar: true,
-      showConfirmButton: false,
-    });
-  }
-});
-
 </script>
   
   

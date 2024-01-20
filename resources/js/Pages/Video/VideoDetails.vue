@@ -67,9 +67,7 @@
                                 <span>{{ person.family }}</span>
                             </div>
                         </a>
-
                     </div>
-
                     <InputError class="mt-2" :message="form.errors.cover_image" />
                 </div>
 
@@ -78,10 +76,17 @@
                 </progress>
 
                 <div class="flex items-center justify-end mt-4">
-                    <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing || invalidFile }"
-                        :disabled="form.processing || invalidFile">
-                        Submit
-                    </PrimaryButton>
+                    <div v-if="form.processing">
+                        <div class="animate-spin inline-block w-6 h-6 border-[3px] border-current border-t-transparent text-indigo-600 rounded-full dark:text-indigo-6000" role="status" aria-label="loading">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                    <div v-else>
+                        <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing || invalidFile }"
+                            :disabled="form.processing || invalidFile">
+                            Submit
+                        </PrimaryButton>
+                    </div>
                 </div>
             </form>
         </div>
@@ -97,7 +102,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import TextArea from '@/Components/TextArea.vue';
 import CoverImageUploader from '@/Components/CoverImageUploader.vue';
-import { useForm, router } from '@inertiajs/vue3';
+import { useForm, router, usePage } from '@inertiajs/vue3';
 import axios from 'axios';
 import Swal from 'sweetalert2'
 
@@ -115,6 +120,8 @@ const props = defineProps({
         default: () => ({}),
     }
 });
+
+const previousUrl = ref(usePage().props.previous);
 
 const form = useForm({
     title: ref(props.video.title ?? ''),
@@ -181,9 +188,23 @@ const submit = async () => {
                 });
             }
 
-            await form.put(route('video.update', props.video.id));
+            try {
+                await form.put(route('video.update', props.video.id), {
+                    preserveState: true,
+                });
+            } catch (error) {
+                // Handle error with Swal
+                Swal.fire({
+                    title: 'Error',
+                    text: 'An error occurred',
+                    icon: 'error',
+                    timer: 2000,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                });
+                console.error(error);
+            }
         } catch (error) {
-            console.log({ error });
             Swal.fire({
                 title: "Error",
                 text: `There was an issue uploading your image (${error?.response?.data?.message ? error.response.data.message : 'please try again'})`,
@@ -216,8 +237,12 @@ const submit = async () => {
                     },
                 }).then((res) => {
                     console.log(res);
-                }).catch((err) => {
-                    console.log(err);
+                }).catch((error) => {
+                    Swal.fire({
+                        title: "Error",
+                        text: `There was an issue: (${error?.response?.data?.message ? error.response.data.message : 'please try again'})`,
+                        icon: "error",
+                    });
                 });
             }
 
@@ -229,9 +254,8 @@ const submit = async () => {
                 timerProgressBar: true,
                 showConfirmButton: false,
             }).then(() => {
-                router.visit(`/video/${videoId}`);
+                router.visit(previousUrl.value, { preserveState: true });
             });
-
 
         } catch (error) {
             console.log({ error });
@@ -243,8 +267,6 @@ const submit = async () => {
 
             throw error;
         }
-
-
     }
 };
 

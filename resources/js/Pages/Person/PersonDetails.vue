@@ -27,7 +27,7 @@
                     <InputLabel for="avatar" value="Avatar" />
 
                     <AvatarUploader :avatarImage="avatarImage" @imageChanged="onImageChange"
-                        @invalidFile="handleInvalidFile" />
+                    @invalidFile="handleInvalidFile" />
 
                     <InputError class="mt-2" :message="form.errors.avatarImage" />
                 </div>
@@ -37,10 +37,17 @@
                 </progress>
 
                 <div class="flex items-center justify-end mt-4">
-                    <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing || invalidFile }"
-                        :disabled="form.processing || invalidFile">
-                        Submit
-                    </PrimaryButton>
+                    <div v-if="form.processing">
+                        <div class="animate-spin inline-block w-6 h-6 border-[3px] border-current border-t-transparent text-indigo-600 rounded-full dark:text-indigo-6000" role="status" aria-label="loading">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                    <div v-else>
+                        <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing || invalidFile }"
+                            :disabled="form.processing || invalidFile">
+                            Submit
+                        </PrimaryButton>
+                    </div>
                 </div>
             </form>
         </div>
@@ -75,6 +82,7 @@ const props = defineProps({
     }
 });
 
+let submitting = ref(false);
 
 const previousUrl = ref(usePage().props.previous);
 
@@ -132,23 +140,10 @@ const submit = async () => {
                         person: props.person,
                     }
                 });
-
             }
 
             try {
-                const response = await form.put(route('person.update', props.person.id));
-
-                Swal.fire({
-                    title: response?.data?.message?.type,
-                    text: response?.data?.message?.text,
-                    icon: response?.data?.message?.type.toLowerCase(),
-                    timer: 2000,
-                    timerProgressBar: true,
-                    showConfirmButton: false,
-                }).then(() => {
-                    router.visit(previousUrl.value, { preserveState: true });
-                });
-
+                await form.put(route('person.update', props.person.id));
             } catch (error) {
                 // Handle error with Swal
                 Swal.fire({
@@ -161,7 +156,6 @@ const submit = async () => {
                 });
                 console.error(error);
             }
-
 
         } catch (error) {
             console.log({ error });
@@ -212,7 +206,6 @@ const submit = async () => {
             }).then(() => {
                 router.visit(`/person`);
             });
-
 
         } catch (error) {
             console.log({ error });

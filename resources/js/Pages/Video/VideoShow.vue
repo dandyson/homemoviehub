@@ -31,7 +31,7 @@
           <font-awesome-icon icon="fa-solid fa-pencil" class="me-2" /> Edit Details
         </span>
         </Link>
-        <button @click="deleteVideo()"
+        <button @click="deleteVideo"
           class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-red-400 via-red-500 to-red-700 group-hover:from-red-400 group-hover:via-red-500 group-hover:to-red-700 dark:text-white focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400">
           <span
             class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
@@ -47,7 +47,7 @@
               :href="route('person.show', { person: person })"
               :key="index" 
               class="cursor-pointer w-32 bg-[#20354b] hover:bg-indigo-600 hover:border-blue-600 hover:border rounded-2xl px-4 py-6 shadow-lg me-4 my-4 transition-all relative group overflow-hidden"
-          >
+            >
               <div class="mx-auto">
                   <img :src="person.avatar !== null ? person.avatar : 'https://cdn.pixabay.com/photo/2021/12/17/08/27/silhouette-6875954_1280.png'" class="rounded-full w-28" alt="profile picture">
               </div>
@@ -71,12 +71,11 @@
 </template>
   
 <script setup>
-import { ref, onMounted } from 'vue';
+import { onMounted } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import axios from 'axios';
-import { Link } from '@inertiajs/vue3';
-import Swal from 'sweetalert2'
-import { router } from '@inertiajs/vue3'
+import { Link, router } from '@inertiajs/vue3';
+import Swal from 'sweetalert2';
 
 const { video, message, people } = defineProps(['video', 'message', 'people']);
 

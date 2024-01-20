@@ -60,7 +60,7 @@
                                         <td class="flex justify-center px-6 py-4 whitespace-nowrap">
                                             <Link :href="route('person.show', { person: person })" :class="buttonClasses"> <font-awesome-icon icon="fa-solid fa-eye" class="me-2" /> View </Link>
                                             <Link :href="route('person.edit', { person: person })" :class="buttonClasses"> <font-awesome-icon icon="fa-solid fa-pencil" class="me-2" /> Edit </Link>
-                                            <DangerButton class="me-2"> <font-awesome-icon icon="fa-solid fa-trash" class="me-2" /> Delete </DangerButton>
+                                            <DangerButton @click="deletePerson(person)" class="me-2"> <font-awesome-icon icon="fa-solid fa-trash" class="me-2" /> Delete </DangerButton>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -85,6 +85,7 @@
 import { ref } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
+import Swal from 'sweetalert2'
 import DangerButton from '@/Components/DangerButton.vue';
 
 const props = defineProps({
@@ -96,6 +97,49 @@ const props = defineProps({
 
 const buttonClasses = ref('me-2 inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded-md font-semibold text-xs text-gray-700 dark:text-gray-300 uppercase tracking-widest shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-25 transition ease-in-out duration-150');
 
+const deletePerson = (person) => {
+  const swalWithBootstrapButtons = Swal.mixin({
+    customClass: {
+      confirmButton: "bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 border-b-4 border-red-700 hover:border-red-500 rounded",
+      cancelButton: "me-2 bg-gray-500 hover:bg-gray-400 text-white font-bold py-2 px-4 border-b-4 border-gray-700 hover:border-gray-500 rounded"
+    },
+    buttonsStyling: false
+  });
+  swalWithBootstrapButtons.fire({
+    title: "Are you sure?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Yes, delete person!",
+    cancelButtonText: "No, cancel!",
+    reverseButtons: true
+  }).then((result) => {
+    if (result.isConfirmed) {
+      axios.delete(`/person/${person.id}`)
+        .then(() => {
+          swalWithBootstrapButtons.fire({
+            title: "Deleted!",
+            text: "This person has been removed.",
+            icon: "success"
+          }).then(() => {
+            location.reload();
+          });
+        })
+        .catch((error) => {
+          // Handle any errors or show a notification
+          console.error('Error deleting person:', error);
+        })
+    } else if (
+      /* Read more about handling dismissals below */
+      result.dismiss === Swal.DismissReason.cancel
+    ) {
+      swalWithBootstrapButtons.fire({
+        title: "Cancelled",
+        text: "The person is safe :)",
+        icon: "error"
+      });
+    }
+  });
+}
 </script>
   
   

@@ -153,14 +153,11 @@ class PersonController extends Controller
         
         $person->save();
 
-        return redirect()->back()->with([
+        return Inertia::render('Person/PersonShow', [
             'person' => $person,
+            'videos' => $person->videos,
             'message' => ['type' => 'Success', 'text' => $person->name . ' updated successfully'],
         ]);
-        // return Inertia::render('Person/PersonShow', [
-        //     'person' => $person,
-        //     'message' => ['type' => 'Success', 'text' => $person->name . ' updated successfully'],
-        // ]);
     }
 
     /**
@@ -168,6 +165,9 @@ class PersonController extends Controller
      */
     public function destroy(Person $person)
     {
-        //
+        $person->delete();
+
+        // Optionally, you can return a response or redirect
+        return response()->json(['success', 'Person deleted successfully']);
     }
 }
