@@ -76,8 +76,10 @@ class VideoController extends Controller
         $video->save();
 
         // Attach the validated user IDs to the video
-        foreach ($request->featured_people as $person) {
-            $video->people()->attach($person['id']);
+        if ($request->featured_people) {
+            foreach ($request->featured_people as $person) {
+                $video->people()->attach($person['id']);
+            }
         }
         
         if ($request->cover_image) {
