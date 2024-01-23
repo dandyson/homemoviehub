@@ -44,10 +44,10 @@
                     <InputError class="mt-2" :message="form.errors.coverImage" />
                 </div>
 
-                <div class="mt-4">
+                <div class="mt-10">
                     <InputLabel for="featured_people" value="Featured People" />
 
-                    <div class="flex flex-wrap justify-start align-center">
+                    <div v-if="people && people.length > 0" class="flex flex-wrap justify-start align-center">
                         <a 
                             v-for="(person, index) in people" 
                             :key="index" 
@@ -67,6 +67,9 @@
                                 <span>{{ person.family }}</span>
                             </div>
                         </a>
+                    </div>
+                    <div v-else class="bg-gray-700 rounded text-white text-center my-4 py-5">
+                        No People have been added yet.
                     </div>
                     <InputError class="mt-2" :message="form.errors.cover_image" />
                 </div>
