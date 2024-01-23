@@ -6,6 +6,7 @@ use App\Models\Person;
 use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Illuminate\Validation\Rules\File;
@@ -23,7 +24,7 @@ class VideoController extends Controller
     public function show(Video $video)
     {
         // Ensure the user can only view their own video
-        if ($video->user_id !== Auth::id()) {
+        if (Gate::denies('show', $video)) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -42,6 +43,11 @@ class VideoController extends Controller
 
     public function edit(Video $video)
     {
+        // Ensure the user can only edit their own video
+        if (Gate::denies('edit', $video)) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $video->load('people');
 
         return Inertia::render('Video/VideoDetails', [
@@ -88,6 +94,11 @@ class VideoController extends Controller
 
     public function update(Request $request, Video $video)
     {
+        // Ensure the user can only update their own video
+        if (Gate::denies('update', $video)) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $request->validate([
             'title' => 'required|string',
             'description' => 'required|string',
@@ -121,9 +132,13 @@ class VideoController extends Controller
 
     public function destroy(Video $video)
     {
+        // Ensure the user can only update their own video
+        if (Gate::denies('update', $video)) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         $video->delete();
 
-        // Optionally, you can return a response or redirect
         return response()->json(['success', 'Video deleted successfully']);
     }
 

@@ -6,6 +6,7 @@ use App\Models\Family;
 use App\Models\Person;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use App\Services\AvatarService;
 
@@ -107,6 +108,11 @@ class PersonController extends Controller
      */
     public function edit(Person $person)
     {
+        // Ensure the user can only edit People related to their account
+        if (Gate::denies('edit', $person)) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $person->load('family');
 
         return Inertia::render('Person/PersonDetails', [
@@ -121,6 +127,11 @@ class PersonController extends Controller
      */
     public function update(Request $request, Person $person)
     {
+        // Ensure the user can only update People related to their account
+        if (Gate::denies('update', $person)) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $request->validate([
             'name' => 'required|string',
             'family' => 'required',
@@ -165,6 +176,11 @@ class PersonController extends Controller
      */
     public function destroy(Person $person)
     {
+        // Ensure the user can only destroy People related to their account
+        if (Gate::denies('destroy', $person)) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $person->delete();
 
         // Optionally, you can return a response or redirect
