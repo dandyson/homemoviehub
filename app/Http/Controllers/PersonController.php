@@ -44,7 +44,7 @@ class PersonController extends Controller
     public function create()
     {
         return Inertia::render('Person/PersonDetails', [
-            'families' => Family::orderBy('name')->get(['id', 'name']),
+            'families' => Auth::user()->families()->orderBy('name')->get(['id', 'name']),
         ]);
     }
 
