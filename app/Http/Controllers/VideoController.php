@@ -36,7 +36,7 @@ class VideoController extends Controller
     public function create()
     {
         return Inertia::render('Video/VideoDetails', [
-            'people' => Person::all(),
+            'people' => Auth::user()->people,
         ]);
     }
 
