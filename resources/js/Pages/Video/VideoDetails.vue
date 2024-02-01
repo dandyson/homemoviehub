@@ -78,6 +78,70 @@
                     {{ form.progress.percentage }}%
                 </progress>
 
+                <h2 class="text-3xl mt-10 text-white">Locations (optional):</h2>
+                <p class="bold italic text-white my-2">Start entering the location in the field:</p>
+
+                <div class="my-4">
+                    <vue-google-autocomplete 
+                        @keydown.enter.prevent
+                        :types="['(cities)']"
+                        id="map" 
+                        classname="rounded w-full form-control" 
+                        placeholder="Start typing" 
+                        v-on:placechanged="getAddressData"
+                    >
+                    </vue-google-autocomplete>
+                </div>
+
+                <GoogleMap :markers="locations"></GoogleMap>
+                
+                <div v-if="locations.length > 0" class="flex flex-wrap my-2">
+                    <h2 class="text-2xl mt-10 text-white mb-2">Location list:</h2>
+                    <div v-for="(location, index) in locations" :key="index" class="flex flex-col md:flex-row md:justify-between md:items-center my-5 text-white cursor-pointer w-full bg-[#20354b] hover:bg-indigo-600 hover:border-blue-600 hover:border rounded-2xl px-8 py-6 shadow-lg me-4 my-4 transition-all relative group overflow-hidden">
+                        <div>
+                            <InputLabel for="location" value="Location" />
+                            <TextInput
+                                disabled
+                                :id="`location${index}`"
+                                type="text"
+                                class="mt-2 mb-5 block w-full"
+                                v-model="locations[index].location"
+                                autocomplete="location"
+                                autofocus
+                            />
+                        </div>
+
+                        <div>
+                            <InputLabel for="latitude" value="Latitude" />
+                            <NumberInput
+                                disabled
+                                :id="`latitude${index}`"
+                                type="number"
+                                class="mt-2 mb-5 block w-full"
+                                v-model="locations[index].lat"
+                                autocomplete="latitude"
+                                autofocus
+                            />
+                        </div>
+
+                        <div>
+                            <InputLabel for="longitude" value="Longitude" />
+                            <NumberInput
+                                disabled
+                                :id="`longitude${index}`"
+                                type="number"
+                                class="mt-2 mb-5 block w-full"
+                                v-model="locations[index].lng"
+                                autocomplete="longitude"
+                                autofocus
+                            />
+                        </div>
+                        <div>
+                            <DangerButton type="button" @click="deleteLocation(location)" class="mt-2 ms-2"> <font-awesome-icon icon="fa-solid fa-trash" class="me-2" /> Delete </DangerButton>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="flex items-center justify-end mt-4">
                     <div v-if="form.processing">
                         <div class="animate-spin inline-block w-6 h-6 border-[3px] border-current border-t-transparent text-indigo-600 rounded-full dark:text-indigo-6000" role="status" aria-label="loading">
@@ -97,17 +161,21 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, reactive } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import NumberInput from '@/Components/NumberInput.vue';
 import TextArea from '@/Components/TextArea.vue';
 import CoverImageUploader from '@/Components/CoverImageUploader.vue';
 import { useForm, router, usePage } from '@inertiajs/vue3';
 import axios from 'axios';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
+import GoogleMap from '@/Components/Maps/GoogleMap.vue';
+import VueGoogleAutocomplete from "vue-google-autocomplete";
+import DangerButton from '@/Components/DangerButton.vue';
 
 const props = defineProps({
     updateMode: {
@@ -121,16 +189,27 @@ const props = defineProps({
     people: {
         type: Object,
         default: () => ({}),
-    }
+    },
 });
 
 const previousUrl = ref(usePage().props.previous);
+
+const locations = reactive(props.video.locations ?? []);
+
+const getAddressData = (addressData) => {
+    locations.push({
+        location: addressData.hasOwnProperty('locality') ? addressData.locality : addressData.country,
+        lat: addressData.latitude,
+        lng: addressData.longitude,
+    });
+}
 
 const form = useForm({
     title: ref(props.video.title ?? ''),
     description: ref(props.video.description ?? ''),
     youtube_url: ref(props.video.youtube_url ?? ''),
     featured_people: ref(ref(props.video.people ?? [])),
+    locations: locations ?? [],
 });
 
 let coverImage = ref(props.video.cover_image ?? '');
@@ -162,7 +241,42 @@ const togglePersonSelection = (person) => {
   form.featured_people = selectedPeople.value;
 };
 
+const deleteLocation = (location) => {
+  const swalWithBootstrapButtons = Swal.mixin({
+    customClass: {
+      confirmButton: "bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 border-b-4 border-red-700 hover:border-red-500 rounded",
+      cancelButton: "me-2 bg-gray-500 hover:bg-gray-400 text-white font-bold py-2 px-4 border-b-4 border-gray-700 hover:border-gray-500 rounded"
+    },
+    buttonsStyling: false
+  });
+  swalWithBootstrapButtons.fire({
+    title: "Are you sure?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Yes, delete location!",
+    cancelButtonText: "No, cancel!",
+    reverseButtons: true
+  }).then((result) => {
+    if (result.isConfirmed) {
+       // Remove the location
+        const index = locations.findIndex(loc => loc.id === location.id);
+        locations.splice(index, 1);
+    } else if (result.dismiss === Swal.DismissReason.cancel) {
+      swalWithBootstrapButtons.fire({
+        title: "Cancelled",
+        text: "The location is safe :)",
+        icon: "error"
+      });
+    }
+  });
+}
+
+
 const submit = async () => {
+    if (locations.length > 0)
+    {
+        form.locations = locations;
+    }
     // Set default image if none chosen
     if (coverImage === '') {
         coverImage = 'https://images.unsplash.com/photo-1550399504-8953e1a6ac87?q=80&w=2829&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';

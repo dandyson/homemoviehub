@@ -25,4 +25,12 @@ class Video extends Model
     {
         return $this->belongsToMany(Person::class);
     }
+
+     /**
+     * Get the locations associated with the video.
+     */ 
+    public function locations()
+    {
+        return $this->belongsToMany(Location::class);
+    }
 }

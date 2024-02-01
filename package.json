@@ -24,6 +24,8 @@
         "@fortawesome/free-solid-svg-icons": "^6.4.2",
         "@fortawesome/vue-fontawesome": "^3.0.5",
         "sweetalert2": "^11.10.1",
-        "vue-plyr": "^7.0.0"
+        "vue-google-autocomplete": "^1.1.4",
+        "vue-plyr": "^7.0.0",
+        "vue3-google-map": "^0.19.0"
     }
 }

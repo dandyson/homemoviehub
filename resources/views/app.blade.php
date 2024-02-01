@@ -15,6 +15,8 @@
         <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
 
         <!-- Scripts -->
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPskLzqe7W_yYpinkeBK5Mt9Lv8f9TnM4&libraries=places"></script>
+
         @routes
         @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
         @inertiaHead

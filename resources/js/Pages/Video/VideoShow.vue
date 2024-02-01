@@ -19,9 +19,9 @@
           See Video on YouTube
         </a>
 
-        <!-- <div class="my-12 h-[30rem] bg-white text-black text-6xl flex justify-center items-center">
-          Map
-        </div> -->
+        <h2 class="text-3xl mt-10 mb-5">Locations:</h2>
+
+        <GoogleMap :markers="video.locations"></GoogleMap>
       </div>
       <div class="video-page-description border-l border-opacity-50 border-slate-500 ps-6">
         <Link :href="route('video.edit', { video: video.id })"
@@ -41,9 +41,9 @@
 
         <div class="mt-4 text-gray-700 dark:text-white">
           <h4 class="text-2xl mb-3">People included:</h4>
-          <div v-if="people && people.length" class="flex flex-wrap">
+          <div v-if="video.people && video.people.length" class="flex flex-wrap">
             <a 
-              v-for="(person, index) in people"
+              v-for="(person, index) in video.people"
               :href="route('person.show', { person: person })"
               :key="index" 
               class="cursor-pointer w-32 bg-[#20354b] hover:bg-indigo-600 hover:border-blue-600 hover:border rounded-2xl px-4 py-6 shadow-lg me-4 my-4 transition-all relative group overflow-hidden"
@@ -71,13 +71,16 @@
 </template>
   
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, reactive } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import axios from 'axios';
 import { Link, router } from '@inertiajs/vue3';
 import Swal from 'sweetalert2';
+import GoogleMap from '@/Components/Maps/GoogleMap.vue';
 
-const { video, message, people } = defineProps(['video', 'message', 'people']);
+const { video, message } = defineProps(['video', 'message']);
+
+const locations = reactive(video.locations ?? []);
 
 onMounted(() => {
   if (message) {
@@ -136,7 +139,4 @@ const deleteVideo = () => {
     }
   });
 }
-
 </script>
-  
-<style></style>

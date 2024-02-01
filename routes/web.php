@@ -1,11 +1,11 @@
 <?php
 
+use App\Http\Controllers\LocationController;
 use App\Http\Controllers\PersonController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VideoController;
 use App\Models\Person;
 use App\Models\Video;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 

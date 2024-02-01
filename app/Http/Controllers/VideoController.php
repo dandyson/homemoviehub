@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Location;
 use App\Models\Person;
 use App\Models\Video;
 use Illuminate\Http\Request;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Illuminate\Validation\Rules\File;
+use Illuminate\Support\Facades\DB;
 
 class VideoController extends Controller
 {
@@ -28,9 +30,10 @@ class VideoController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
+        $video->load('people', 'locations');
+
         return Inertia::render('Video/VideoShow', [
             'video' => $video,
-            'people' => $video->people,
         ]);
     }
 
@@ -48,7 +51,7 @@ class VideoController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $video->load('people');
+        $video->load('people', 'locations');
 
         return Inertia::render('Video/VideoDetails', [
             'updateMode' => true,
@@ -64,6 +67,7 @@ class VideoController extends Controller
             'description' => 'required|string',
             'youtube_url' => ['required', 'string', 'regex:/^[a-zA-Z0-9_-]{11}$/'],
             'featured_people' => 'nullable|array',
+            'locations' => 'nullable|array'
         ]);
 
         $video = new Video([
@@ -74,6 +78,11 @@ class VideoController extends Controller
         ]);
         
         $video->save();
+
+        // Add locations if any have been added
+        if ($request->locations) {
+            $this->storeVideoLocations($video, $request->locations);
+        }
 
         // Attach the validated user IDs to the video
         if ($request->featured_people) {
@@ -123,11 +132,17 @@ class VideoController extends Controller
         // Sync the person IDs with the video's people relationship
         $video->people()->sync($featuredPeopleIds);
 
+        // Add locations if any have been added
+        if ($request->locations) {
+            $this->storeVideoLocations($video, $request->locations);
+        }
+
         $video->save();
 
+        $video->load('people', 'locations');
+
         return Inertia::render('Video/VideoShow', [
-            'video' => $video->only('id', 'title', 'description', 'youtube_url', 'featured_people'),
-            'people' => $video->people,
+            'video' => $video,
             'message' => ['type' => 'Success', 'text' => 'Video updated successfully'],
         ]);
     }
@@ -179,4 +194,35 @@ class VideoController extends Controller
             return response()->json(['error' => 'Internal Server Error'], 500);
         }
     }
+
+
+    public function storeVideoLocations(Video $video, $locations): void
+    {
+        DB::transaction(function () use ($video, $locations) {
+            // Detach all existing locations from the video
+            $video->locations()->detach();
+
+            foreach ($locations as $locationData) {
+                // Search for an existing location with the same coordinates
+                $existingLocation = Location::where('lat', $locationData['lat'])
+                    ->where('lng', $locationData['lng'])
+                    ->first();
+
+                if ($existingLocation) {
+                    // Location already exists, attach it to the video
+                    $video->locations()->attach($existingLocation->id);
+                } else {
+                    // Location doesn't exist, create a new one and attach it to the video
+                    $newLocation = Location::create([
+                        'location' => $locationData['location'],
+                        'lat' => $locationData['lat'],
+                        'lng' => $locationData['lng'],
+                    ]);
+
+                    $video->locations()->attach($newLocation->id);
+                }
+            }
+        });
+    }
+
 }
