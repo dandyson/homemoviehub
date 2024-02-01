@@ -1,6 +1,6 @@
 <template>
   <GoogleMap
-    api-key="AIzaSyDPskLzqe7W_yYpinkeBK5Mt9Lv8f9TnM4"
+    :api-key="googleAutocompleteApiKey"
     style="width: 100%; height: 500px"
     :center="center"
     :zoom="zoomAmount"
@@ -25,6 +25,7 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const googleAutocompleteApiKey = import.meta.env.GOOGLE_AUTOCOMPLETE_API_KEY;
     const locations = ref(props.markers);
     const zoomAmount = ref(1);
     let center;
