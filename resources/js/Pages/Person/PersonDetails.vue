@@ -19,7 +19,7 @@
                 
                 <div class="mb-4">
                     <InputLabel for="family" value="Family" />
-                    <DropdownForm label="Choose Family" id="family" :families="families" v-model="form.family" @update:modelValue="handleFamilyUpdate" required autofocus
+                    <DropdownForm label="Choose Family" id="family" :families="families" v-model="form.family.name" @update:modelValue="handleFamilyUpdate" required autofocus
                         autocomplete="family"></DropdownForm>
                 </div>
 
