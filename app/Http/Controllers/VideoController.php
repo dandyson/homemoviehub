@@ -16,13 +16,6 @@ use Illuminate\Support\Facades\DB;
 class VideoController extends Controller
 {
 
-    private $defaultCoverImage = 'https://images.unsplash.com/photo-1550399504-8953e1a6ac87?q=80&w=2829&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
-    
-    public function index()
-    {
-        $videos = Video::all();
-    }
-
     public function show(Video $video)
     {
         // Ensure the user can only view their own video
@@ -92,7 +85,7 @@ class VideoController extends Controller
         }
         
         if ($request->cover_image) {
-            $video->cover_image = $this->defaultCoverImage;
+            $video->cover_image = config('app.default_cover_image');
         }
 
         $video->save();
@@ -156,7 +149,7 @@ class VideoController extends Controller
         
         $video->delete();
 
-        return response()->json(['success', 'Video deleted successfully']);
+        return response()->json(['success' => 'Video deleted successfully']);
     }
 
     public function handleCoverImageUpload(Request $request, Video $video = null)

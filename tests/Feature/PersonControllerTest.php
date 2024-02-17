@@ -55,7 +55,7 @@ class PersonControllerTest extends TestCase
     }
 
     /** @test */
-    public function create_method_displays_create_form()
+    public function create_method_displays_details_form()
     {
         $user = User::factory()->create();
 
@@ -134,5 +134,111 @@ class PersonControllerTest extends TestCase
             'name' => 'Johnson',
             'user_id' => $user->id,
         ]);
+    }
+
+    /** @test */
+    public function edit_method_displays_details_form()
+    {
+        $user = User::factory()->create();
+        $person = Person::factory()->create([
+            'user_id' => $user->id,
+        ]);
+        $family1 = Family::factory()->create([
+            'name' => 'Atkinson',
+            'user_id' => $user->id
+        ]);
+        $family2 = Family::factory()->create([
+            'name' => 'Bentley',
+            'user_id' => $user->id
+        ]);
+        $family3 = Family::factory()->create([
+            'name' => 'Carrington',
+            'user_id' => $user->id
+        ]);
+
+        $response = $this->actingAs($user)->get(route('person.edit', ['person' => $person]));
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Person/PersonDetails')
+            ->has('families', 3, fn (Assert $page) => $page
+                ->has('id')
+                ->has('name')
+                ->missing('created_at')
+                ->missing('updated_at')
+                ->etc()
+            )
+            ->has('families.0', fn (Assert $page) => $page
+                ->where('id', $family1->id)
+                ->where('name', $family1->name)
+            )
+            ->has('families.1', fn (Assert $page) => $page
+                ->where('id', $family2->id)
+                ->where('name', $family2->name)
+            )
+            ->has('families.2', fn (Assert $page) => $page
+                ->where('id', $family3->id)
+                ->where('name', $family3->name)
+            )
+            ->has('updateMode')
+            ->etc()
+        ); 
+    }
+
+    /** @test */
+    public function update_method_updates_person_and_returns_correct_view()
+    {
+        $user = User::factory()->create();
+
+        $person = Person::factory()->create([
+            'name' => 'Mark',
+            'user_id' => $user->id,
+        ]);
+
+        $family = Family::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        $newName = 'John';
+        $newFamilyName = 'Smith';
+
+        $response = $this->actingAs($user)->put(route('person.update', ['person' => $person]), [
+            'name' => $newName,
+            'family' => $newFamilyName,
+        ])->assertStatus(200);
+
+        $person->refresh();
+
+        $newFamilyModel = Family::where('name', $newFamilyName)->first();
+
+        $this->assertEquals($newName, $person->name);
+        $this->assertEquals($newFamilyModel->id, $person->family_id);
+
+        $response->assertInertia(fn ($page) => $page
+            ->component('Person/PersonShow')
+            ->where('person', function ($responseData) use ($person) {
+                return $responseData['id'] === $person->id;
+            })
+            ->where('videos', [])
+            ->where('message', [
+                'type' => 'Success',
+                'text' => $person->name . ' updated successfully',
+            ])
+        );
+    }
+
+    /** @test */
+    public function destroy_method_deletes_person_and_returns_success_response()
+    {
+        $user = User::factory()->create();
+        $person = Person::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        $response = $this->actingAs($user)->delete(route('person.destroy', ['person' => $person]));
+        $response->assertStatus(200);
+
+        $this->assertDatabaseMissing('people', ['id' => $person->id]);
+
+        $response->assertJson(['success' => 'Person deleted successfully']);
     }
 }

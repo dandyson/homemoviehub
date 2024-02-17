@@ -184,6 +184,6 @@ class PersonController extends Controller
         $person->delete();
 
         // Optionally, you can return a response or redirect
-        return response()->json(['success', 'Person deleted successfully']);
+        return response()->json(['success' => 'Person deleted successfully']);
     }
 }
