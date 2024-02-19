@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Video extends Model
 {
@@ -18,17 +17,17 @@ class Video extends Model
         'cover_image',
     ];
 
-     /**
+    /**
      * Get the people associated with the video.
-     */ 
+     */
     public function people()
     {
         return $this->belongsToMany(Person::class);
     }
 
-     /**
+    /**
      * Get the locations associated with the video.
-     */ 
+     */
     public function locations()
     {
         return $this->belongsToMany(Location::class);

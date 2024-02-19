@@ -28,6 +28,7 @@ class ProfileController extends Controller
 
         // Your other logic here
     }
+
     /**
      * Display the user's profile form.
      */

@@ -3,7 +3,6 @@
 namespace App\Policies;
 
 use App\Models\Location;
-use App\Models\Person;
 use App\Models\User;
 
 class LocationPolicy extends BasePolicy

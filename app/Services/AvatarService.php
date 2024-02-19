@@ -4,14 +4,14 @@ namespace App\Services;
 
 use App\Models\Person;
 use App\Models\User;
-use Illuminate\Validation\Rules\File;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rules\File;
 
 class AvatarService
 {
     private $defaultAvatar = 'https://images.unsplash.com/photo-1550399504-8953e1a6ac87?q=80&w=2829&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
-    
+
     public function handleAvatarUpload(Request $request, User|Person $person = null)
     {
         $request->validate([
@@ -19,7 +19,7 @@ class AvatarService
                 'required',
                 File::types(['jpeg', 'png', 'jpg'])
                     ->max(12 * 1024),
-            ]
+            ],
         ]);
 
         if ($person instanceof User) {
@@ -51,7 +51,8 @@ class AvatarService
                 'message' => 'Image uploaded successfully',
             ]);
         } catch (\Exception $e) {
-            \Log::error('Error uploading cover image: ' . $e->getMessage());
+            \Log::error('Error uploading cover image: '.$e->getMessage());
+
             return response()->json(['error' => 'Internal Server Error'], 500);
         }
     }

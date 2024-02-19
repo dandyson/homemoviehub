@@ -6,11 +6,11 @@ use App\Models\Family;
 use App\Models\Person;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
-use Tests\TestCase;
 use Inertia\Testing\AssertableInertia as Assert;
+use Tests\TestCase;
+
 class PersonControllerTest extends TestCase
 {
     use RefreshDatabase;
@@ -47,11 +47,11 @@ class PersonControllerTest extends TestCase
 
         $response->assertInertia(fn (Assert $page) => $page
             ->component('Person/PersonIndex')
-            ->has('people', count($people), fn (Assert $page) => $page 
+            ->has('people', count($people), fn (Assert $page) => $page
                 ->where('user_id', $user->id)
                 ->etc()
             )
-        ); 
+        );
     }
 
     /** @test */
@@ -67,14 +67,14 @@ class PersonControllerTest extends TestCase
 
         $response->assertInertia(fn (Assert $page) => $page
             ->component('Person/PersonDetails')
-            ->has('families', count($families), fn (Assert $page) => $page 
+            ->has('families', count($families), fn (Assert $page) => $page
                 ->has('id')
                 ->has('name')
                 ->missing('created_at')
                 ->missing('updated_at')
                 ->etc()
             )
-        ); 
+        );
     }
 
     /** @test */
@@ -83,7 +83,7 @@ class PersonControllerTest extends TestCase
         $user = User::factory()->create();
         $family = Family::factory()->create([
             'name' => 'Doe',
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
 
         $data = [
@@ -95,7 +95,7 @@ class PersonControllerTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJson(['message' => ['type' => 'Success', 'text' => 'Person created successfully']]);
-        
+
         $this->assertDatabaseHas('people', [
             'name' => 'John',
             'user_id' => $user->id,
@@ -109,7 +109,7 @@ class PersonControllerTest extends TestCase
         $user = User::factory()->create();
         $family = Family::factory()->create([
             'name' => 'Doe',
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
 
         $data = [
@@ -123,7 +123,7 @@ class PersonControllerTest extends TestCase
             ->assertJson(['message' => ['type' => 'Success', 'text' => 'Person created successfully']]);
 
         $newFamily = Family::where('name', 'Johnson')->first();
-        
+
         $this->assertDatabaseHas('people', [
             'name' => 'John',
             'user_id' => Auth::id(),
@@ -145,15 +145,15 @@ class PersonControllerTest extends TestCase
         ]);
         $family1 = Family::factory()->create([
             'name' => 'Atkinson',
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
         $family2 = Family::factory()->create([
             'name' => 'Bentley',
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
         $family3 = Family::factory()->create([
             'name' => 'Carrington',
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
 
         $response = $this->actingAs($user)->get(route('person.edit', ['person' => $person]));
@@ -181,7 +181,7 @@ class PersonControllerTest extends TestCase
             )
             ->has('updateMode')
             ->etc()
-        ); 
+        );
     }
 
     /** @test */
@@ -221,7 +221,7 @@ class PersonControllerTest extends TestCase
             ->where('videos', [])
             ->where('message', [
                 'type' => 'Success',
-                'text' => $person->name . ' updated successfully',
+                'text' => $person->name.' updated successfully',
             ])
         );
     }

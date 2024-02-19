@@ -49,12 +49,12 @@ class User extends Authenticatable
         return $this->hasMany(Family::class);
     }
 
-    public function videos(): HasMany 
+    public function videos(): HasMany
     {
         return $this->hasMany(Video::class);
     }
 
-    public function people(): HasMany 
+    public function people(): HasMany
     {
         return $this->hasMany(Person::class);
     }

@@ -7,15 +7,14 @@ use App\Models\Person;
 use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
-use Inertia\Inertia;
 use Illuminate\Validation\Rules\File;
-use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
 
 class VideoController extends Controller
 {
-
     public function show(Video $video)
     {
         // Ensure the user can only view their own video
@@ -60,7 +59,7 @@ class VideoController extends Controller
             'description' => 'required|string',
             'youtube_url' => ['required', 'string', 'regex:/^[a-zA-Z0-9_-]{11}$/'],
             'featured_people' => 'nullable|array',
-            'locations' => 'nullable|array'
+            'locations' => 'nullable|array',
         ]);
 
         $video = new Video([
@@ -69,7 +68,7 @@ class VideoController extends Controller
             'youtube_url' => $request->input('youtube_url'),
             'user_id' => Auth::id(),
         ]);
-        
+
         $video->save();
 
         // Add locations if any have been added
@@ -83,7 +82,7 @@ class VideoController extends Controller
                 $video->people()->attach($person['id']);
             }
         }
-        
+
         if ($request->cover_image) {
             $video->cover_image = config('app.default_cover_image');
         }
@@ -109,7 +108,7 @@ class VideoController extends Controller
             'youtube_url' => ['required', 'string', 'regex:/^[a-zA-Z0-9_-]{11}$/'],
             'featured_people' => 'nullable|array',
         ]);
-    
+
         // Update video with extracted YouTube video ID
         $video->update([
             'title' => $request->input('title'),
@@ -146,7 +145,7 @@ class VideoController extends Controller
         if (Gate::denies('update', $video)) {
             abort(403, 'Unauthorized action.');
         }
-        
+
         $video->delete();
 
         return response()->json(['success' => 'Video deleted successfully']);
@@ -159,7 +158,7 @@ class VideoController extends Controller
                 'required',
                 File::types(['jpeg', 'png', 'jpg'])
                     ->max(12 * 1024),
-            ]
+            ],
         ]);
 
         $path = "cover-images/{$video->id} - {$video->title}";
@@ -183,11 +182,11 @@ class VideoController extends Controller
                 'message' => 'Image uploaded successfully',
             ]);
         } catch (\Exception $e) {
-            \Log::error('Error uploading cover image: ' . $e->getMessage());
+            \Log::error('Error uploading cover image: '.$e->getMessage());
+
             return response()->json(['error' => 'Internal Server Error'], 500);
         }
     }
-
 
     public function storeVideoLocations(Video $video, $locations): void
     {
@@ -217,5 +216,4 @@ class VideoController extends Controller
             }
         });
     }
-
 }

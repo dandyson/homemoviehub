@@ -22,7 +22,7 @@ class Location extends Model
 
     /**
      * Get the Videos associated with the location
-     */ 
+     */
     public function videos()
     {
         return $this->belongsToMany(Video::class)

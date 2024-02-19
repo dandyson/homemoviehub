@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::table('people', function (Blueprint $table) {
             $table->foreignId('user_id')->after('name')->constrained('users');
         });
-    
+
         DB::statement('SET FOREIGN_KEY_CHECKS=1');
     }
 

@@ -2,8 +2,6 @@
 
 namespace App\Policies;
 
-use App\Models\User;
-
 class BasePolicy
 {
     protected function isOwner($user, $model)

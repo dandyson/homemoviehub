@@ -7,11 +7,10 @@ use App\Models\Person;
 use App\Models\User;
 use App\Models\Video;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-use Inertia\Testing\AssertableInertia as Assert;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Testing\AssertableInertia as Assert;
+use Tests\TestCase;
 
 class VideoControllerTest extends TestCase
 {
@@ -25,7 +24,7 @@ class VideoControllerTest extends TestCase
             'user_id' => $user->id,
         ]);
         $people = Person::factory()->count(2)->create([
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
         $locations = Location::factory()->count(2)->create();
 
@@ -42,7 +41,7 @@ class VideoControllerTest extends TestCase
             ->component('Video/VideoShow')
             ->where('video.id', $video->id)
             ->has('video.locations')
-        ); 
+        );
     }
 
     /** @test */
@@ -58,12 +57,12 @@ class VideoControllerTest extends TestCase
 
         $response->assertInertia(fn (Assert $page) => $page
             ->component('Video/VideoDetails')
-            ->has('people', count($people), fn (Assert $page) => $page 
+            ->has('people', count($people), fn (Assert $page) => $page
                 ->has('user_id')
                 ->where('user_id', $user->id)
                 ->etc()
             )
-        ); 
+        );
     }
 
     /** @test */
@@ -74,7 +73,7 @@ class VideoControllerTest extends TestCase
             'user_id' => $user->id,
         ]);
         $people = Person::factory()->count(2)->create([
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
 
         foreach ($people as $person) {
@@ -85,13 +84,13 @@ class VideoControllerTest extends TestCase
 
         $response->assertInertia(fn (Assert $page) => $page
             ->component('Video/VideoDetails')
-            ->has('people', count($people), fn (Assert $page) => $page 
+            ->has('people', count($people), fn (Assert $page) => $page
                 ->has('user_id')
                 ->where('user_id', $user->id)
                 ->etc()
             )
             ->has('updateMode')
-        ); 
+        );
     }
 
     /** @test */
@@ -99,7 +98,7 @@ class VideoControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $people = Person::factory()->count(2)->create([
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
         $locations = Location::factory()->count(2)->create();
         $data = [
@@ -140,7 +139,7 @@ class VideoControllerTest extends TestCase
 
         // Assert that the video was created with the default cover image
         $this->assertEquals(
-            $video->cover_image, 
+            $video->cover_image,
             config('app.default_cover_image')
         );
 
@@ -162,10 +161,10 @@ class VideoControllerTest extends TestCase
         $user = User::factory()->create();
         $video = Video::factory()->create([
             'user_id' => $user->id,
-            'title' => 'Christmas 1990'
+            'title' => 'Christmas 1990',
         ]);
         $people = Person::factory()->count(2)->create([
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
         $locations = Location::factory()->count(2)->create();
         $newPeopleIds = Person::factory()->count(2)->create([
@@ -204,31 +203,31 @@ class VideoControllerTest extends TestCase
         );
     }
 
-    /** @test 
-     * This test ensures that if a video has existing locations attached and the user submits 
+    /** @test
+     * This test ensures that if a video has existing locations attached and the user submits
      * new locations but keeps the old ones in, the old ones still remain
-    */
+     */
     public function update_method_keeps_existing_locations_if_new_ones_added()
     {
         $user = User::factory()->create();
         $video = Video::factory()->create([
             'user_id' => $user->id,
-            'title' => 'Christmas 1990'
+            'title' => 'Christmas 1990',
         ]);
         $oldLocation1 = Location::factory()->create([
-            'location' => 'London'
+            'location' => 'London',
         ]);
         $oldLocation2 = Location::factory()->create([
-            'location' => 'New York'
+            'location' => 'New York',
         ]);
 
         $video->locations()->attach([$oldLocation1->id, $oldLocation2->id]);
 
         $newLocation1 = Location::factory()->create([
-            'location' => 'Dubai'
+            'location' => 'Dubai',
         ]);
         $newLocation2 = Location::factory()->create([
-            'location' => 'Los Angeles'
+            'location' => 'Los Angeles',
         ]);
 
         $locationData = [
@@ -258,24 +257,24 @@ class VideoControllerTest extends TestCase
         );
     }
 
-    /** @test 
+    /** @test
      * This test ensures that if the user removes existing locations in the UI
      * and submits new ones, only the new locations are saved and the old ones are
      * no longer attached
-    */
+     */
     public function update_method_removes_existing_locations_if_only_new_ones_added()
     {
         $user = User::factory()->create();
         $video = Video::factory()->create([
             'user_id' => $user->id,
-            'title' => 'Christmas 1990'
+            'title' => 'Christmas 1990',
         ]);
         $existingLocations = Location::factory()->count(10)->create();
         $newLocation1 = Location::factory()->create([
-            'location' => 'London'
+            'location' => 'London',
         ]);
         $newLocation2 = Location::factory()->create([
-            'location' => 'New York'
+            'location' => 'New York',
         ]);
         $newLocationData = [
             $newLocation1->toArray(),
@@ -328,7 +327,7 @@ class VideoControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $video = Video::factory()->create([
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
 
         Storage::fake('s3');
@@ -346,5 +345,5 @@ class VideoControllerTest extends TestCase
         $video->refresh();
 
         $this->assertNotNull($video->cover_image);
-    }    
+    }
 }

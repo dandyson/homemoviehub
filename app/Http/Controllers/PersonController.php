@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Family;
 use App\Models\Person;
+use App\Services\AvatarService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
-use App\Services\AvatarService;
 
 class PersonController extends Controller
 {
@@ -32,7 +32,7 @@ class PersonController extends Controller
     public function index()
     {
         $people = Auth::user()->people()->with('family')->withCount('videos')->get();
-    
+
         return Inertia::render('Person/PersonIndex', [
             'people' => $people,
         ]);
@@ -59,15 +59,14 @@ class PersonController extends Controller
         ]);
 
         $familyName = $request->input('family');
-        
-        if (is_array($request->family))
-        {
+
+        if (is_array($request->family)) {
             $familyName = $request->input('family')['name'];
         }
-        
+
         // Check if the family already exists
         $existingFamily = Family::where('name', $familyName)->first();
-        
+
         if ($existingFamily) {
             // If the family exists, use its ID
             $familyId = $existingFamily->id;
@@ -83,7 +82,7 @@ class PersonController extends Controller
             'user_id' => Auth::id(),
             'family_id' => $familyId,
         ]);
-        
+
         $person->save();
 
         return response()->json([
@@ -138,15 +137,14 @@ class PersonController extends Controller
         ]);
 
         $familyName = $request->input('family');
-        
-        if (is_array($request->family))
-        {
+
+        if (is_array($request->family)) {
             $familyName = $request->input('family')['name'];
         }
-        
+
         // Check if the family already exists
         $existingFamily = Family::where('name', $familyName)->first();
-        
+
         if ($existingFamily) {
             // If the family exists, use its ID
             $familyId = $existingFamily->id;
@@ -156,18 +154,18 @@ class PersonController extends Controller
             $newFamily->save();
             $familyId = $newFamily->id;
         }
-    
+
         $person->update([
             'name' => $request->input('name'),
             'family_id' => $familyId,
         ]);
-        
+
         $person->save();
 
         return Inertia::render('Person/PersonShow', [
             'person' => $person,
             'videos' => $person->videos,
-            'message' => ['type' => 'Success', 'text' => $person->name . ' updated successfully'],
+            'message' => ['type' => 'Success', 'text' => $person->name.' updated successfully'],
         ]);
     }
 
