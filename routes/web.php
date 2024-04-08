@@ -4,6 +4,7 @@ use App\Http\Controllers\PersonController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VideoController;
 use App\Models\Video;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -19,7 +20,11 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    return redirect()->route('login');
+    // return redirect()->route('login');
+    return Inertia::render('Welcome', [
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => phpversion(),
+    ]);
 });
 
 Route::get('/dashboard', function () {
