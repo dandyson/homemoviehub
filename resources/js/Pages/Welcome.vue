@@ -1,5 +1,5 @@
 <script setup>
-import { Head, Link } from '@inertiajs/vue3';
+import { Head } from '@inertiajs/vue3';
 import LandingNav from '@/Components/Navs/LandingNav.vue';
 import Hero from '@/Components/Landing/Hero.vue';
 import Features from '@/Components/Landing/Features.vue';
