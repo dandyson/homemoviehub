@@ -25,6 +25,7 @@ import {
     faMapLocation,
     faFaceSmileBeam,
     faIdCard,
+    faSignIn,
 } from '@fortawesome/free-solid-svg-icons'
 import VuePlyr from 'vue-plyr'
 import 'vue-plyr/dist/vue-plyr.css'
@@ -46,6 +47,7 @@ library.add(
     faMapLocation,
     faFaceSmileBeam,
     faIdCard,
+    faSignIn
 )
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
