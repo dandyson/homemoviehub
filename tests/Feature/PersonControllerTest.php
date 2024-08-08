@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
@@ -240,5 +241,56 @@ class PersonControllerTest extends TestCase
         $this->assertDatabaseMissing('people', ['id' => $person->id]);
 
         $response->assertJson(['success' => 'Person deleted successfully']);
+    }
+
+    /** @test */
+    public function handle_avatar_upload_successfully()
+    {
+        $user = User::factory()->create();
+        $person = Person::factory()->create([
+            'user_id' => $user->id,
+            'avatar_upload_count' => 0,
+        ]);
+
+        Storage::fake('s3');
+        $file = UploadedFile::fake()->image('avatar.jpg');
+
+        $response = $this->actingAs($user)->postJson(route('avatar-upload', ['person' => $person->id]), [
+            'avatar' => $file,
+        ]);
+
+        $response->assertStatus(200)
+            ->assertExactJson(['message' => 'Image uploaded successfully']);
+
+        Storage::disk('s3')->assertExists("avatars/people/{$person->id} - {$person->name}/{$file->getClientOriginalName()}");
+
+        $person->refresh();
+
+        $this->assertNotNull($person->avatar);
+        $this->assertEquals(1, $person->avatar_upload_count);
+    }
+
+    /** @test */
+    public function test_person_cannot_upload_more_than_avatar_upload_limit()
+    {
+        $user = User::factory()->create();
+        $person = Person::factory()->create([
+            'user_id' => $user->id,
+            'avatar_upload_count' => 10,
+        ]);
+
+        Storage::fake('s3');
+        $file = UploadedFile::fake()->image('avatar.jpg');
+
+        $response = $this->actingAs($user)->postJson(route('avatar-upload', ['person' => $person->id]), [
+            'avatar' => $file,
+        ]);
+
+        $response->assertStatus(400)
+            ->assertJson([
+                'message' => 'Error: Upload limit reached for this person.',
+            ]);
+
+        Storage::disk('s3')->assertMissing("avatars/people/{$person->id} - {$person->name}/{$file->getClientOriginalName()}");
     }
 }
