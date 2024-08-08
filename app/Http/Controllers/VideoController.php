@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Location;
 use App\Models\Video;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -163,28 +164,32 @@ class VideoController extends Controller
         $path = "cover-images/{$video->id} - {$video->title}";
         $name = $request->file('cover_image')->getClientOriginalName();
 
-        try {
-            $url = Storage::disk('s3')->url("{$path}/{$name}");
-            $video->cover_image = $url;
-            $video->save();
-
-            $request->file('cover_image')->storeAs(
-                $path,
-                $name,
-                's3'
-            );
-
+        DB::transaction(function () use ($video, $request, $path, $name) {
+            if ($video->cover_image_upload_count >= 10) {
+                abort(400,'Error: Upload limit reached for this video.');
+            }
+        
+            // Update the video with the new cover image URL
             $video->cover_image = Storage::disk('s3')->url("{$path}/{$name}");
             $video->save();
+        });
 
+        // Perform the actual upload
+        try {        
+            $request->file('cover_image')->storeAs($path, $name, 's3');
+
+            // Increment the upload count
+            $video->cover_image_upload_count += 1;
+            $video->save();
+        } catch (Exception $e) {
             return response()->json([
-                'message' => 'Image uploaded successfully',
+                'error' => $e->getMessage()
             ]);
-        } catch (\Exception $e) {
-            \Log::error('Error uploading cover image: '.$e->getMessage());
-
-            return response()->json(['error' => 'Internal Server Error'], 500);
         }
+
+        return response()->json([
+            'message' => 'Image uploaded successfully',
+        ]);
     }
 
     public function storeVideoLocations(Video $video, $locations): void

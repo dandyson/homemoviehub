@@ -345,5 +345,28 @@ class VideoControllerTest extends TestCase
         $video->refresh();
 
         $this->assertNotNull($video->cover_image);
+        $this->assertEquals(0, $user->cover_image_upload_count);
     }
+
+     /** @test */
+     public function test_user_cannot_upload_more_than_cover_image_upload_limit()
+     {
+        $user = User::factory()->create();
+        $video = Video::factory()->create([
+            'user_id' => $user->id,
+            'cover_image_upload_count' => 10,
+        ]);
+ 
+        Storage::fake('s3');
+        $file = UploadedFile::fake()->image('cover_image.jpg');
+
+        $response = $this->actingAs($user)->postJson(route('video.cover-image-upload', ['video' => $video]), [
+            'cover_image' => $file,
+        ]);
+
+        $response->assertStatus(400)
+            ->assertJson([
+                'message' => 'Error: Upload limit reached for this video.',
+            ]);
+     }
 }
