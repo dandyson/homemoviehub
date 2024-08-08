@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="public/assets/images/homemoviehub-logo.png" alt="HomeMovieHub Logo" width="100">
+    <img src="public/assets/images/homemoviehub-logo.png" alt="HomeMovieHub Logo" width="120">
 </div>
 
 <br>
