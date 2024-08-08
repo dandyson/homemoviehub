@@ -23,10 +23,7 @@ class ProfileController extends Controller
 
     public function handleAvatarUpload($request, $user)
     {
-        // Use the avatar service
         $this->avatarService->handleAvatarUpload($request, $user);
-
-        // Your other logic here
     }
 
     /**

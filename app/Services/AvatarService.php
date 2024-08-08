@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\File;
+use Illuminate\Support\Facades\DB;
 
 class AvatarService
 {
@@ -22,6 +23,10 @@ class AvatarService
             ],
         ]);
 
+        if ($person->avatar_upload_count >= 10) {
+            abort(400, 'Error: Upload limit reached for this person.');
+        }
+    
         if ($person instanceof User) {
             $path = "avatars/users/{$person->id} - {$person->name}";
         } elseif ($person instanceof Person) {
@@ -30,29 +35,28 @@ class AvatarService
             // Default path
             $path = "avatars/default/{$person->id}";
         }
-
+    
         $name = $request->file('avatar')->getClientOriginalName();
-
+    
         try {
-            $url = Storage::disk('s3')->url("{$path}/{$name}");
-            $person->avatar = $url;
-            $person->save();
-
             $request->file('avatar')->storeAs(
                 $path,
                 $name,
                 's3'
             );
-
-            $person->avatar = Storage::disk('s3')->url("{$path}/{$name}");
-            $person->save();
-
+    
+            DB::transaction(function () use ($person, $path, $name) {    
+                $person->avatar = Storage::disk('s3')->url("{$path}/{$name}");
+                $person->avatar_upload_count++;
+                $person->save();
+            });
+    
             return response()->json([
                 'message' => 'Image uploaded successfully',
             ]);
         } catch (\Exception $e) {
-            \Log::error('Error uploading cover image: '.$e->getMessage());
-
+            \Log::error('Error uploading cover image: ' . $e->getMessage());
+    
             return response()->json(['error' => 'Internal Server Error'], 500);
         }
     }
