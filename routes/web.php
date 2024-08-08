@@ -41,11 +41,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('video', VideoController::class)->middleware(['auth', 'verified']);
-    Route::post('video/{video}/cover-image-upload', [VideoController::class, 'handleCoverImageUpload'])->name('video.cover-image-upload');
+    Route::middleware('throttle:10,1')->post('video/{video}/cover-image-upload', [VideoController::class, 'handleCoverImageUpload'])->name('video.cover-image-upload');
 
     Route::resource('person', PersonController::class)->middleware(['auth', 'verified']);
 
-    Route::post('person/{person}/avatar-upload', [PersonController::class, 'handleAvatarUpload'])
+    Route::middleware('throttle:10,1')->post('person/{person}/avatar-upload', [PersonController::class, 'handleAvatarUpload'])
         ->name('avatar-upload');
 });
 
