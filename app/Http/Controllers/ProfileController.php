@@ -21,11 +21,6 @@ class ProfileController extends Controller
         $this->avatarService = $avatarService;
     }
 
-    public function handleAvatarUpload($request, $user)
-    {
-        $this->avatarService->handleAvatarUpload($request, $user);
-    }
-
     /**
      * Display the user's profile form.
      */
@@ -72,5 +67,10 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+    public function handleAvatarUpload($request, $user)
+    {
+        $this->avatarService->handleAvatarUpload($request, $user);
     }
 }

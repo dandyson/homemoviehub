@@ -222,7 +222,7 @@ class PersonControllerTest extends TestCase
             ->where('videos', [])
             ->where('message', [
                 'type' => 'Success',
-                'text' => $person->name.' updated successfully',
+                'text' => $person->name . ' updated successfully',
             ])
         );
     }
