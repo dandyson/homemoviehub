@@ -3,8 +3,8 @@
 namespace App\Providers;
 
 use App\Services\AvatarService;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
-use URL;
 
 class AppServiceProvider extends ServiceProvider
 {
