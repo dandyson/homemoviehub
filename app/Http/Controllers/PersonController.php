@@ -19,13 +19,6 @@ class PersonController extends Controller
         $this->avatarService = $avatarService;
     }
 
-    public function handleAvatarUpload(Request $request, $personId)
-    {
-        $person = Person::findOrFail($personId);
-
-        return $this->avatarService->handleAvatarUpload($request, $person);
-    }
-
     /**
      * Display a listing of the resource.
      */
@@ -165,7 +158,7 @@ class PersonController extends Controller
         return Inertia::render('Person/PersonShow', [
             'person' => $person,
             'videos' => $person->videos,
-            'message' => ['type' => 'Success', 'text' => $person->name.' updated successfully'],
+            'message' => ['type' => 'Success', 'text' => $person->name . ' updated successfully'],
         ]);
     }
 
@@ -183,5 +176,12 @@ class PersonController extends Controller
 
         // Optionally, you can return a response or redirect
         return response()->json(['success' => 'Person deleted successfully']);
+    }
+
+    public function handleAvatarUpload(Request $request, $personId)
+    {
+        $person = Person::findOrFail($personId);
+
+        return $this->avatarService->handleAvatarUpload($request, $person);
     }
 }

@@ -15,39 +15,9 @@ use Inertia\Inertia;
 
 class VideoController extends Controller
 {
-    public function show(Video $video)
-    {
-        // Ensure the user can only view their own video
-        if (Gate::denies('show', $video)) {
-            abort(403, 'Unauthorized action.');
-        }
-
-        $video->load('people', 'locations');
-
-        return Inertia::render('Video/VideoShow', [
-            'video' => $video,
-        ]);
-    }
-
     public function create()
     {
         return Inertia::render('Video/VideoDetails', [
-            'people' => Auth::user()->people,
-        ]);
-    }
-
-    public function edit(Video $video)
-    {
-        // Ensure the user can only edit their own video
-        if (Gate::denies('edit', $video)) {
-            abort(403, 'Unauthorized action.');
-        }
-
-        $video->load('people', 'locations');
-
-        return Inertia::render('Video/VideoDetails', [
-            'updateMode' => true,
-            'video' => $video,
             'people' => Auth::user()->people,
         ]);
     }
@@ -92,6 +62,36 @@ class VideoController extends Controller
         return response()->json([
             'video' => $video->only('id', 'title', 'description', 'youtube_url'),
             'message' => ['type' => 'Success', 'text' => 'Video created successfully'],
+        ]);
+    }
+
+    public function show(Video $video)
+    {
+        // Ensure the user can only view their own video
+        if (Gate::denies('show', $video)) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $video->load('people', 'locations');
+
+        return Inertia::render('Video/VideoShow', [
+            'video' => $video,
+        ]);
+    }
+
+    public function edit(Video $video)
+    {
+        // Ensure the user can only edit their own video
+        if (Gate::denies('edit', $video)) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $video->load('people', 'locations');
+
+        return Inertia::render('Video/VideoDetails', [
+            'updateMode' => true,
+            'video' => $video,
+            'people' => Auth::user()->people,
         ]);
     }
 
@@ -151,7 +151,7 @@ class VideoController extends Controller
         return response()->json(['success' => 'Video deleted successfully']);
     }
 
-    public function handleCoverImageUpload(Request $request, Video $video = null)
+    public function handleCoverImageUpload(Request $request, ?Video $video = null)
     {
         $request->validate([
             'cover_image' => [
@@ -182,7 +182,7 @@ class VideoController extends Controller
             });
         } catch (Exception $e) {
             return response()->json([
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
 

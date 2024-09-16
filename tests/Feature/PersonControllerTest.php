@@ -22,17 +22,30 @@ class PersonControllerTest extends TestCase
         $this->withoutExceptionHandling();
 
         $user = User::factory()->create();
-
         $person = Person::factory()->create([
             'user_id' => $user->id,
         ]);
 
+        Storage::fake('s3');
+
         $file = UploadedFile::fake()->image('avatar.jpg');
 
-        $response = $this->actingAs($user)->postJson(route('avatar-upload', $person->id), ['avatar' => $file]);
+        $response = $this->actingAs($user)->postJson(route('avatar-upload', $person->id), [
+            'avatar' => $file,
+        ]);
 
-        $response->assertStatus(200);
-        $this->assertNotNull($person->refresh()->avatar);
+        $response->assertStatus(200)
+            ->assertJson([
+                'message' => 'Image uploaded successfully',
+            ]);
+
+        // Refresh the person instance and assert avatar is not null
+        $person->refresh();
+        $this->assertNotNull($person->avatar);
+        $this->assertEquals(1, $person->avatar_upload_count);
+
+        // Assert the file exists on the fake S3 disk
+        Storage::disk('s3')->assertExists("avatars/people/{$person->id} - {$person->name}/{$file->getClientOriginalName()}");
     }
 
     /** @test */
@@ -222,7 +235,7 @@ class PersonControllerTest extends TestCase
             ->where('videos', [])
             ->where('message', [
                 'type' => 'Success',
-                'text' => $person->name.' updated successfully',
+                'text' => $person->name . ' updated successfully',
             ])
         );
     }

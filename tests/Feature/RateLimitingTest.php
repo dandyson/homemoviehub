@@ -5,12 +5,10 @@ namespace Tests\Feature;
 use App\Models\Person;
 use App\Models\User;
 use App\Models\Video;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-
 
 class RateLimitingTest extends TestCase
 {
