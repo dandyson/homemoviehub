@@ -21,7 +21,7 @@ class RegisteredUserController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Auth/Register', ['env' =>  env('APP_ENV')]);
+        return Inertia::render('Auth/Register', ['env' => config('app.env')]);
     }
 
     /**
