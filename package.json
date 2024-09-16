@@ -1,4 +1,13 @@
 {
+    "name": "homemoviehub",
+    "version": "0.0.1",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/dandyson/homemoviehub.git"
+    },
+    "author": {
+        "name": "Dan Dyson"
+    },
     "private": true,
     "type": "module",
     "scripts": {
