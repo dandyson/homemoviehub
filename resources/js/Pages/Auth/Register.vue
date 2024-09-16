@@ -8,6 +8,10 @@ import { Head, Link, useForm } from '@inertiajs/vue3';
 import Swal from "sweetalert2";
 import { onMounted } from 'vue';
 
+const props = defineProps({
+  env: String
+});
+
 const form = useForm({
     name: '',
     email: '',
@@ -20,26 +24,35 @@ const submit = () => {
     // form.post(route('register'), {
     //     onFinish: () => form.reset('password', 'password_confirmation'),
     // });
+    if (props.env === 'local') {
+        form.post(route('register'), {
+            onFinish: () => form.reset('password', 'password_confirmation'),
+        });
+    } else {
+        Swal.fire({
+            icon: 'error',
+            title: 'This is a demo app only',
+            html: 'Please contact us at <a href="mailto:dannydyson297@gmail.com">dannydyson297@gmail.com</a> with your email address.<br><br>' +
+                'Once we have added you to our email service, you will be able to register for an account<br><br>' +
+                'Thank you for your interest!',
+            showConfirmButton: true,
+        });
+    }
+};
+
+onMounted(() => {
+  // TODO: This is all working, but need to get a good privacy policy and TOCs before allowing users to join
+  if (props.env !== 'local') {
     Swal.fire({
-        icon: 'error',
-        title: 'This is a demo app only',
-        html: 'Please contact us at <a href="mailto:dannydyson297@gmail.com">dannydyson297@gmail.com</a> with your email address.<br><br>' +
+        icon: 'warning',
+        title: 'Demo Notice',
+        html: 'This is a <strong>demo</strong> version of our app, so trying to sign up here will throw an error.<br><br>' +
+            'To sign up and access the service, please contact us at <a href="mailto:dannydyson297@gmail.com">dannydyson297@gmail.com</a> with your email address.<br><br>' +
             'Once we have added you to our email service, you will be able to register for an account<br><br>' +
             'Thank you for your interest!',
         showConfirmButton: true,
     });
-};
-
-onMounted(() => {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Demo Notice',
-    html: 'This is a <strong>demo</strong> version of our app, so trying to sign up here will throw an error.<br><br>' +
-          'To sign up and access the service, please contact us at <a href="mailto:dannydyson297@gmail.com">dannydyson297@gmail.com</a> with your email address.<br><br>' +
-          'Once we have added you to our email service, you will be able to register for an account<br><br>' +
-          'Thank you for your interest!',
-    showConfirmButton: true,
-  });
+  }
 });
 </script>
 
@@ -52,8 +65,7 @@ onMounted(() => {
                 <InputLabel for="name" value="Name" />
 
                 <TextInput
-                    disabled
-                    id="name"
+                    :disabled="props.env !== 'local'"
                     type="text"
                     class="mt-1 block w-full"
                     v-model="form.name"
@@ -69,7 +81,7 @@ onMounted(() => {
                 <InputLabel for="email" value="Email" />
 
                 <TextInput
-                    disabled
+                    :disabled="props.env !== 'local'"
                     id="email"
                     type="email"
                     class="mt-1 block w-full"
@@ -85,7 +97,7 @@ onMounted(() => {
                 <InputLabel for="password" value="Password" />
 
                 <TextInput
-                    disabled
+                    :disabled="props.env !== 'local'"
                     id="password"
                     type="password"
                     class="mt-1 block w-full"
@@ -101,7 +113,7 @@ onMounted(() => {
                 <InputLabel for="password_confirmation" value="Confirm Password" />
 
                 <TextInput
-                    disabled
+                    :disabled="props.env !== 'local'"
                     id="password_confirmation"
                     type="password"
                     class="mt-1 block w-full"
@@ -121,7 +133,7 @@ onMounted(() => {
                     Already registered?
                 </Link>
 
-                <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing && props.env !== 'local'">
                     Register
                 </PrimaryButton>
             </div>
