@@ -16,11 +16,20 @@
                     <InputError class="mt-2" :message="form.errors.name" />
                 </div>
 
-                
+
                 <div class="mb-4">
                     <InputLabel for="family" value="Family" />
-                    <DropdownForm label="Choose Family" id="family" :families="families" v-model="form.family.name" @update:modelValue="handleFamilyUpdate" required autofocus
-                        autocomplete="family"></DropdownForm>
+                    <DropdownForm
+                        label="Choose Family"
+                        id="family"
+                        :families="families"
+                        v-model="form.family"
+                        @update:modelValue="handleFamilyUpdate"
+                        required
+                        autofocus
+                        autocomplete="family"
+                    >
+                    </DropdownForm>
                 </div>
 
                 <div class="mt-4">
@@ -122,7 +131,7 @@ const submit = async () => {
      * STORE: I use axios to send the formData and get the new person.id and the success message and assign these to new variables. Then, I only send a request
      * to the uploadImnage route of the avatarImage is actually there and not default. Otherwise it will just get the defaultImage URL and store that in the db
      * as the cover imgae
-     * 
+     *
      * Need to come back to this once I have worked out how to send form data with the image and parsed with Laravel successfully, then we can really make this code cleaner and shorter!
     */
 
@@ -223,5 +232,4 @@ const submit = async () => {
 };
 
 </script>
-  
-  
+
