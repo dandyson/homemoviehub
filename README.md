@@ -140,7 +140,17 @@ CONNECTION TYPE: TCP/IP
 
 <br>
 
-## Step 7: Build and Serve the Frontend
+## Step 7: Create Symbolic Link for Storage:
+
+This command creates a symbolic link from public/storage to storage/app/public so that files stored in storage/app/public can be publicly accessed, allowing upload images to store properly:
+
+```bash
+./vendor/bin/sail artisan storage:link
+```
+
+<br>
+
+## Step 8: Build and Serve the Frontend
 To build and serve the frontend assets using Vite, run:
 ```bash
 ./vendor/bin/sail npm run dev
@@ -148,7 +158,7 @@ To build and serve the frontend assets using Vite, run:
 This command starts a development server that serves your frontend assets and automatically refreshes the browser on changes.
 <br>
 
-## Step 8: Access the Application
+## Step 9: Access the Application
 Once everything is set up, you can access the application by visiting http://localhost in your web browser.
 
 Visit http://localhost/register to create a new local user and access the app - enjoy!
