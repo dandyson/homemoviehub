@@ -104,7 +104,7 @@ class VideoControllerTest extends TestCase
         $data = [
             'title' => 'Christmas 1990',
             'description' => 'Christmas with the family',
-            'youtube_url' => 'HUWqeq_H9mc',
+            'youtube_url' => 'g-LHZL0pnLw',
             'featured_people' => $people->toArray(),
             'locations' => $locations->toArray(),
             'cover_image' => 'default_cover_image',
@@ -131,7 +131,7 @@ class VideoControllerTest extends TestCase
         $this->assertDatabaseHas('videos', [
             'title' => 'Christmas 1990',
             'description' => 'Christmas with the family',
-            'youtube_url' => 'HUWqeq_H9mc',
+            'youtube_url' => 'g-LHZL0pnLw',
             'user_id' => $user->id,
         ]);
 
