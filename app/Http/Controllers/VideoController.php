@@ -167,14 +167,18 @@ class VideoController extends Controller
 
         $path = "cover-images/{$video->id} - {$video->title}";
         $name = $request->file('cover_image')->getClientOriginalName();
+        $disk = config('filesystems.default');
+
+        // Use public disk on local
+        $storageDisk = $disk === 'local' ? 'public' : 's3';
 
         try {
-            DB::transaction(function () use ($request, $video, $path, $name) {
+            DB::transaction(function () use ($request, $video, $path, $name, $storageDisk) {
                 // Perform the actual upload
-                $request->file('cover_image')->storeAs($path, $name, 's3');
+                $request->file('cover_image')->storeAs($path, $name, $storageDisk);
 
                 // Update the video with the new cover image URL
-                $video->cover_image = Storage::disk('s3')->url("{$path}/{$name}");
+                $video->cover_image = Storage::disk($storageDisk)->url("{$path}/{$name}");
 
                 // Increment the upload count
                 $video->cover_image_upload_count += 1;

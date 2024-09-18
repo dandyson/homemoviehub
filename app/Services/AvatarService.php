@@ -40,15 +40,18 @@ class AvatarService
 
         $name = $request->file('avatar')->getClientOriginalName();
 
+        // Determine the storage disk based on environment
+        $storageDisk = config('filesystems.default') === 'local' ? 'public' : 's3';
+
         try {
             $request->file('avatar')->storeAs(
                 $path,
                 $name,
-                's3'
+                $storageDisk
             );
 
-            DB::transaction(function () use ($person, $path, $name) {
-                $person->avatar = Storage::disk('s3')->url("{$path}/{$name}");
+            DB::transaction(function () use ($person, $path, $name, $storageDisk) {
+                $person->avatar = Storage::disk($storageDisk)->url("{$path}/{$name}");
                 $person->avatar_upload_count++;
                 $person->save();
             });
@@ -57,7 +60,7 @@ class AvatarService
                 'message' => 'Image uploaded successfully',
             ]);
         } catch (Exception $e) {
-            Log::error('Error uploading cover image: ' . $e->getMessage());
+            Log::error('Error uploading avatar image: ' . $e->getMessage());
 
             return response()->json(['error' => 'Internal Server Error'], 500);
         }
