@@ -28,7 +28,7 @@
                 <div class="mt-4">
                     <InputLabel for="youtube_url" value="YouTube Video Id" />
                     <p class="my-2 text-xs text-white italic">This will be the bundle of letters & numbers at the end of the
-                        link <br>e.g the 'HUWqeq_H9mc' in https://www.youtube.com/watch?v=HUWqeq_H9mc</p>
+                        link <br>e.g the 'g-LHZL0pnLw' in https://www.youtube.com/watch?v=g-LHZL0pnLw</p>
 
                     <TextInput id="youtube_url" type="text" class="mt-1 block w-full" v-model="form.youtube_url" required
                         autofocus autocomplete="youtube_url" />
@@ -48,9 +48,9 @@
                     <InputLabel for="featured_people" value="Featured People" />
 
                     <div v-if="people && people.length > 0" class="flex flex-wrap justify-start align-center">
-                        <a 
-                            v-for="(person, index) in people" 
-                            :key="index" 
+                        <a
+                            v-for="(person, index) in people"
+                            :key="index"
                             class="cursor-pointer w-64 bg-[#20354b] hover:bg-indigo-600 hover:border-blue-600 hover:border rounded-2xl px-8 py-6 shadow-lg me-4 my-4 transition-all relative group overflow-hidden"
                             :class="{ 'bg-green-600': selectedPeople.some(user => user.id === person.id) }"
                             @click="togglePersonSelection(person)"
@@ -82,19 +82,19 @@
                 <p class="bold italic text-white my-2">Start entering the location in the field:</p>
 
                 <div class="my-4">
-                    <vue-google-autocomplete 
+                    <vue-google-autocomplete
                         @keydown.enter.prevent
                         :types="['(cities)']"
-                        id="map" 
-                        classname="rounded w-full form-control" 
-                        placeholder="Start typing" 
+                        id="map"
+                        classname="rounded w-full form-control"
+                        placeholder="Start typing"
                         v-on:placechanged="getAddressData"
                     >
                     </vue-google-autocomplete>
                 </div>
 
                 <GoogleMap :markers="locations"></GoogleMap>
-                
+
                 <div v-if="locations.length > 0" class="flex flex-wrap my-2">
                     <h2 class="text-2xl mt-10 text-white mb-2">Location list:</h2>
                     <div v-for="(location, index) in locations" :key="index" class="flex flex-col md:flex-row md:justify-between md:items-center my-5 text-white cursor-pointer w-full bg-[#20354b] hover:bg-indigo-600 hover:border-blue-600 hover:border rounded-2xl px-8 py-6 shadow-lg me-4 my-4 transition-all relative group overflow-hidden">
@@ -288,7 +288,7 @@ const submit = async () => {
      * STORE: I use axios to send the formData and get the new video.id and the success message and assign these to new variables. Then, I only send a request
      * to the uploadImnage route of the coverimage is actually there and not default. Otherwise it will just get the defaultImage URL and store that in the db
      * as the cover imgae
-     * 
+     *
      * Need to come back to this once I have worked out how to send form data with the image and parsed with Laravel successfully, then we can really make this code cleaner and shorter!
     */
 
@@ -343,7 +343,7 @@ const submit = async () => {
             const response = await axios.post(route('video.store', requestData));
             videoId = response.data.video.id;
             message = response.data.message;
-            
+
             if (coverImage.value !== '') {
                 const formData = new FormData();
                 formData.append('cover_image', coverImage);
@@ -388,5 +388,4 @@ const submit = async () => {
 };
 
 </script>
-  
-  
+
