@@ -45,9 +45,9 @@ const props = defineProps({
     required: false,
   },
   modelValue: {
-    type: [String, Object], // Allow both String and Object types
+    type: [String, Object],
     required: true,
-    default: null, // Set a default value (you can adjust this based on your use case)
+    default: null,
   },
 });
 
