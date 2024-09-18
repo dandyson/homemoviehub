@@ -323,14 +323,20 @@ class VideoControllerTest extends TestCase
     }
 
     /** @test */
-    public function handle_cover_image_upload_successfully()
+    public function user_can_upload_avatar_to_local_and_not_s3_storage()
     {
+        // Mock storage
+        Storage::fake('public');
+        Storage::fake('s3');
+
+        // Simulate local environment
+        config(['filesystems.default' => 'local']);
+
         $user = User::factory()->create();
         $video = Video::factory()->create([
             'user_id' => $user->id,
         ]);
 
-        Storage::fake('s3');
         $file = UploadedFile::fake()->image('cover_image.jpg');
 
         $response = $this->actingAs($user)->postJson(route('video.cover-image-upload', ['video' => $video]), [
@@ -338,14 +344,54 @@ class VideoControllerTest extends TestCase
         ]);
 
         $response->assertStatus(200)
-            ->assertExactJson(['message' => 'Image uploaded successfully']);
-
-        Storage::disk('s3')->assertExists("cover-images/{$video->id} - {$video->title}/{$file->getClientOriginalName()}");
+            ->assertJson([
+                'message' => 'Image uploaded successfully',
+            ]);
 
         $video->refresh();
-
         $this->assertNotNull($video->cover_image);
-        $this->assertEquals(0, $user->cover_image_upload_count);
+        $this->assertEquals(1, $video->cover_image_upload_count);
+
+        $coverImagePath = "cover-images/{$video->id} - {$video->title}/{$file->getClientOriginalName()}";
+        Storage::disk('public')->assertExists($coverImagePath);
+        Storage::disk('s3')->assertMissing($coverImagePath);
+    }
+
+    /**
+     * @test
+     */
+    public function user_can_upload_avatar_to_s3_and_not_local_storage()
+    {
+        Storage::fake('s3');
+        Storage::fake('public');
+
+        $user = User::factory()->create();
+        $video = Video::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        // Set environment to production (simulation)
+        config(['filesystems.default' => 's3']);
+        $this->withoutExceptionHandling();
+
+        $file = UploadedFile::fake()->image('cover_image.jpg');
+
+        $response = $this->actingAs($user)->postJson(route('video.cover-image-upload', ['video' => $video]), [
+            'cover_image' => $file,
+        ]);
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'message' => 'Image uploaded successfully',
+            ]);
+
+        $video->refresh();
+        $this->assertNotNull($video->cover_image);
+        $this->assertEquals(1, $video->cover_image_upload_count);
+
+        $coverImagePath = "cover-images/{$video->id} - {$video->title}/{$file->getClientOriginalName()}";
+        Storage::disk('s3')->assertExists($coverImagePath);
+        Storage::disk('public')->assertMissing($coverImagePath);
     }
 
     /** @test */
