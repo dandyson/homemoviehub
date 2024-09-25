@@ -1,13 +1,13 @@
 <template>
     <Head title="View" />
     <AuthenticatedLayout>
-        
+
         <div class="flex flex-col items-center justify-center">
             <h2
                 class="mt-14 font-semibold text-4xl md:text-6xl text-gray-800 dark:text-gray-200 leading-tight font-bebas tracking-wider text-center">
                 <span>{{ person.name }} {{ person.family }}</span>
             </h2>
-            
+
             <img :src="person.avatar !== null ? person.avatar : 'https://cdn.pixabay.com/photo/2021/12/17/08/27/silhouette-6875954_1280.png'" class="mt-6 w-48 h-48 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500" alt="avatar">
             <div class="flex justify-center mx-6">
                 <button type="button" @click="goBack" class="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 mt-8">
@@ -62,7 +62,6 @@ const props = defineProps({
 
 onMounted(() => {
   if (Object.values(props.message).length > 0) {
-    console.log(props.message);
     Swal.fire({
       title: props.message?.type,
       text: props.message?.text,
@@ -83,5 +82,4 @@ const goBack = () => {
     router.visit(previousUrl.value, { preserveState: true });
 }
 </script>
-  
-  
+

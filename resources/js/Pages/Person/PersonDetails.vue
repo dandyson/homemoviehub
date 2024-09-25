@@ -167,7 +167,6 @@ const submit = async () => {
             }
 
         } catch (error) {
-            console.log({ error });
             Swal.fire({
                 title: "Error",
                 text: `There was an issue: (${error?.response?.data?.message ? error.response.data.message : 'please try again'})`,
@@ -198,11 +197,7 @@ const submit = async () => {
                     headers: {
                         "Content-Type": "multipart/form-data",
                     },
-                }).then((res) => {
-                    console.log(res);
-                }).catch((err) => {
-                    console.log(err);
-                });
+                }).then((res) => {});
             }
 
             Swal.fire({
@@ -217,7 +212,6 @@ const submit = async () => {
             });
 
         } catch (error) {
-            console.log({ error });
             Swal.fire({
                 title: "Error",
                 text: `There was an issue: (${error?.response?.data?.message ? error.response.data.message : 'please try again'})`,
