@@ -53,9 +53,7 @@ const onFileChange = (e) => {
       emit('imageChanged', file);
     };
 
-    reader.readAsDataURL(file);
-
-    console.log(invalidFile.value);
+    reader.readAsDataURL(file);;
 
     if (invalidFile.value) {
       emit('invalidFile', true);

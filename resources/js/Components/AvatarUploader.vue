@@ -55,8 +55,6 @@ const onFileChange = (e) => {
 
     reader.readAsDataURL(file);
 
-    console.log(invalidFile.value);
-
     if (invalidFile.value) {
       emit('invalidFile', true);
     } else {
