@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Video extends Model
 {
@@ -28,8 +29,8 @@ class Video extends Model
     /**
      * Get the locations associated with the video.
      */
-    public function locations()
+    public function locations(): HasMany
     {
-        return $this->belongsToMany(Location::class);
+        return $this->hasMany(Location::class);
     }
 }
