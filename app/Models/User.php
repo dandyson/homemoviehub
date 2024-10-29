@@ -34,7 +34,7 @@ class User extends Model implements
     ];
 
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'email_verified' => 'boolean',
     ];
 
     public function families(): HasMany
