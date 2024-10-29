@@ -1,5 +1,7 @@
 <?php
 
+use Auth0\Laravel\Contract\Auth\User\Repository;
+
 return [
 
     /*
@@ -40,6 +42,16 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'auth0-session' => [
+            'driver' => 'auth0.authenticator',
+            'provider' => 'auth0-provider',
+            'configuration' => 'web',
+        ],
+        'auth0-api' => [
+            'driver' => 'auth0.authorizer',
+            'provider' => 'auth0-provider',
+            'configuration' => 'api',
+        ],
     ],
 
     /*
@@ -63,6 +75,10 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
+        ],
+        'auth0-provider' => [
+            'driver' => 'auth0.provider',
+            'repository' => \App\Repositories\UserRepository::class,
         ],
 
         // 'users' => [
