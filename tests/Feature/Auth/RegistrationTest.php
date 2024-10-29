@@ -11,28 +11,33 @@ class RegistrationTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * @test
-     */
-    public function registration_screen_can_be_rendered(): void
-    {
-        $response = $this->get('/register');
-
-        $response->assertStatus(200);
-    }
+     * TODO: Auth0 handles authentication now, and because this is currently a portfolio app, registering new users has been disabled for security purposes.
+     *
+     * */
 
     /**
      * @test
      */
-    public function new_users_can_register(): void
-    {
-        $response = $this->post('/register', [
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
-        ]);
+    // public function registration_screen_can_be_rendered(): void
+    // {
+    //     $response = $this->get('/register');
 
-        $this->assertAuthenticated();
-        $response->assertRedirect(RouteServiceProvider::HOME);
-    }
+    //     $response->assertStatus(200);
+    // }
+
+    /**
+     * @test
+     */
+    // public function new_users_can_register(): void
+    // {
+    //     $response = $this->post('/register', [
+    //         'name' => 'Test User',
+    //         'email' => 'test@example.com',
+    //         'password' => 'password',
+    //         'password_confirmation' => 'password',
+    //     ]);
+
+    //     $this->assertAuthenticated();
+    //     $response->assertRedirect(RouteServiceProvider::HOME);
+    // }
 }

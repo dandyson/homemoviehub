@@ -17,7 +17,10 @@ class RateLimitingTest extends TestCase
     /** @test */
     public function person_avatar_upload_route_allows_requests_within_rate_limit()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) \Str::uuid()
+        ]);
         $person = Person::factory()->create([
             'user_id' => $user->id,
             'avatar_upload_count' => 0,
@@ -28,7 +31,7 @@ class RateLimitingTest extends TestCase
 
         // Perform requests within the rate limit
         for ($i = 0; $i < 10; $i++) {
-            $response = $this->actingAs($user)->postJson(route('avatar-upload', ['person' => $person->id]), [
+            $response = $this->actingAs($user, 'auth0-session')->postJson(route('avatar-upload', ['person' => $person->id]), [
                 'avatar' => $file,
             ]);
 
@@ -39,7 +42,10 @@ class RateLimitingTest extends TestCase
     /** @test */
     public function person_avatar_upload_route_blocks_requests_exceeding_rate_limit()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) \Str::uuid()
+        ]);
         $person = Person::factory()->create([
             'user_id' => $user->id,
             'avatar_upload_count' => 0,
@@ -50,7 +56,7 @@ class RateLimitingTest extends TestCase
 
         // Perform requests within the rate limit
         for ($i = 0; $i < 10; $i++) {
-            $response = $this->actingAs($user)->postJson(route('avatar-upload', ['person' => $person->id]), [
+            $response = $this->actingAs($user, 'auth0-session')->postJson(route('avatar-upload', ['person' => $person->id]), [
                 'avatar' => $file,
             ]);
 
@@ -58,7 +64,7 @@ class RateLimitingTest extends TestCase
         }
 
         // Try one more request which should be rate limited
-        $response = $this->actingAs($user)->postJson(route('avatar-upload', ['person' => $person->id]), [
+        $response = $this->actingAs($user, 'auth0-session')->postJson(route('avatar-upload', ['person' => $person->id]), [
             'avatar' => $file,
         ]);
 
@@ -68,7 +74,10 @@ class RateLimitingTest extends TestCase
     /** @test */
     public function video_cover_image_upload_route_allows_requests_within_rate_limit()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) \Str::uuid()
+        ]);
         $video = Video::factory()->create([
             'user_id' => $user->id,
         ]);
@@ -78,7 +87,7 @@ class RateLimitingTest extends TestCase
 
         // Perform requests within the rate limit
         for ($i = 0; $i < 10; $i++) {
-            $response = $this->actingAs($user)->postJson(route('video.cover-image-upload', ['video' => $video]), [
+            $response = $this->actingAs($user, 'auth0-session')->postJson(route('video.cover-image-upload', ['video' => $video]), [
                 'cover_image' => $file,
             ]);
 
@@ -89,7 +98,10 @@ class RateLimitingTest extends TestCase
     /** @test */
     public function video_cover_image_upload_route_blocks_requests_exceeding_rate_limit()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) \Str::uuid()
+        ]);
         $video = Video::factory()->create([
             'user_id' => $user->id,
         ]);
@@ -99,13 +111,13 @@ class RateLimitingTest extends TestCase
 
         // Perform requests within the rate limit
         for ($i = 0; $i < 10; $i++) {
-            $this->actingAs($user)->postJson(route('video.cover-image-upload', ['video' => $video]), [
+            $this->actingAs($user, 'auth0-session')->postJson(route('video.cover-image-upload', ['video' => $video]), [
                 'cover_image' => $file,
             ]);
         }
 
         // Try one more request which should be rate limited
-        $response = $this->actingAs($user)->postJson(route('video.cover-image-upload', ['video' => $video]), [
+        $response = $this->actingAs($user, 'auth0-session')->postJson(route('video.cover-image-upload', ['video' => $video]), [
             'cover_image' => $file,
         ]);
 

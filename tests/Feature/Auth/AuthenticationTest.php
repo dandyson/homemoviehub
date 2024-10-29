@@ -7,7 +7,6 @@ use App\Models\Video;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
-use Str;
 use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
@@ -37,7 +36,7 @@ class AuthenticationTest extends TestCase
     {
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) Str::uuid()
+            'auth0' => (string) \Str::uuid()
         ]);
 
         // auth-session guard needed to authenticate the user properly
@@ -50,7 +49,7 @@ class AuthenticationTest extends TestCase
     {
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) Str::uuid()
+            'auth0' => (string) \Str::uuid()
         ]);
         $videos = Video::factory()->count(3)->create(['user_id' => $user->id]);
 
@@ -65,7 +64,7 @@ class AuthenticationTest extends TestCase
     {
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) Str::uuid()
+            'auth0' => (string) \Str::uuid()
         ]);
         $response = $this->actingAs($user, 'auth0-session')->get('/video/create');
 
@@ -76,7 +75,7 @@ class AuthenticationTest extends TestCase
     {
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) Str::uuid()
+            'auth0' => (string) \Str::uuid()
         ]);
 
         $response = $this->actingAs($user, 'auth0-session')->get('/person/create');

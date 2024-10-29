@@ -14,7 +14,10 @@ class FamilyTest extends TestCase
     /** @test */
     public function test_family_has_a_user_relationship()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) \Str::uuid()
+        ]);
 
         $family = Family::factory()->create(['user_id' => $user->id]);
 
@@ -25,7 +28,10 @@ class FamilyTest extends TestCase
     /** @test */
     public function test_family_can_be_filled_with_mass_assignment()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) \Str::uuid()
+        ]);
 
         $family = Family::create([
             'name' => 'Smith Family',
