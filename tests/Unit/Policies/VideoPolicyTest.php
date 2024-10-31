@@ -17,10 +17,13 @@ class VideoPolicyTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->videoPolicy = new VideoPolicy();
+        $this->videoPolicy = new VideoPolicy;
     }
 
-    public function test_user_can_show_own_video()
+    /**
+     * @test
+     */
+    public function user_can_show_own_video()
     {
         $user = User::factory()->create();
         $video = Video::factory()->create(['user_id' => $user->id]);
@@ -30,7 +33,10 @@ class VideoPolicyTest extends TestCase
         $this->assertTrue($canShow);
     }
 
-    public function test_user_cannot_show_another_users_video()
+    /**
+     * @test
+     */
+    public function user_cannot_show_another_users_video()
     {
         $user = User::factory()->create();
         $anotherUser = User::factory()->create();
@@ -41,7 +47,10 @@ class VideoPolicyTest extends TestCase
         $this->assertFalse($canShow);
     }
 
-    public function test_user_can_edit_own_video()
+    /**
+     * @test
+     */
+    public function user_can_edit_own_video()
     {
         $user = User::factory()->create();
         $video = Video::factory()->create(['user_id' => $user->id]);
@@ -51,7 +60,10 @@ class VideoPolicyTest extends TestCase
         $this->assertTrue($canEdit);
     }
 
-    public function test_user_cannot_edit_another_users_video()
+    /**
+     * @test
+     */
+    public function user_cannot_edit_another_users_video()
     {
         $user = User::factory()->create();
         $anotherUser = User::factory()->create();
@@ -62,7 +74,10 @@ class VideoPolicyTest extends TestCase
         $this->assertFalse($canEdit);
     }
 
-    public function test_user_can_update_own_video()
+    /**
+     * @test
+     */
+    public function user_can_update_own_video()
     {
         $user = User::factory()->create();
         $video = Video::factory()->create(['user_id' => $user->id]);
@@ -72,7 +87,10 @@ class VideoPolicyTest extends TestCase
         $this->assertTrue($canUpdate);
     }
 
-    public function test_user_cannot_update_another_users_video()
+    /**
+     * @test
+     */
+    public function user_cannot_update_another_users_video()
     {
         $user = User::factory()->create();
         $anotherUser = User::factory()->create();
@@ -83,7 +101,10 @@ class VideoPolicyTest extends TestCase
         $this->assertFalse($canUpdate);
     }
 
-    public function test_user_can_destroy_own_video()
+    /**
+     * @test
+     */
+    public function user_can_destroy_own_video()
     {
         $user = User::factory()->create();
         $video = Video::factory()->create(['user_id' => $user->id]);
@@ -93,7 +114,10 @@ class VideoPolicyTest extends TestCase
         $this->assertTrue($canDestroy);
     }
 
-    public function test_user_cannot_destroy_another_users_video()
+    /**
+     * @test
+     */
+    public function user_cannot_destroy_another_users_video()
     {
         $user = User::factory()->create();
         $anotherUser = User::factory()->create();

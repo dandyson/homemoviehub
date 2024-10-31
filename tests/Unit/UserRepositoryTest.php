@@ -4,8 +4,8 @@ namespace Tests\Unit;
 
 use App\Models\User;
 use App\Repositories\UserRepository;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Tests\TestCase;
 
 class UserRepositoryTest extends TestCase
@@ -17,12 +17,15 @@ class UserRepositoryTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->userRepository = new UserRepository();
+        $this->userRepository = new UserRepository;
         // Clear cache before each test to ensure fromSession and fromAccessToken methods are executed.
         Cache::flush();
     }
 
-    public function test_from_access_token_retrieves_user_directly()
+    /**
+     * @test
+     */
+    public function from_access_token_retrieves_user_directly()
     {
         $user = User::factory()->create(['auth0' => 'auth0|123456']);
 
@@ -31,14 +34,20 @@ class UserRepositoryTest extends TestCase
         $this->assertEquals($user->id, $result->id);
     }
 
-    public function test_from_access_token_returns_null_when_identifier_is_missing()
+    /**
+     * @test
+     */
+    public function from_access_token_returns_null_when_identifier_is_missing()
     {
         $result = $this->userRepository->fromAccessToken([]);
 
         $this->assertNull($result);
     }
 
-    public function test_from_session_creates_user_directly()
+    /**
+     * @test
+     */
+    public function from_session_creates_user_directly()
     {
         $userData = [
             'sub' => 'auth0|123456',
@@ -53,7 +62,10 @@ class UserRepositoryTest extends TestCase
         $this->assertEquals($userData['email'], $result->email);
     }
 
-    public function test_from_session_updates_existing_user()
+    /**
+     * @test
+     */
+    public function from_session_updates_existing_user()
     {
         $existingUser = User::factory()->create([
             'auth0' => 'auth0|123456',
@@ -77,7 +89,10 @@ class UserRepositoryTest extends TestCase
         $this->assertDatabaseHas('users', ['email_verified' => true]);
     }
 
-    public function test_from_session_returns_cached_user()
+    /**
+     * @test
+     */
+    public function from_session_returns_cached_user()
     {
         $userData = [
             'sub' => 'auth0|123456',
@@ -97,7 +112,10 @@ class UserRepositoryTest extends TestCase
         $this->assertEquals('Cached User', $result->name);
     }
 
-    public function test_from_session_creates_user_when_none_found()
+    /**
+     * @test
+     */
+    public function from_session_creates_user_when_none_found()
     {
         $userData = [
             'sub' => 'auth0|654321',
@@ -112,7 +130,10 @@ class UserRepositoryTest extends TestCase
         $this->assertEquals($userData['email'], $result->email);
     }
 
-    public function test_cache_behavior_directly()
+    /**
+     * @test
+     */
+    public function cache_behavior_directly()
     {
         $userData = [
             'sub' => 'auth0|123456',

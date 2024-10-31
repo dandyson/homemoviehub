@@ -8,6 +8,7 @@ use App\Models\Video;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Str;
 use Tests\TestCase;
 
 class RateLimitingTest extends TestCase
@@ -19,7 +20,7 @@ class RateLimitingTest extends TestCase
     {
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) \Str::uuid()
+            'auth0' => (string) Str::uuid(),
         ]);
         $person = Person::factory()->create([
             'user_id' => $user->id,
@@ -44,7 +45,7 @@ class RateLimitingTest extends TestCase
     {
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) \Str::uuid()
+            'auth0' => (string) Str::uuid(),
         ]);
         $person = Person::factory()->create([
             'user_id' => $user->id,
@@ -76,7 +77,7 @@ class RateLimitingTest extends TestCase
     {
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) \Str::uuid()
+            'auth0' => (string) Str::uuid(),
         ]);
         $video = Video::factory()->create([
             'user_id' => $user->id,
@@ -100,7 +101,7 @@ class RateLimitingTest extends TestCase
     {
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) \Str::uuid()
+            'auth0' => (string) Str::uuid(),
         ]);
         $video = Video::factory()->create([
             'user_id' => $user->id,

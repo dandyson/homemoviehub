@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use App\Models\Family;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Str;
 use Tests\TestCase;
 
 class FamilyTest extends TestCase
@@ -16,7 +17,7 @@ class FamilyTest extends TestCase
     {
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) \Str::uuid()
+            'auth0' => (string) Str::uuid(),
         ]);
 
         $family = Family::factory()->create(['user_id' => $user->id]);
@@ -30,7 +31,7 @@ class FamilyTest extends TestCase
     {
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) \Str::uuid()
+            'auth0' => (string) Str::uuid(),
         ]);
 
         $family = Family::create([

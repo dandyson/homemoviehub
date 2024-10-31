@@ -4,8 +4,8 @@ namespace Tests\Unit;
 
 use App\Models\Family;
 use App\Models\Person;
-use App\Models\Video;
 use App\Models\User;
+use App\Models\Video;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

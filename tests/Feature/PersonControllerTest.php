@@ -10,6 +10,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Testing\AssertableInertia as Assert;
+use Str;
 use Tests\TestCase;
 
 class PersonControllerTest extends TestCase
@@ -29,7 +30,7 @@ class PersonControllerTest extends TestCase
 
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) \Str::uuid()
+            'auth0' => (string) Str::uuid(),
         ]);
         $person = Person::factory()->create([
             'user_id' => $user->id,
@@ -65,7 +66,7 @@ class PersonControllerTest extends TestCase
 
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) \Str::uuid()
+            'auth0' => (string) Str::uuid(),
         ]);
         $person = Person::factory()->create([
             'user_id' => $user->id,
@@ -100,7 +101,7 @@ class PersonControllerTest extends TestCase
     {
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) \Str::uuid()
+            'auth0' => (string) Str::uuid(),
         ]);
 
         $people = Person::factory()->count(3)->create([
@@ -123,7 +124,7 @@ class PersonControllerTest extends TestCase
     {
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) \Str::uuid()
+            'auth0' => (string) Str::uuid(),
         ]);
 
         $families = Family::factory()->count(3)->create([
@@ -149,7 +150,7 @@ class PersonControllerTest extends TestCase
     {
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) \Str::uuid()
+            'auth0' => (string) Str::uuid(),
         ]);
         $family = Family::factory()->create([
             'name' => 'Doe',
@@ -178,7 +179,7 @@ class PersonControllerTest extends TestCase
     {
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) \Str::uuid()
+            'auth0' => (string) Str::uuid(),
         ]);
         $family = Family::factory()->create([
             'name' => 'Doe',
@@ -214,7 +215,7 @@ class PersonControllerTest extends TestCase
     {
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) \Str::uuid()
+            'auth0' => (string) Str::uuid(),
         ]);
         $person = Person::factory()->create([
             'user_id' => $user->id,
@@ -265,7 +266,7 @@ class PersonControllerTest extends TestCase
     {
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) \Str::uuid()
+            'auth0' => (string) Str::uuid(),
         ]);
 
         $person = Person::factory()->create([
@@ -310,7 +311,7 @@ class PersonControllerTest extends TestCase
     {
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) \Str::uuid()
+            'auth0' => (string) Str::uuid(),
         ]);
         $person = Person::factory()->create([
             'user_id' => $user->id,
@@ -329,7 +330,7 @@ class PersonControllerTest extends TestCase
     {
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) \Str::uuid()
+            'auth0' => (string) Str::uuid(),
         ]);
         $person = Person::factory()->create([
             'user_id' => $user->id,

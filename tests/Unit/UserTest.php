@@ -2,11 +2,12 @@
 
 namespace Tests\Unit;
 
-use App\Models\User;
 use App\Models\Family;
-use App\Models\Video;
 use App\Models\Person;
+use App\Models\User;
+use App\Models\Video;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Str;
 use Tests\TestCase;
 
 class UserTest extends TestCase
@@ -17,7 +18,7 @@ class UserTest extends TestCase
     public function a_user_can_be_created()
     {
         $user = User::create([
-            'auth0' => (string) \Str::uuid(),
+            'auth0' => (string) Str::uuid(),
             'name' => 'Jane Doe',
             'email' => 'jane@example.com',
             'email_verified' => true,

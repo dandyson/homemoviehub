@@ -24,9 +24,9 @@ Route::get('/', function () {
             'laravelVersion' => Application::VERSION,
             'phpVersion' => phpversion(),
         ]);
-      }
+    }
 
-      return redirect('/dashboard');
+    return redirect('/dashboard');
 });
 
 Route::get('dashboard', function () {

@@ -22,11 +22,7 @@ class ProfileController extends Controller
     }
 
     /**
-     *
-     *
      * TODO: **DISABLED** For security purposes - the following functions are disabled for now as the app is just a demo project
-     *
-     *
     */
 
     /**

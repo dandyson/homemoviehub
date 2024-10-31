@@ -1,7 +1,5 @@
 <?php
 
-use Auth0\Laravel\Contract\Auth\User\Repository;
-
 return [
 
     /*

@@ -30,4 +30,3 @@ class Location extends Model
             ->where('user_id', auth()->id());
     }
 }
-

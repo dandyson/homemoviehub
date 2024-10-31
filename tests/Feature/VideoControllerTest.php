@@ -10,6 +10,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Testing\AssertableInertia as Assert;
+use Str;
 use Tests\TestCase;
 
 class VideoControllerTest extends TestCase
@@ -21,7 +22,7 @@ class VideoControllerTest extends TestCase
     {
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) \Str::uuid()
+            'auth0' => (string) Str::uuid(),
         ]);
         $video = Video::factory()->create([
             'user_id' => $user->id,
@@ -52,7 +53,7 @@ class VideoControllerTest extends TestCase
     {
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) \Str::uuid()
+            'auth0' => (string) Str::uuid(),
         ]);
 
         $people = Person::factory()->count(3)->create([
@@ -76,7 +77,7 @@ class VideoControllerTest extends TestCase
     {
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) \Str::uuid()
+            'auth0' => (string) Str::uuid(),
         ]);
         $video = Video::factory()->create([
             'user_id' => $user->id,
@@ -107,7 +108,7 @@ class VideoControllerTest extends TestCase
     {
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) \Str::uuid()
+            'auth0' => (string) Str::uuid(),
         ]);
         $this->actingAs($user, 'auth0-session');
 
@@ -122,13 +123,12 @@ class VideoControllerTest extends TestCase
         $response->assertSessionHasErrors(['title', 'youtube_url']);
     }
 
-
     /** @test */
     public function store_method_creates_new_video_with_people_and_new_locations()
     {
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) \Str::uuid()
+            'auth0' => (string) Str::uuid(),
         ]);
         $people = Person::factory()->count(2)->create([
             'user_id' => $user->id,
@@ -193,7 +193,7 @@ class VideoControllerTest extends TestCase
     {
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) \Str::uuid()
+            'auth0' => (string) Str::uuid(),
         ]);
         $video = Video::factory()->create([
             'user_id' => $user->id,
@@ -244,7 +244,7 @@ class VideoControllerTest extends TestCase
     {
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) \Str::uuid()
+            'auth0' => (string) Str::uuid(),
         ]);
         $video = Video::factory()->create(); // Not owned by $user
 
@@ -257,7 +257,7 @@ class VideoControllerTest extends TestCase
     {
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) \Str::uuid()
+            'auth0' => (string) Str::uuid(),
         ]);
         $existingLocation = Location::factory()->create(['lat' => 40.7128, 'lng' => -74.0060]);
         $newLocationData = [
@@ -292,17 +292,17 @@ class VideoControllerTest extends TestCase
     {
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) \Str::uuid()
+            'auth0' => (string) Str::uuid(),
         ]);
         $video = Video::factory()->create(); // Video not owned by $user
 
         $this->actingAs($user, 'auth0-session')
-             ->put(route('video.update', $video))
-             ->assertStatus(403);
+            ->put(route('video.update', $video))
+            ->assertStatus(403);
 
         $this->actingAs($user, 'auth0-session')
-             ->delete(route('video.destroy', $video))
-             ->assertStatus(403);
+            ->delete(route('video.destroy', $video))
+            ->assertStatus(403);
     }
 
     /** @test */
@@ -310,7 +310,7 @@ class VideoControllerTest extends TestCase
     {
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) \Str::uuid()
+            'auth0' => (string) Str::uuid(),
         ]);
         $video = Video::factory()->create([
             'user_id' => $user->id,
@@ -340,7 +340,7 @@ class VideoControllerTest extends TestCase
     {
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) \Str::uuid()
+            'auth0' => (string) Str::uuid(),
         ]);
         $video = Video::factory()->create([
             'user_id' => $user->id,
@@ -398,7 +398,7 @@ class VideoControllerTest extends TestCase
     {
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) \Str::uuid()
+            'auth0' => (string) Str::uuid(),
         ]);
         $video = Video::factory()->create([
             'user_id' => $user->id,
@@ -446,7 +446,7 @@ class VideoControllerTest extends TestCase
     {
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) \Str::uuid()
+            'auth0' => (string) Str::uuid(),
         ]);
         $video = Video::factory()->create([
             'user_id' => $user->id,
@@ -472,7 +472,7 @@ class VideoControllerTest extends TestCase
 
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) \Str::uuid()
+            'auth0' => (string) Str::uuid(),
         ]);
         $video = Video::factory()->create([
             'user_id' => $user->id,
@@ -509,7 +509,7 @@ class VideoControllerTest extends TestCase
 
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) \Str::uuid()
+            'auth0' => (string) Str::uuid(),
         ]);
         $video = Video::factory()->create([
             'user_id' => $user->id,
@@ -544,7 +544,7 @@ class VideoControllerTest extends TestCase
     {
         $user = User::factory()->create([
             'email_verified' => true,
-            'auth0' => (string) \Str::uuid()
+            'auth0' => (string) Str::uuid(),
         ]);
         $video = Video::factory()->create([
             'user_id' => $user->id,
