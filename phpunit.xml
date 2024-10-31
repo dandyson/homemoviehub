@@ -27,4 +27,9 @@
         <env name="SESSION_DRIVER" value="array"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
     </php>
+
+    <!-- TODO: Temp fix as for some reason the github actions pipeline phpunit is still recognising this file that does not exist -->
+    <warnings>
+        <ignore>Tests\Feature\Auth\RegistrationTest</ignore>
+    </warnings>
 </phpunit>
