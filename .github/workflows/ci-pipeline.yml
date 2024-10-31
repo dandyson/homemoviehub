@@ -51,6 +51,11 @@ jobs:
           sed -i 's/DB_DATABASE=laravel/DB_DATABASE=test_db/' .env
           sed -i 's/DB_USERNAME=root/DB_USERNAME=${{ secrets.DB_USERNAME }}/' .env
           sed -i 's/DB_PASSWORD=/DB_PASSWORD=${{ secrets.DB_PASSWORD }}/' .env
+          # Add Auth0 environment variables
+          echo "VITE_AUTH0_CLIENT_ID=${{ secrets.VITE_AUTH0_CLIENT_ID }}" >> .env
+          echo "VITE_AUTH0_CLIENT_SECRET=${{ secrets.VITE_AUTH0_CLIENT_SECRET }}" >> .env
+          echo "VITE_AUTH0_DOMAIN=${{ secrets.VITE_AUTH0_DOMAIN }}" >> .env
+          echo "VITE_AUTH0_REDIRECT_URI=${{ secrets.VITE_AUTH0_REDIRECT_URI }}" >> .env
 
       - name: Generate Key
         run: php artisan key:generate
