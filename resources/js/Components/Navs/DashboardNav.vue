@@ -6,6 +6,7 @@ import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/vue3';
 import DashboardNav from '@/Components/Navs/DashboardNav.vue';
+import { login, logout } from '../../auth.js';
 
 const showingNavigationDropdown = ref(false);
 </script>
@@ -68,10 +69,10 @@ const showingNavigationDropdown = ref(false);
                         </template>
 
                         <template #content>
-                            <DropdownLink :href="route('profile.edit')"> Profile </DropdownLink>
-                            <DropdownLink :href="route('logout')" method="post" as="button">
+                            <!-- <DropdownLink :href="route('profile.edit')"> Profile </DropdownLink> -->
+                            <button @click="logout" class="block w-full px-4 py-2 text-start text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-800 transition duration-150 ease-in-out">
                                 Log Out
-                            </DropdownLink>
+                            </button>
                         </template>
                     </Dropdown>
                 </div>
@@ -136,13 +137,13 @@ const showingNavigationDropdown = ref(false);
             </div>
 
             <div class="mt-3 space-y-1">
-                <ResponsiveNavLink :href="route('profile.edit')"> Profile </ResponsiveNavLink>
+                <!-- <ResponsiveNavLink :href="route('profile.edit')"> Profile </ResponsiveNavLink> -->
                 <ResponsiveNavLink :href="route('person.index')"> People </ResponsiveNavLink>
-                <ResponsiveNavLink :href="route('logout')" method="post" as="button">
+                <button @click="logout" class="block w-full px-4 py-2 text-start text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-800 transition duration-150 ease-in-out">
                     Log Out
-                </ResponsiveNavLink>
+                </button>
             </div>
         </div>
     </div>
-</nav>    
+</nav>
 </template>

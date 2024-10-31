@@ -9,6 +9,7 @@ use App\Models\Video;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
@@ -19,7 +20,10 @@ class VideoControllerTest extends TestCase
     /** @test */
     public function show_method_displays_video_details()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) Str::uuid(),
+        ]);
         $video = Video::factory()->create([
             'user_id' => $user->id,
         ]);
@@ -35,7 +39,7 @@ class VideoControllerTest extends TestCase
             $video->people()->attach($person->id);
         }
 
-        $response = $this->actingAs($user)->get(route('video.show', ['video' => $video->id]));
+        $response = $this->actingAs($user, 'auth0-session')->get(route('video.show', ['video' => $video->id]));
 
         $response->assertInertia(fn (Assert $page) => $page
             ->component('Video/VideoShow')
@@ -47,13 +51,16 @@ class VideoControllerTest extends TestCase
     /** @test */
     public function create_method_displays_details_form()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) Str::uuid(),
+        ]);
 
         $people = Person::factory()->count(3)->create([
             'user_id' => $user->id,
         ]);
 
-        $response = $this->actingAs($user)->get(route('video.create'));
+        $response = $this->actingAs($user, 'auth0-session')->get(route('video.create'));
 
         $response->assertInertia(fn (Assert $page) => $page
             ->component('Video/VideoDetails')
@@ -68,7 +75,10 @@ class VideoControllerTest extends TestCase
     /** @test */
     public function edit_method_displays_details_form()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) Str::uuid(),
+        ]);
         $video = Video::factory()->create([
             'user_id' => $user->id,
         ]);
@@ -80,7 +90,7 @@ class VideoControllerTest extends TestCase
             $video->people()->attach($person->id);
         }
 
-        $response = $this->actingAs($user)->get(route('video.edit', ['video' => $video]));
+        $response = $this->actingAs($user, 'auth0-session')->get(route('video.edit', ['video' => $video]));
 
         $response->assertInertia(fn (Assert $page) => $page
             ->component('Video/VideoDetails')
@@ -94,9 +104,32 @@ class VideoControllerTest extends TestCase
     }
 
     /** @test */
+    public function store_method_requires_valid_data()
+    {
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) Str::uuid(),
+        ]);
+        $this->actingAs($user, 'auth0-session');
+
+        // Send invalid data for both title and youtube_url
+        $response = $this->post(route('video.store'), [
+            'title' => '', // Title is required
+            'description' => 'A video without title',
+            'youtube_url' => 'invalid', // Invalid YouTube URL
+        ]);
+
+        // Assert that there are errors for both fields
+        $response->assertSessionHasErrors(['title', 'youtube_url']);
+    }
+
+    /** @test */
     public function store_method_creates_new_video_with_people_and_new_locations()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) Str::uuid(),
+        ]);
         $people = Person::factory()->count(2)->create([
             'user_id' => $user->id,
         ]);
@@ -110,7 +143,7 @@ class VideoControllerTest extends TestCase
             'cover_image' => 'default_cover_image',
         ];
 
-        $response = $this->actingAs($user)->post(route('video.store'), $data);
+        $response = $this->actingAs($user, 'auth0-session')->post(route('video.store'), $data);
 
         $video = Video::first();
 
@@ -158,7 +191,10 @@ class VideoControllerTest extends TestCase
     /** @test */
     public function update_method_updates_video_and_returns_correct_view()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) Str::uuid(),
+        ]);
         $video = Video::factory()->create([
             'user_id' => $user->id,
             'title' => 'Christmas 1990',
@@ -181,7 +217,7 @@ class VideoControllerTest extends TestCase
         $newVideoTitle = 'Christmas 2000';
         $newVideoDescription = 'This is a new video description';
 
-        $response = $this->actingAs($user)->put(route('video.update', ['video' => $video]), [
+        $response = $this->actingAs($user, 'auth0-session')->put(route('video.update', ['video' => $video]), [
             'title' => $newVideoTitle,
             'description' => $newVideoDescription,
             'youtube_url' => '1z1tv5dB5uA',
@@ -203,13 +239,109 @@ class VideoControllerTest extends TestCase
         );
     }
 
+    /** @test */
+    public function show_method_requires_authentication_and_proper_ownership()
+    {
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) Str::uuid(),
+        ]);
+        $video = Video::factory()->create(); // Not owned by $user
+
+        $response = $this->actingAs($user, 'auth0-session')->get(route('video.show', ['video' => $video->id]));
+        $response->assertStatus(403);
+    }
+
+    /** @test */
+    public function store_method_attaches_existing_and_new_locations_to_video()
+    {
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) Str::uuid(),
+        ]);
+        $existingLocation = Location::factory()->create(['lat' => 40.7128, 'lng' => -74.0060]);
+        $newLocationData = [
+            'location' => 'New Spot',
+            'lat' => 35.6895,
+            'lng' => 139.6917,
+        ];
+
+        $data = [
+            'title' => 'Location Test',
+            'description' => 'Video with multiple locations',
+            'youtube_url' => 'g-LHZL0pnLw',
+            'locations' => [
+                $existingLocation->toArray(),
+                $newLocationData,
+            ],
+        ];
+
+        $response = $this->actingAs($user, 'auth0-session')->post(route('video.store'), $data);
+        $response->assertStatus(200);
+
+        $video = Video::first();
+        $this->assertTrue($video->locations->contains($existingLocation));
+
+        // Check that the new location is created and attached
+        $this->assertDatabaseHas('locations', $newLocationData);
+        $this->assertTrue($video->locations->contains('location', $newLocationData['location']));
+    }
+
+    /** @test */
+    public function unauthorized_user_cannot_update_or_delete_video()
+    {
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) Str::uuid(),
+        ]);
+        $video = Video::factory()->create(); // Video not owned by $user
+
+        $this->actingAs($user, 'auth0-session')
+            ->put(route('video.update', $video))
+            ->assertStatus(403);
+
+        $this->actingAs($user, 'auth0-session')
+            ->delete(route('video.destroy', $video))
+            ->assertStatus(403);
+    }
+
+    /** @test */
+    public function handle_cover_image_upload_accepts_only_valid_files()
+    {
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) Str::uuid(),
+        ]);
+        $video = Video::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        Storage::fake('s3');
+        $file = UploadedFile::fake()->image('cover_image.gif');
+
+        $this->actingAs($user, 'auth0-session')->postJson(route('video.cover-image-upload', ['video' => $video]), [
+            'cover_image' => $file,
+        ]);
+
+        // Try one more request which should be rate limited
+        $response = $this->actingAs($user, 'auth0-session')->postJson(route('video.cover-image-upload', ['video' => $video]), [
+            'cover_image' => $file,
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['cover_image']);
+    }
+
     /** @test
      * This test ensures that if a video has existing locations attached and the user submits
      * new locations but keeps the old ones in, the old ones still remain
      */
     public function update_method_keeps_existing_locations_if_new_ones_added()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) Str::uuid(),
+        ]);
         $video = Video::factory()->create([
             'user_id' => $user->id,
             'title' => 'Christmas 1990',
@@ -237,7 +369,7 @@ class VideoControllerTest extends TestCase
             $newLocation2->toArray(),
         ];
 
-        $response = $this->actingAs($user)->put(route('video.update', ['video' => $video]), [
+        $response = $this->actingAs($user, 'auth0-session')->put(route('video.update', ['video' => $video]), [
             'title' => $video->title,
             'description' => $video->description,
             'youtube_url' => $video->youtube_url,
@@ -264,7 +396,10 @@ class VideoControllerTest extends TestCase
      */
     public function update_method_removes_existing_locations_if_only_new_ones_added()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) Str::uuid(),
+        ]);
         $video = Video::factory()->create([
             'user_id' => $user->id,
             'title' => 'Christmas 1990',
@@ -285,7 +420,7 @@ class VideoControllerTest extends TestCase
             $video->locations()->attach($location->id);
         }
 
-        $response = $this->actingAs($user)->put(route('video.update', ['video' => $video]), [
+        $response = $this->actingAs($user, 'auth0-session')->put(route('video.update', ['video' => $video]), [
             'title' => $video->title,
             'description' => $video->description,
             'youtube_url' => $video->youtube_url,
@@ -309,12 +444,15 @@ class VideoControllerTest extends TestCase
     /** @test */
     public function destroy_method_deletes_video_and_returns_success_response()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) Str::uuid(),
+        ]);
         $video = Video::factory()->create([
             'user_id' => $user->id,
         ]);
 
-        $response = $this->actingAs($user)->delete(route('video.destroy', ['video' => $video]));
+        $response = $this->actingAs($user, 'auth0-session')->delete(route('video.destroy', ['video' => $video]));
         $response->assertStatus(200);
 
         $this->assertDatabaseMissing('videos', ['id' => $video->id]);
@@ -332,14 +470,17 @@ class VideoControllerTest extends TestCase
         // Simulate local environment
         config(['filesystems.default' => 'local']);
 
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) Str::uuid(),
+        ]);
         $video = Video::factory()->create([
             'user_id' => $user->id,
         ]);
 
         $file = UploadedFile::fake()->image('cover_image.jpg');
 
-        $response = $this->actingAs($user)->postJson(route('video.cover-image-upload', ['video' => $video]), [
+        $response = $this->actingAs($user, 'auth0-session')->postJson(route('video.cover-image-upload', ['video' => $video]), [
             'cover_image' => $file,
         ]);
 
@@ -349,6 +490,7 @@ class VideoControllerTest extends TestCase
             ]);
 
         $video->refresh();
+
         $this->assertNotNull($video->cover_image);
         $this->assertEquals(1, $video->cover_image_upload_count);
 
@@ -365,7 +507,10 @@ class VideoControllerTest extends TestCase
         Storage::fake('s3');
         Storage::fake('public');
 
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) Str::uuid(),
+        ]);
         $video = Video::factory()->create([
             'user_id' => $user->id,
         ]);
@@ -376,7 +521,7 @@ class VideoControllerTest extends TestCase
 
         $file = UploadedFile::fake()->image('cover_image.jpg');
 
-        $response = $this->actingAs($user)->postJson(route('video.cover-image-upload', ['video' => $video]), [
+        $response = $this->actingAs($user, 'auth0-session')->postJson(route('video.cover-image-upload', ['video' => $video]), [
             'cover_image' => $file,
         ]);
 
@@ -397,7 +542,10 @@ class VideoControllerTest extends TestCase
     /** @test */
     public function test_user_cannot_upload_more_than_cover_image_upload_limit()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) Str::uuid(),
+        ]);
         $video = Video::factory()->create([
             'user_id' => $user->id,
             'cover_image_upload_count' => 10,
@@ -406,7 +554,7 @@ class VideoControllerTest extends TestCase
         Storage::fake('s3');
         $file = UploadedFile::fake()->image('cover_image.jpg');
 
-        $response = $this->actingAs($user)->postJson(route('video.cover-image-upload', ['video' => $video]), [
+        $response = $this->actingAs($user, 'auth0-session')->postJson(route('video.cover-image-upload', ['video' => $video]), [
             'cover_image' => $file,
         ]);
 

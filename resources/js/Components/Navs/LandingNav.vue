@@ -6,8 +6,10 @@ import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/vue3';
 import DashboardNav from '@/Components/Navs/DashboardNav.vue';
+import { login, logout } from '../../auth.js';
 
 const showingNavigationDropdown = ref(false);
+
 </script>
 
 <template>
@@ -30,18 +32,18 @@ const showingNavigationDropdown = ref(false);
                     <!-- Navigation Links -->
                     <div class="space-x-2 -my-px ms-10 flex">
                         <!-- Action buttons -->
-                        <Link :href="route('login')" class="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-xs sm:text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800">
+                        <button type="button" @click="login" class="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-xs sm:text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800">
                             <span class="relative flex justify-center items-center  px-3 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
                                 <font-awesome-icon icon="fa-solid fa-sign-in" />
                                 <span class="hidden sm:block ms-2">Login</span>
                             </span>
-                        </Link>
-                        <Link :href="route('register')" class="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-xs sm:text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800">
+                        </button>
+                        <!-- <Link :href="route('register')" class="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-xs sm:text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800">
                             <span class="relative flex justify-center items-center  px-3 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
                                 <font-awesome-icon icon="fa-solid fa-rocket" />
                                 <span class="hidden sm:block ms-2">Get Started</span>
                             </span>
-                        </Link>
+                        </Link> -->
                     </div>
                 </div>
             </div>
@@ -74,7 +76,7 @@ const showingNavigationDropdown = ref(false);
             </div>
 
             <div class="mt-3 space-y-1">
-                <ResponsiveNavLink :href="route('profile.edit')"> Profile </ResponsiveNavLink>
+                <!-- <ResponsiveNavLink :href="route('profile.edit')"> Profile </ResponsiveNavLink> -->
                 <ResponsiveNavLink :href="route('person.index')"> People </ResponsiveNavLink>
                 <ResponsiveNavLink :href="route('logout')" method="post" as="button">
                     Log Out
@@ -82,5 +84,5 @@ const showingNavigationDropdown = ref(false);
             </div>
         </div>
     </div>
-</nav>    
+</nav>
 </template>

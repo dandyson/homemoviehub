@@ -9,6 +9,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
@@ -27,14 +28,17 @@ class PersonControllerTest extends TestCase
         config(['filesystems.default' => 'local']);
         $this->withoutExceptionHandling();
 
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) Str::uuid(),
+        ]);
         $person = Person::factory()->create([
             'user_id' => $user->id,
         ]);
 
         $file = UploadedFile::fake()->image('avatar.jpg');
 
-        $response = $this->actingAs($user)->postJson(route('avatar-upload', $person->id), [
+        $response = $this->actingAs($user, 'auth0-session')->postJson(route('avatar-upload', $person->id), [
             'avatar' => $file,
         ]);
 
@@ -60,7 +64,10 @@ class PersonControllerTest extends TestCase
         Storage::fake('s3');
         Storage::fake('public');
 
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) Str::uuid(),
+        ]);
         $person = Person::factory()->create([
             'user_id' => $user->id,
         ]);
@@ -71,7 +78,7 @@ class PersonControllerTest extends TestCase
 
         $file = UploadedFile::fake()->image('avatar.jpg');
 
-        $response = $this->actingAs($user)->postJson(route('avatar-upload', $person->id), [
+        $response = $this->actingAs($user, 'auth0-session')->postJson(route('avatar-upload', $person->id), [
             'avatar' => $file,
         ]);
 
@@ -92,13 +99,16 @@ class PersonControllerTest extends TestCase
     /** @test */
     public function index_method_returns_correct_view_with_correct_people_data()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) Str::uuid(),
+        ]);
 
         $people = Person::factory()->count(3)->create([
             'user_id' => $user->id,
         ]);
 
-        $response = $this->actingAs($user)->get(route('person.index'));
+        $response = $this->actingAs($user, 'auth0-session')->get(route('person.index'));
 
         $response->assertInertia(fn (Assert $page) => $page
             ->component('Person/PersonIndex')
@@ -112,13 +122,16 @@ class PersonControllerTest extends TestCase
     /** @test */
     public function create_method_displays_details_form()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) Str::uuid(),
+        ]);
 
         $families = Family::factory()->count(3)->create([
             'user_id' => $user->id,
         ]);
 
-        $response = $this->actingAs($user)->get(route('person.create'));
+        $response = $this->actingAs($user, 'auth0-session')->get(route('person.create'));
 
         $response->assertInertia(fn (Assert $page) => $page
             ->component('Person/PersonDetails')
@@ -135,7 +148,10 @@ class PersonControllerTest extends TestCase
     /** @test */
     public function store_method_creates_new_person_with_existing_family()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) Str::uuid(),
+        ]);
         $family = Family::factory()->create([
             'name' => 'Doe',
             'user_id' => $user->id,
@@ -146,7 +162,7 @@ class PersonControllerTest extends TestCase
             'family' => ['name' => $family->name],
         ];
 
-        $response = $this->actingAs($user)->post(route('person.store'), $data);
+        $response = $this->actingAs($user, 'auth0-session')->post(route('person.store'), $data);
 
         $response->assertStatus(200)
             ->assertJson(['message' => ['type' => 'Success', 'text' => 'Person created successfully']]);
@@ -161,7 +177,10 @@ class PersonControllerTest extends TestCase
     /** @test */
     public function store_method_creates_new_person_with_new_family()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) Str::uuid(),
+        ]);
         $family = Family::factory()->create([
             'name' => 'Doe',
             'user_id' => $user->id,
@@ -172,7 +191,7 @@ class PersonControllerTest extends TestCase
             'family' => ['name' => 'Johnson'],
         ];
 
-        $response = $this->actingAs($user)->post(route('person.store'), $data);
+        $response = $this->actingAs($user, 'auth0-session')->post(route('person.store'), $data);
 
         $response->assertStatus(200)
             ->assertJson(['message' => ['type' => 'Success', 'text' => 'Person created successfully']]);
@@ -194,7 +213,10 @@ class PersonControllerTest extends TestCase
     /** @test */
     public function edit_method_displays_details_form()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) Str::uuid(),
+        ]);
         $person = Person::factory()->create([
             'user_id' => $user->id,
         ]);
@@ -211,7 +233,7 @@ class PersonControllerTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        $response = $this->actingAs($user)->get(route('person.edit', ['person' => $person]));
+        $response = $this->actingAs($user, 'auth0-session')->get(route('person.edit', ['person' => $person]));
 
         $response->assertInertia(fn (Assert $page) => $page
             ->component('Person/PersonDetails')
@@ -242,7 +264,10 @@ class PersonControllerTest extends TestCase
     /** @test */
     public function update_method_updates_person_and_returns_correct_view()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) Str::uuid(),
+        ]);
 
         $person = Person::factory()->create([
             'name' => 'Mark',
@@ -256,7 +281,7 @@ class PersonControllerTest extends TestCase
         $newName = 'John';
         $newFamilyName = 'Smith';
 
-        $response = $this->actingAs($user)->put(route('person.update', ['person' => $person]), [
+        $response = $this->actingAs($user, 'auth0-session')->put(route('person.update', ['person' => $person]), [
             'name' => $newName,
             'family' => $newFamilyName,
         ])->assertStatus(200);
@@ -284,12 +309,15 @@ class PersonControllerTest extends TestCase
     /** @test */
     public function destroy_method_deletes_person_and_returns_success_response()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) Str::uuid(),
+        ]);
         $person = Person::factory()->create([
             'user_id' => $user->id,
         ]);
 
-        $response = $this->actingAs($user)->delete(route('person.destroy', ['person' => $person]));
+        $response = $this->actingAs($user, 'auth0-session')->delete(route('person.destroy', ['person' => $person]));
         $response->assertStatus(200);
 
         $this->assertDatabaseMissing('people', ['id' => $person->id]);
@@ -300,7 +328,10 @@ class PersonControllerTest extends TestCase
     /** @test */
     public function test_person_cannot_upload_more_than_avatar_upload_limit()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) Str::uuid(),
+        ]);
         $person = Person::factory()->create([
             'user_id' => $user->id,
             'avatar_upload_count' => 10,
@@ -309,7 +340,7 @@ class PersonControllerTest extends TestCase
         Storage::fake('s3');
         $file = UploadedFile::fake()->image('avatar.jpg');
 
-        $response = $this->actingAs($user)->postJson(route('avatar-upload', ['person' => $person->id]), [
+        $response = $this->actingAs($user, 'auth0-session')->postJson(route('avatar-upload', ['person' => $person->id]), [
             'avatar' => $file,
         ]);
 
