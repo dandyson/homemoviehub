@@ -7,7 +7,7 @@ use App\Models\Person;
 use App\Models\User;
 use App\Models\Video;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Str;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class UserTest extends TestCase

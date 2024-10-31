@@ -8,7 +8,7 @@ use App\Models\Video;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Str;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class RateLimitingTest extends TestCase

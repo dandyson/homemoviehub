@@ -5,7 +5,7 @@ namespace Tests\Unit;
 use App\Models\Family;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Str;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class FamilyTest extends TestCase
