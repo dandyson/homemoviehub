@@ -8,16 +8,16 @@ import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 /* fontawesome */
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { 
-    faPlay, 
-    faFileVideo, 
-    faVideo, 
-    faPlus, 
-    faEye, 
-    faPencil, 
-    faTrash, 
-    faSquareArrowUpRight, 
-    faArrowLeft, 
+import {
+    faPlay,
+    faFileVideo,
+    faVideo,
+    faPlus,
+    faEye,
+    faPencil,
+    faTrash,
+    faSquareArrowUpRight,
+    faArrowLeft,
     faRocket,
     faDisplay,
     faLock,
@@ -56,6 +56,17 @@ createInertiaApp({
     title: (title) => `${title} | ${appName}`,
     resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
     setup({ el, App, props, plugin }) {
+        console.log('Setting up app with element:', el);
+
+        // Add error handling
+        window.addEventListener('error', (e) => {
+            console.error('Global error:', e.message, e.filename, e.lineno);
+        });
+
+        // Add unhandled promise rejection handling
+        window.addEventListener('unhandledrejection', (e) => {
+            console.error('Unhandled Promise Rejection:', e.reason);
+        });
         return createApp({ render: () => h(App, props) })
             .component('font-awesome-icon', FontAwesomeIcon)
             .use(plugin)
