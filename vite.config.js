@@ -19,13 +19,6 @@ export default defineConfig({
         }),
     ],
     // Added to resolve cors issues in safari as it is a bit stricter than other browsers
-    server: {
-        cors: true,
-        hmr: {
-            host: 'www.homemoviehub.com',
-            protocol: 'https'  // Add this to ensure HTTPS
-        },
-    },
     build: {
         manifest: true,
         rollupOptions: {
