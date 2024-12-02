@@ -22,8 +22,8 @@ export default defineConfig({
     server: {
         cors: true,
         hmr: {
-            host: 'www.homemoviehub.com',
-            protocol: 'https'  // Add this to ensure HTTPS
+            host: process.env.HMR_HOST || 'localhost',
+            protocol: process.env.HMR_PROTOCOL || 'http', // Ensures HTTPS on live, http on local
         },
     },
     build: {
