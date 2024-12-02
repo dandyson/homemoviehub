@@ -146,14 +146,18 @@ class VideoController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $video->delete();
-
         $locations = $video->locations;
+
+        // Detach locations from the video
+        $video->locations()->detach();
+
+        $video->delete();
 
         // Check if locations are still associated with other videos
         foreach ($locations as $location) {
+            // If the location is not associated with any other videos, delete it
             if ($location->videos()->count() === 0) {
-                $location->delete(); // Permanently delete if no other videos reference it
+                $location->delete();
             }
         }
 
