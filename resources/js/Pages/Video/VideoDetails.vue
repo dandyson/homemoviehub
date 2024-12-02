@@ -82,7 +82,7 @@
                 <p class="bold italic text-white my-2">Start entering the location in the field:</p>
 
                 <div class="my-4">
-                    <GoogleAutocompleteWrapper
+                    <GoogleAutoCompleteWrapper
                         v-if="isGoogleMapsLoaded"
                         id="map"
                         classname="rounded w-full form-control"
@@ -174,7 +174,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import GoogleMap from '@/Components/Maps/GoogleMap.vue';
 import DangerButton from '@/Components/DangerButton.vue';
-import GoogleAutocompleteWrapper from '@/Components/Maps/GoogleAutocompleteWrapper.vue';
+import GoogleAutoCompleteWrapper from '@/Components/Maps/GoogleAutoCompleteWrapper.vue';
 
 const props = defineProps({
     updateMode: {
