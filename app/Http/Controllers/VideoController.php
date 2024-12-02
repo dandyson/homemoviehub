@@ -107,6 +107,7 @@ class VideoController extends Controller
             'description' => 'required|string',
             'youtube_url' => ['required', 'string', 'regex:/^[a-zA-Z0-9_-]{11}$/'],
             'featured_people' => 'nullable|array',
+            'locations' => 'nullable|array',
         ]);
 
         // Update video with extracted YouTube video ID
@@ -116,20 +117,29 @@ class VideoController extends Controller
             'youtube_url' => $request->input('youtube_url'),
         ]);
 
-        $video->save();
-
         // Get the array of person IDs from the request
         $featuredPeopleIds = collect($request->featured_people)->pluck('id')->toArray();
 
         // Sync the person IDs with the video's people relationship
         $video->people()->sync($featuredPeopleIds);
 
+        // Get current locations before detaching
+        $currentLocations = $video->locations;
+
         // Add locations if any have been added
         if ($request->locations) {
             $this->storeVideoLocations($video, $request->locations);
+        } else {
+            // If no locations are provided, detach all locations
+            $video->locations()->detach();
         }
 
-        $video->save();
+        // Check if the previously associated locations are still linked to other videos
+        foreach ($currentLocations as $location) {
+            if ($location->videos()->count() === 0) {
+                $location->delete(); // Delete the location if it's not associated with any videos
+            }
+        }
 
         $video->load('people', 'locations');
 
@@ -213,6 +223,11 @@ class VideoController extends Controller
         DB::transaction(function () use ($video, $locations) {
             // Detach all existing locations from the video
             $video->locations()->detach();
+
+            // If no locations are provided, we can skip the rest
+            if (empty($locations)) {
+                return;
+            }
 
             foreach ($locations as $locationData) {
                 // Search for an existing location with the same coordinates
