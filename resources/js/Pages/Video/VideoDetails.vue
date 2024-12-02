@@ -82,15 +82,14 @@
                 <p class="bold italic text-white my-2">Start entering the location in the field:</p>
 
                 <div class="my-4">
-                    <vue-google-autocomplete
-                        @keydown.enter.prevent
-                        :types="['(cities)']"
+                    <GoogleAutocompleteWrapper
+                        v-if="isGoogleMapsLoaded"
                         id="map"
                         classname="rounded w-full form-control"
                         placeholder="Start typing"
-                        v-on:placechanged="getAddressData"
-                    >
-                    </vue-google-autocomplete>
+                        :types="['(cities)']"
+                        @placechanged="getAddressData"
+                    />
                 </div>
 
                 <GoogleMap :markers="locations"></GoogleMap>
@@ -161,7 +160,7 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
@@ -174,8 +173,8 @@ import { useForm, router, usePage } from '@inertiajs/vue3';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import GoogleMap from '@/Components/Maps/GoogleMap.vue';
-import VueGoogleAutocomplete from "vue-google-autocomplete";
 import DangerButton from '@/Components/DangerButton.vue';
+import GoogleAutocompleteWrapper from '@/Components/Maps/GoogleAutocompleteWrapper.vue';
 
 const props = defineProps({
     updateMode: {
@@ -190,6 +189,18 @@ const props = defineProps({
         type: Object,
         default: () => ({}),
     },
+});
+
+const isGoogleMapsLoaded = ref(false);
+
+onMounted(() => {
+    // Check if Google Maps API is already loaded
+    if (typeof google !== 'undefined' && typeof google.maps !== 'undefined') {
+        isGoogleMapsLoaded.value = true;
+        console.log('Google Maps API is already loaded');
+    } else {
+        console.error('Google Maps API is not loaded');
+    }
 });
 
 const previousUrl = ref(usePage().props.previous);
