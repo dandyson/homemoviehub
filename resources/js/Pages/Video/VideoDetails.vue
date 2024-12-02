@@ -270,8 +270,12 @@ const deleteLocation = (location) => {
   }).then((result) => {
     if (result.isConfirmed) {
        // Remove the location
-        const index = locations.findIndex(loc => loc.id === location.id);
-        locations.splice(index, 1);
+       const index = locations.findIndex(loc => loc.id === location.id);
+        if (index !== -1) {
+            locations.splice(index, 1);
+        }
+
+        form.locations = locations; // Update the form's locations
     } else if (result.dismiss === Swal.DismissReason.cancel) {
       swalWithBootstrapButtons.fire({
         title: "Cancelled",
