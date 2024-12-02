@@ -56,8 +56,6 @@ createInertiaApp({
     title: (title) => `${title} | ${appName}`,
     resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
     setup({ el, App, props, plugin }) {
-        console.log('Setting up app with element:', el);
-
         // Add error handling
         window.addEventListener('error', (e) => {
             console.error('Global error:', e.message, e.filename, e.lineno);
