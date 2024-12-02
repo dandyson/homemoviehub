@@ -148,6 +148,15 @@ class VideoController extends Controller
 
         $video->delete();
 
+        $locations = $video->locations;
+
+        // Check if locations are still associated with other videos
+        foreach ($locations as $location) {
+            if ($location->videos()->count() === 0) {
+                $location->delete(); // Permanently delete if no other videos reference it
+            }
+        }
+
         return response()->json(['success' => 'Video deleted successfully']);
     }
 
@@ -203,23 +212,17 @@ class VideoController extends Controller
 
             foreach ($locations as $locationData) {
                 // Search for an existing location with the same coordinates
-                $existingLocation = Location::where('lat', $locationData['lat'])
-                    ->where('lng', $locationData['lng'])
-                    ->first();
-
-                if ($existingLocation) {
-                    // Location already exists, attach it to the video
-                    $video->locations()->attach($existingLocation->id);
-                } else {
-                    // Location doesn't exist, create a new one and attach it to the video
-                    $newLocation = Location::create([
-                        'location' => $locationData['location'],
+                $existingLocation = Location::firstOrCreate(
+                    [
                         'lat' => $locationData['lat'],
                         'lng' => $locationData['lng'],
-                    ]);
+                    ],
+                    [
+                        'location' => $locationData['location'],
+                    ]
+                );
 
-                    $video->locations()->attach($newLocation->id);
-                }
+                $video->locations()->attach($existingLocation->id);
             }
         });
     }
