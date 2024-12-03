@@ -455,7 +455,11 @@ class VideoControllerTest extends TestCase
         $response = $this->actingAs($user, 'auth0-session')->delete(route('video.destroy', ['video' => $video]));
         $response->assertStatus(200);
 
-        $this->assertDatabaseMissing('videos', ['id' => $video->id]);
+        // Check that the video is soft deleted
+        $this->assertSoftDeleted('videos', ['id' => $video->id]);
+
+        // Check that the video is not present in the active records
+        $this->assertDatabaseMissing('videos', ['id' => $video->id, 'deleted_at' => null]);
 
         $response->assertJson(['success' => 'Video deleted successfully']);
     }
