@@ -242,7 +242,7 @@ class VideoController extends Controller
                 );
 
                 // Check if the location is already associated with the video, if not, attach it
-                if (!$video->locations()->where('lat', $existingLocation->lat)->where('lng', $existingLocation->lng)->exists()) {
+                if (! $video->locations()->where('lat', $existingLocation->lat)->where('lng', $existingLocation->lng)->exists()) {
                     $video->locations()->attach($existingLocation->id);
                 }
             }
