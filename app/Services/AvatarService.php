@@ -21,7 +21,7 @@ class AvatarService
             'avatar' => [
                 'required',
                 File::types(['jpeg', 'png', 'jpg'])
-                    ->max(12 * 1024),
+                    ->max(2048),
             ],
         ]);
 
