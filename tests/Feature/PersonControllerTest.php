@@ -351,4 +351,27 @@ class PersonControllerTest extends TestCase
 
         Storage::disk('s3')->assertMissing("avatars/people/{$person->id} - {$person->name}/{$file->getClientOriginalName()}");
     }
+
+    /** @test */
+    public function user_cannot_upload_avatar_exceeding_size_limit()
+    {
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) Str::uuid(),
+        ]);
+        $person = Person::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        Storage::fake('s3');
+
+        $file = UploadedFile::fake()->image('avatar.jpg')->size(3072); // 3 MB
+
+        $response = $this->actingAs($user, 'auth0-session')->postJson(route('avatar-upload', ['person' => $person->id]), [
+            'avatar' => $file,
+        ]);
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['avatar']);
+    }
 }

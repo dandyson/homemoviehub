@@ -567,4 +567,29 @@ class VideoControllerTest extends TestCase
                 'message' => 'Error: Upload limit reached for this video.',
             ]);
     }
+
+    /** @test */
+    public function user_cannot_upload_cover_image_exceeding_2mb_size_limit()
+    {
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) Str::uuid(),
+        ]);
+
+        $video = Video::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        Storage::fake('s3');
+
+        $file = UploadedFile::fake()->image('cover_image.jpg')->size(3072); // 3072 KB = 3 MB
+
+        $response = $this->actingAs($user, 'auth0-session')->postJson(route('video.cover-image-upload', ['video' => $video]), [
+            'cover_image' => $file,
+        ]);
+
+        // Assert that the response status is 422 (Unprocessable Entity)
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['cover_image']); // Check for validation errors
+    }
 }
