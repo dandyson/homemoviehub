@@ -57,7 +57,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <GuestLayout>
+    <GuestLayout customClasses="sm:max-w-md">
         <Head title="Register" />
 
         <form @submit.prevent="submit">

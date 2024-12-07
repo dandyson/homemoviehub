@@ -18,7 +18,7 @@ const submit = () => {
 </script>
 
 <template>
-    <GuestLayout>
+    <GuestLayout customClasses="sm:max-w-md">
         <Head title="Confirm Password" />
 
         <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
