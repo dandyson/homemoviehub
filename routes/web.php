@@ -52,14 +52,14 @@ Route::middleware('auth')->group(function () {
         ->name('avatar-upload');
 });
 
-Route::get('/cookies', function () {
+Route::get('cookies', function () {
     return Inertia::render('Cookies');
 })->name('cookies');
 
-Route::get('/privacy', function () {
+Route::get('privacy', function () {
     return Inertia::render('Privacy');
 })->name('privacy');
 
-Route::get('/terms', function () {
+Route::get('terms', function () {
     return Inertia::render('Terms');
 })->name('terms');
