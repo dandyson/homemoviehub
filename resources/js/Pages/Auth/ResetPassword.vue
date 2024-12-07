@@ -32,7 +32,7 @@ const submit = () => {
 </script>
 
 <template>
-    <GuestLayout>
+    <GuestLayout customClasses="sm:max-w-md">
         <Head title="Reset Password" />
 
         <form @submit.prevent="submit">
