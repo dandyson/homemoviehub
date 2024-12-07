@@ -32,7 +32,7 @@ const submit = () => {
         Swal.fire({
             icon: 'error',
             title: 'This is a demo app only',
-            html: 'Please contact us at <a href="mailto:dannydyson297@gmail.com">dannydyson297@gmail.com</a> with your email address.<br><br>' +
+            html: 'Please contact us at <a href="mailto:homevideohub@gmail.com">homevideohub@gmail.com</a> with your email address.<br><br>' +
                 'Once we have added you to our email service, you will be able to register for an account<br><br>' +
                 'Thank you for your interest!',
             showConfirmButton: true,
@@ -47,7 +47,7 @@ onMounted(() => {
         icon: 'warning',
         title: 'Demo Notice',
         html: 'This is a <strong>demo</strong> version of our app, so trying to sign up here will throw an error.<br><br>' +
-            'To sign up and access the service, please contact us at <a href="mailto:dannydyson297@gmail.com">dannydyson297@gmail.com</a> with your email address.<br><br>' +
+            'To sign up and access the service, please contact us at <a href="mailto:homevideohub@gmail.com">homevideohub@gmail.com</a> with your email address.<br><br>' +
             'Once we have added you to our email service, you will be able to register for an account<br><br>' +
             'Thank you for your interest!',
         showConfirmButton: true,
