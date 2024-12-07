@@ -51,3 +51,15 @@ Route::middleware('auth')->group(function () {
     Route::middleware('throttle:10,1')->post('person/{person}/avatar-upload', [PersonController::class, 'handleAvatarUpload'])
         ->name('avatar-upload');
 });
+
+Route::get('/cookies', function () {
+    return Inertia::render('Cookies');
+})->name('cookies');
+
+Route::get('/privacy', function () {
+    return Inertia::render('Privacy');
+})->name('privacy');
+
+Route::get('/terms', function () {
+    return Inertia::render('Terms');
+})->name('terms');
