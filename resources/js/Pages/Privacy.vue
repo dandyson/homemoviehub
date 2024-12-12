@@ -36,10 +36,10 @@
                     <section class="mb-8">
                         <h2 class="text-xl font-semibold mb-3">Third-Party Services</h2>
                         <ul class="list-disc pl-5 space-y-2">
-                            <li><strong>Auth0:</strong> Handles user authentication</li>
-                            <li><strong>YouTube:</strong> Provides video streaming functionality</li>
-                            <li><strong>Google Maps:</strong> Displays video location data</li>
-                            <li><strong>AWS S3:</strong> Stores uploaded images</li>
+                            <li><strong>Auth0:</strong> Handles user authentication - <a href="https://auth0.com/docs/secure/data-privacy-and-compliance" target="_blank" class="text-blue-500 hover:text-blue-600">View privacy docs here</a></li>
+                            <li><strong>YouTube:</strong> Provides video streaming functionality - <a href="https://www.youtube.com/intl/ALL_uk/howyoutubeworks/our-commitments/protecting-user-data/" target="_blank" class="text-blue-500 hover:text-blue-600">View privacy docs here</a></li>
+                            <li><strong>Google Maps:</strong> Displays video location data - <a href="https://policies.google.com/privacy" target="_blank" class="text-blue-500 hover:text-blue-600">View privacy docs here</a></li>
+                            <li><strong>AWS S3:</strong> Stores uploaded images - <a href="https://aws.amazon.com/privacy/" target="_blank" class="text-blue-500 hover:text-blue-600">View privacy docs here</a></li>
                         </ul>
                     </section>
 
