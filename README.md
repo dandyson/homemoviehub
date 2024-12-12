@@ -10,6 +10,12 @@
 
 Welcome to HomeMovieHub! It is a Vue.js and Laravel Web-App designed to create a streaming experience for home movies. The app combines the power of Vue & Laravel to create a Netflix-like experience to users and a safe place to store their precious footage.
 
+## Live Demo
+
+Visit [HomeMovieHub](https://homemoviehub.com) to see the full application in action!
+
+****Demo credentials will be provided upon request.***
+
 ## Features
 
 ### Netflix-like UI
@@ -161,7 +167,11 @@ This command starts a development server that serves your frontend assets and au
 ## Step 9: Access the Application
 Once everything is set up, you can access the application by visiting http://localhost in your web browser.
 
-Visit http://localhost/register to create a new local user and access the app - enjoy!
+
+## Understanding the Auth Layer
+
+The application uses Auth0 in production to protect costly API routes. For local development, focus on exploring the architecture and UI components
+
 
 ## Troubleshooting
 
