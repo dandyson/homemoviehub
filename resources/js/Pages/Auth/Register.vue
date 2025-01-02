@@ -1,61 +1,3 @@
-<script setup>
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
-import Swal from "sweetalert2";
-import { onMounted } from 'vue';
-
-const props = defineProps({
-  env: String
-});
-
-const form = useForm({
-    name: '',
-    email: '',
-    password: '',
-    password_confirmation: '',
-});
-
-const submit = () => {
-    // TODO: This is all working, but need to get a good privacy policy and TOCs before allowing users to join
-    // form.post(route('register'), {
-    //     onFinish: () => form.reset('password', 'password_confirmation'),
-    // });
-    if (props.env === 'local') {
-        form.post(route('register'), {
-            onFinish: () => form.reset('password', 'password_confirmation'),
-        });
-    } else {
-        Swal.fire({
-            icon: 'error',
-            title: 'This is a demo app only',
-            html: 'Please contact us at <a href="mailto:homevideohub@gmail.com">homevideohub@gmail.com</a> with your email address.<br><br>' +
-                'Once we have added you to our email service, you will be able to register for an account<br><br>' +
-                'Thank you for your interest!',
-            showConfirmButton: true,
-        });
-    }
-};
-
-onMounted(() => {
-  // TODO: This is all working, but need to get a good privacy policy and TOCs before allowing users to join
-  if (props.env !== 'local') {
-    Swal.fire({
-        icon: 'warning',
-        title: 'Demo Notice',
-        html: 'This is a <strong>demo</strong> version of our app, so trying to sign up here will throw an error.<br><br>' +
-            'To sign up and access the service, please contact us at <a href="mailto:homevideohub@gmail.com">homevideohub@gmail.com</a> with your email address.<br><br>' +
-            'Once we have added you to our email service, you will be able to register for an account<br><br>' +
-            'Thank you for your interest!',
-        showConfirmButton: true,
-    });
-  }
-});
-</script>
-
 <template>
     <GuestLayout customClasses="sm:max-w-md">
         <Head title="Register" />
@@ -140,3 +82,61 @@ onMounted(() => {
         </form>
     </GuestLayout>
 </template>
+
+<script setup>
+import GuestLayout from '@/Layouts/GuestLayout.vue';
+import InputError from '@/Components/InputError.vue';
+import InputLabel from '@/Components/InputLabel.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import TextInput from '@/Components/TextInput.vue';
+import { Head, Link, useForm } from '@inertiajs/vue3';
+import Swal from "sweetalert2";
+import { onMounted } from 'vue';
+
+const props = defineProps({
+  env: String
+});
+
+const form = useForm({
+    name: '',
+    email: '',
+    password: '',
+    password_confirmation: '',
+});
+
+const submit = () => {
+    // TODO: This is all working, but need to get a good privacy policy and TOCs before allowing users to join
+    // form.post(route('register'), {
+    //     onFinish: () => form.reset('password', 'password_confirmation'),
+    // });
+    if (props.env === 'local') {
+        form.post(route('register'), {
+            onFinish: () => form.reset('password', 'password_confirmation'),
+        });
+    } else {
+        Swal.fire({
+            icon: 'error',
+            title: 'This is a demo app only',
+            html: 'Please contact us at <a href="mailto:homevideohub@gmail.com">homevideohub@gmail.com</a> with your email address.<br><br>' +
+                'Once we have added you to our email service, you will be able to register for an account<br><br>' +
+                'Thank you for your interest!',
+            showConfirmButton: true,
+        });
+    }
+};
+
+onMounted(() => {
+  // TODO: This is all working, but need to get a good privacy policy and TOCs before allowing users to join
+  if (props.env !== 'local') {
+    Swal.fire({
+        icon: 'warning',
+        title: 'Demo Notice',
+        html: 'This is a <strong>demo</strong> version of our app, so trying to sign up here will throw an error.<br><br>' +
+            'To sign up and access the service, please contact us at <a href="mailto:homevideohub@gmail.com">homevideohub@gmail.com</a> with your email address.<br><br>' +
+            'Once we have added you to our email service, you will be able to register for an account<br><br>' +
+            'Thank you for your interest!',
+        showConfirmButton: true,
+    });
+  }
+});
+</script>

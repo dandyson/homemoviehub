@@ -1,25 +1,3 @@
-<script setup>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
-import CollectionLatest from '@/Components/Collections/CollectionLatest.vue';
-import { Link } from '@inertiajs/vue3';
-import { ref, defineProps, reactive } from 'vue';
-
-const { videos } = defineProps(['videos']);
-
-const latestVideo = Object.values(videos)[0] ?? null;
-const collectionVideos = ref(Object.values(videos).slice(1) || []);
-
-const latestVideoBgStyle = ref({
-  backgroundImage: `url('${latestVideo?.cover_image || ''}')`,
-  backgroundSize: 'cover',
-  backgroundPosition: 'center',
-  backgroundRepeat: 'no-repeat',
-  height: videos.length > 1 ? '80vh' : '100vh',
-});
-
-</script>
-
 <template>
   <Head title="Dashboard" />
 
@@ -65,6 +43,26 @@ const latestVideoBgStyle = ref({
       <CollectionLatest :videos="collectionVideos"></CollectionLatest>
     </div>
   </AuthenticatedLayout>
-
-
 </template>
+
+<script setup>
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import { Head } from '@inertiajs/vue3';
+import CollectionLatest from '@/Components/Collections/CollectionLatest.vue';
+import { Link } from '@inertiajs/vue3';
+import { ref, defineProps, reactive } from 'vue';
+
+const { videos } = defineProps(['videos']);
+
+const latestVideo = Object.values(videos)[0] ?? null;
+const collectionVideos = ref(Object.values(videos).slice(1) || []);
+
+const latestVideoBgStyle = ref({
+  backgroundImage: `url('${latestVideo?.cover_image || ''}')`,
+  backgroundSize: 'cover',
+  backgroundPosition: 'center',
+  backgroundRepeat: 'no-repeat',
+  height: videos.length > 1 ? '80vh' : '100vh',
+});
+
+</script>
