@@ -1,3 +1,7 @@
+<template>
+  <input type="file" @change="handleChange" ref="fileInput" />
+</template>
+
 <script setup>
 import { ref, defineProps, defineEmits, defineExpose } from 'vue';
 
@@ -12,7 +16,3 @@ defineExpose({ fileInput, handleChange });
 const { modelValue } = defineProps(['modelValue']);
 const emit = defineEmits();
 </script>
-
-<template>
-  <input type="file" @change="handleChange" ref="fileInput" />
-</template>

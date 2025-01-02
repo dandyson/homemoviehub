@@ -1,15 +1,3 @@
-<script setup>
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-import { Link } from '@inertiajs/vue3';
-
-defineProps({
-    customClasses: {
-        type: String,
-        default: ''
-    }
-});
-</script>
-
 <template>
     <div class="min-h-screen flex flex-col sm:justify-center items-center bg-gray-100 dark:bg-gray-900 py-6 sm:py-8">
         <div>
@@ -24,3 +12,15 @@ defineProps({
         </div>
     </div>
 </template>
+
+<script setup>
+import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+import { Link } from '@inertiajs/vue3';
+
+defineProps({
+    customClasses: {
+        type: String,
+        default: ''
+    }
+});
+</script>

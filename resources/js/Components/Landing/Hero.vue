@@ -1,6 +1,5 @@
 <template>
     <div class="mx-auto w-full rounded-xl bg-neutral-100 p-6">
-
         <div class="relative flex w-full flex-col items-center space-y-12 overflow-hidden pt-12 text-center md:py-32">
             <div class="flex max-w-xl flex-col space-y-4">
                 <h1 class="text-4xl font-semibold leading-snug tracking-tight md:text-5xl">
@@ -48,8 +47,4 @@
             </div>
         </div>
     </div>
-
 </template>
-
-<script setup>
-</script>

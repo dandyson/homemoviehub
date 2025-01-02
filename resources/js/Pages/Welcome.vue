@@ -1,3 +1,15 @@
+
+<template>
+    <Head title="Welcome" />
+    <LandingNav />
+    <div class="flex flex-col space-y-8 p-4 md:p-8 bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
+      <Hero />
+      <Features />
+      <CallToAction />
+      <Footer />
+    </div>
+</template>
+
 <script setup>
 import { Head } from '@inertiajs/vue3';
 import LandingNav from '@/Components/Navs/LandingNav.vue';
@@ -23,17 +35,6 @@ defineProps({
     },
 });
 </script>
-
-<template>
-    <Head title="Welcome" />
-    <LandingNav />
-    <div class="flex flex-col space-y-8 p-4 md:p-8 bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
-      <Hero />
-      <Features />
-      <CallToAction />
-      <Footer />
-    </div>
-</template>
 
 <style>
 .bg-dots-darker {

@@ -75,7 +75,3 @@ export default {
     }
 };
 </script>
-
-<style scoped>
-/* Add any styles specific to your wrapper component here */
-</style>
