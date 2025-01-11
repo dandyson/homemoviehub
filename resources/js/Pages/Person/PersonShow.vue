@@ -10,9 +10,19 @@
 
             <img :src="person.avatar !== null ? person.avatar : 'https://cdn.pixabay.com/photo/2021/12/17/08/27/silhouette-6875954_1280.png'" class="mt-6 w-48 h-48 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500" alt="avatar">
             <div class="flex justify-center mx-6">
-                <button type="button" @click="goBack" class="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 mt-8">
+                <button
+                    type="button"
+                    @click="goBack"
+                    aria-label="Return to previous page"
+                    class="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 focus-visible:ring-offset-2 mt-8"
+                >
                     <span class="relative px-3 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-                        <font-awesome-icon icon="fa-solid fa-arrow-left" size="xl" class="me-1" /> Back
+                        <font-awesome-icon
+                            icon="fa-solid fa-arrow-left"
+                            aria-hidden="true"
+                            class="w-4 h-4 me-1"
+                        />
+                        <span>Back</span>
                     </span>
                 </button>
                 <Link :href="route('person.edit', { person: person })" class="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 mt-8">

@@ -10,7 +10,7 @@
                 </p>
             </div>
             <div class="mx-auto max-w-4xl">
-                <img src="/assets/images/hero-image.png" class="relative z-50 rounded-xl md:w-auto" />
+                <img src="/assets/images/hero-image.png" alt="Screenshot of HomeMovieHub's video library interface showing organized family videos with thumbnails" class="relative z-50 rounded-xl md:w-auto" />
                 <div>
                     <div class="absolute top-[30rem] left-1/2 -ml-[40rem] w-[163.125rem] max-w-none sm:-ml-[37.5rem]">
                         <svg width="277" height="393" viewBox="0 0 277 393" fill="none"
