@@ -8,20 +8,17 @@
 
 ## Overview
 
-Welcome to HomeMovieHub! It is a Vue.js and Laravel Web-App designed to create a streaming experience for home movies. The app combines the power of Vue & Laravel to create a Netflix-like experience to users and a safe place to store their precious footage.
+HomeMovieHub is a Vue.js and Laravel Web-App designed to create a streaming experience for home movies. The app combines the power of Vue & Laravel to create a Netflix-like experience to users and a safe place to store their precious footage.
 
 ## Live Demo
 
-Visit [HomeMovieHub](https://homemoviehub.com) to see the full application in action!
-
-****Demo credentials will be provided upon request.***
+Visit [HomeMovieHub](https://homemoviehub.com) to see the full application
 
 ## Features
 
 ### Netflix-like UI
 
-
-A nice and family UI allows users to easily navigate their collection.
+A clean, family-friendly UI that allows users to easily navigate their collection.
 
 ### Personal Profiles
 
@@ -31,20 +28,21 @@ Users can have each family member as a profile, which can be tagged in videos!
 
 Using the integrated Google Maps, users can pin the locations in their videos, allowing a better perspective of where they have been in the world
 
+<br>
 
-## Future Planned Updates
+## Technical Stack
 
-The next release of HomeMovieHub is planned to include:
+- Frontend: Vue 3, Inertia.js, Vite, Tailwind CSS
+- Backend: Laravel 10, PHP 8.2
+- Database: MySQL
+- Caching/Queue: Redis
+- Authentication: Auth0 (auth0/login), Laravel Sanctum
+- Testing: PHPUnit, Duster (lint)
+- CI/CD: GitHub Actions
+- Containerization: Docker, Laravel Sail
+- Storage: AWS S3 (via Flysystem)
+- Other: Google Maps (vue3-google-map, autocomplete), Plyr video player, FontAwesome, SweetAlert2
 
-- **Email Verification** Added security for something as private as a place for home movies
-
-- **Enhanced User Profiles:** Like Netflix, users will be able to have a family account, and then profiles for each member that they can secondarily login to.
-
-- **Enhanced Maps:** Enhance the locations section by allowing users to add notes and pictures for each map location pin, essentially helping to detail the story behind the scenes.
-
-- **Code Improvements:** Refine the user interface and codebase for an improved user experience.
-
-- **CI/CD Implementation:** Integrate Continuous Integration and Continuous Deployment processes with frontend testing to ensure a robust and reliable application.
 
 <br>
 
@@ -171,22 +169,3 @@ Once everything is set up, you can access the application by visiting http://loc
 ## Understanding the Auth Layer
 
 The application uses Auth0 in production to protect costly API routes. For local development, focus on exploring the architecture and UI components
-
-
-## Troubleshooting
-
-If you encounter any issues during the setup, consider the following:
-
-- **Docker Issues:** Ensure Docker Desktop is running, and your system meets Docker's minimum requirements.
-
-- **Port Conflicts:** If http://localhost doesn’t work, ensure that no other services are running on the default ports.
-
-- **Environment Variables:** Ensure the .env file exists in your project root. If it doesn’t, you can create one by copying .env.example.
-
-- **'Connection Refused' when running migrations** - This is likely due to your DB_HOST being incorrect. In Laravel sail, DB_CONNECTION and DB_HOST need to BOTH be 'mysql' as this is what it uses. Run the migration command again after making this change and it should work.
-
-- **DB Access Denied Issue** - Can be caused by not updating the .env before you first sail up. Make sure you set up the DB details in your .env file BEFORE running the `./vendor/bin/sail up` command. If this does not work, then you need to run `./vendor/bin/sail down`, remove the docker volumes & images for the project and run `./vendor/bin/sail build`.
-
-##
-
-Thank you for using HomeMovieHub! If you have any questions or suggestions, please don't hesitate to reach out.
