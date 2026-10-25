@@ -26,7 +26,6 @@ class Location extends Model
      */
     public function videos(): BelongsToMany
     {
-        return $this->belongsToMany(Video::class)
-            ->where('user_id', auth()->id());
+        return $this->belongsToMany(Video::class);
     }
 }
