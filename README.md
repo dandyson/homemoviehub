@@ -1,34 +1,72 @@
 <div align="center">
-    <img src="public/assets/images/homemoviehub-logo.png" alt="HomeMovieHub Logo" width="120">
+    <img src="public/assets/images/homemoviehub-logo.png" alt="HomeMovieHub Logo" width="200">
 </div>
 
-<br>
+<div align="center">
+<h1>HOMEMOVIEHUB</h1>
+</div>
 
-# HomeMovieHub - <a href="https://homemoviehub.com" target="_blank">homemoviehub.com</a>
+<h4 align="center">
+  <a href="https://homemoviehub.com">Live Demo</a> |
+  <a href="#features">Features</a> |
+  <a href="#homemoviehub-setup-guide">Setup Guide</a>
+</h4>
 
-## Overview
+<div align="center">
+  <h2>
+    A Netflix-like streaming experience for home movies built with Vue.js and Laravel. </br>
+    Create a safe place to store and share your precious family moments. </br>
+  <br />
+  </h2>
+</div>
 
-HomeMovieHub is a Vue.js and Laravel Web-App designed to create a streaming experience for home movies. The app combines the power of Vue & Laravel to create a Netflix-like experience to users and a safe place to store their precious footage.
+<br />
+<p align="center">
+  <a href="https://opensource.org/licenses/MIT">
+    <img alt="HomeMovieHub is released under the MIT license." src="https://img.shields.io/badge/license-MIT-blue.svg"  />
+  </a>
+  <a href="https://github.com/dandyson/homemoviehub/actions">
+    <img alt="CI Pipeline" src="https://github.com/dandyson/homemoviehub/actions/workflows/ci-pipeline.yml/badge.svg"  />
+  </a>
+  <a href="https://github.com/dandyson/homemoviehub/pulls">
+    <img alt="PRs welcome!" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat"  />
+  </a>
+  <a href="https://github.com/dandyson/homemoviehub/issues">
+    <img alt="Issues" src="https://img.shields.io/github/issues/dandyson/homemoviehub"  />
+  </a>
+</p>
 
-## Live Demo
-
-Visit [HomeMovieHub](https://homemoviehub.com) to see the full application
+<div align="center">
+  <figure>
+    <img src="public/assets/images/homemoviehub-cover.webp" alt="HomeMovieHub Dashboard" />
+    <figcaption>
+      <p align="center">
+        A beautiful, intuitive interface designed for sharing family memories.
+      </p>
+    </figcaption>
+  </figure>
+</div>
 
 ## Features
 
-### Netflix-like UI
+HomeMovieHub provides a comprehensive suite of features for managing home movies:
 
-A clean, family-friendly UI that allows users to easily navigate their collection.
+- 🎬 **Netflix-like UI**: Beautiful and family-friendly interface for easy navigation
+- 👨‍👩‍👧‍👦 **Personal Profiles**: Create profiles for each family member and tag them in videos
+- 📍 **Location Tracking**: Integrated Google Maps to pin video locations
+- 🔒 **Secure Storage**: Safe place for your precious family moments
+- 🎥 **Video Management**: Organise and categorise your home movies
 
-### Personal Profiles
+## Technical Excellence
 
-Users can have each family member as a profile, which can be tagged in videos!
+HomeMovieHub is built with a focus on technical excellence and best practices:
 
-### See locations
-
-Using the integrated Google Maps, users can pin the locations in their videos, allowing a better perspective of where they have been in the world
-
-<br>
+- 🚀 **Modern Stack**: Built with Vue 3, Inertia.js and Laravel 10
+- 🧪 **Testing**: Feature and unit tests with PHPUnit, plus Duster linting
+- 🔄 **CI/CD**: GitHub Actions runs the tests and lint on every pull request, with automatic deployment
+- 📦 **Containerization**: Docker-based development environment with Laravel Sail
+- 🔒 **Security**: Production-grade authentication with Auth0, plus policies so users can only access their own data
+- 📱 **Responsive Design**: Optimised for all devices and screen sizes
 
 ## Technical Stack
 
@@ -43,10 +81,11 @@ Using the integrated Google Maps, users can pin the locations in their videos, a
 - Storage: AWS S3 (via Flysystem)
 - Other: Google Maps (vue3-google-map, autocomplete), Plyr video player, FontAwesome, SweetAlert2
 
-
 <br>
 
 # HomeMovieHub Setup Guide
+
+**Note:** These instructions are for running HomeMovieHub locally. The app is currently a demo, so some features (such as registering new users) are turned off.
 
 ## Prerequisites
 
@@ -223,6 +262,21 @@ If you encounter any issues during the setup, consider the following:
 
 - **DB Access Denied Issue** - Can be caused by not updating the .env before you first sail up. Make sure you set up the DB details in your .env file BEFORE running the `./vendor/bin/sail up` command. If this does not work, then you need to run `./vendor/bin/sail down`, remove the docker volumes & images for the project and run `./vendor/bin/sail build`.
 
-##
+## Future Planned Updates
 
-Thank you for using HomeMovieHub! If you have any questions or suggestions, please don't hesitate to reach out.
+- **Email Verification**: Enhanced security for private family content
+- **Enhanced User Profiles**: Family accounts with individual member profiles
+- **Enhanced Maps**: Add notes and pictures to map location pins
+- **Code Improvements**: Refined UI and optimised codebase
+- **Frontend Testing**: Add automated frontend tests to the CI pipeline
+
+## Contributing
+
+Contributions are welcome! Here's how you can help:
+
+- Found a bug? [Report it here](https://github.com/dandyson/homemoviehub/issues)
+- Have a feature request? [Open an issue](https://github.com/dandyson/homemoviehub/issues)
+
+## License
+
+HomeMovieHub is open-source software licensed under the MIT license.
