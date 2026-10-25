@@ -120,26 +120,28 @@ class VideoController extends Controller
         // Get the array of person IDs from the request
         $featuredPeopleIds = collect($request->featured_people)->pluck('id')->toArray();
 
-        // Sync the person IDs with the video's people relationship
-        $video->people()->sync($featuredPeopleIds);
-
         // Get current locations before detaching
         $currentLocations = $video->locations;
 
-        // Add locations if any have been added
-        if ($request->locations) {
-            $this->storeVideoLocations($video, $request->locations);
-        } else {
-            // If no locations are provided, detach all locations
-            $video->locations()->detach();
-        }
+        DB::transaction(function () use ($request, $video, $featuredPeopleIds, $currentLocations) {
+            // Sync the person IDs with the video's people relationship
+            $video->people()->sync($featuredPeopleIds);
 
-        // Check if the previously associated locations are still linked to other videos
-        foreach ($currentLocations as $location) {
-            if ($location->videos()->count() === 0) {
-                $location->delete(); // Delete the location if it's not associated with any videos
+            // Add locations if any have been added
+            if ($request->locations) {
+                $this->storeVideoLocations($video, $request->locations);
+            } else {
+                // If no locations are provided, detach all locations
+                $video->locations()->detach();
             }
-        }
+
+            // Check if the previously associated locations are still linked to other videos
+            foreach ($currentLocations as $location) {
+                if ($location->videos()->count() === 0) {
+                    $location->delete(); // Delete the location if it's not associated with any videos
+                }
+            }
+        });
 
         $video->load('people', 'locations');
 
@@ -158,18 +160,20 @@ class VideoController extends Controller
 
         $locations = $video->locations;
 
-        // Detach locations from the video
-        $video->locations()->detach();
+        DB::transaction(function () use ($video, $locations) {
+            // Detach locations from the video
+            $video->locations()->detach();
 
-        $video->delete();
+            $video->delete();
 
-        // Check if locations are still associated with other videos
-        foreach ($locations as $location) {
-            // If the location is not associated with any other videos, delete it
-            if ($location->videos()->count() === 0) {
-                $location->delete();
+            // Check if locations are still associated with other videos
+            foreach ($locations as $location) {
+                // If the location is not associated with any other videos, delete it
+                if ($location->videos()->count() === 0) {
+                    $location->delete();
+                }
             }
-        }
+        });
 
         return response()->json(['success' => 'Video deleted successfully']);
     }
