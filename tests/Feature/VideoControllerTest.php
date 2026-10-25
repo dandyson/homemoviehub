@@ -240,6 +240,54 @@ class VideoControllerTest extends TestCase
     }
 
     /** @test */
+    public function updating_video_with_location_also_on_other_users_videos_does_not_cause_an_issue()
+    {
+        // Create 2 users, with a video for each user
+        $user1 = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) Str::uuid(),
+        ]);
+        $user2 = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) Str::uuid(),
+        ]);
+        $video1 = Video::factory()->create([
+            'user_id' => $user1->id,
+            'title' => 'Christmas 1990',
+        ]);
+        $video2 = Video::factory()->create([
+            'user_id' => $user2->id,
+            'title' => 'Summer 2000',
+        ]);
+        // Create a location and attach this same location to both videos (belonging to different users)
+        $location1 = Location::factory()->create();
+
+        $video1->locations()->attach($location1->id);
+        $video2->locations()->attach($location1->id);
+
+        // Create second location to update the video1 to use
+        $location2 = Location::factory()->create();
+
+        $response = $this->actingAs($user1, 'auth0-session')->put(route('video.update', ['video' => $video1]), [
+            'title' => $video1->title,
+            'description' => $video1->description,
+            'youtube_url' => $video1->youtube_url,
+            'locations' => [
+                $location2->toArray(),
+            ],
+        ],
+        );
+
+        $response->assertOk();
+
+        $video1->refresh();
+        $video2->refresh();
+
+        // This should fail, because the current code with the bug will DELETE locations if they are not used on $user1s videos, which they wont be. It should pass when the bug is fixed
+        $this->assertDatabaseHas('locations', $location1->toArray());
+    }
+
+    /** @test */
     public function show_method_requires_authentication_and_proper_ownership()
     {
         $user = User::factory()->create([
@@ -460,6 +508,79 @@ class VideoControllerTest extends TestCase
 
         // Check that the video is not present in the active records
         $this->assertDatabaseMissing('videos', ['id' => $video->id, 'deleted_at' => null]);
+
+        $response->assertJson(['success' => 'Video deleted successfully']);
+    }
+
+    /** @test */
+    public function deleting_video_also_deletes_location_if_location_does_not_belong_to_any_other_videos()
+    {
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) Str::uuid(),
+        ]);
+        $video = Video::factory()->create([
+            'user_id' => $user->id,
+        ]);
+        $location = Location::factory()->create();
+
+        $video->locations()->attach($location);
+
+        $response = $this->actingAs($user, 'auth0-session')->delete(route('video.destroy', ['video' => $video]));
+        $response->assertStatus(200);
+
+        // Check that the video is soft deleted
+        $this->assertSoftDeleted('videos', ['id' => $video->id]);
+
+        // Check that the video is not present in the active records
+        $this->assertDatabaseMissing('videos', ['id' => $video->id, 'deleted_at' => null]);
+
+        // Assert location is also deleted
+        $this->assertDatabaseMissing('locations', ['id' => $location->id]);
+
+        $response->assertJson(['success' => 'Video deleted successfully']);
+    }
+
+    /** @test */
+    public function deleting_video_does_not_delete_location_if_location_belongs_to_any_other_user_videos()
+    {
+        $user1 = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) Str::uuid(),
+        ]);
+        $user2 = User::factory()->create([
+            'email_verified' => true,
+            'auth0' => (string) Str::uuid(),
+        ]);
+        $video1 = Video::factory()->create([
+            'user_id' => $user1->id,
+        ]);
+        $video2 = Video::factory()->create([
+            'user_id' => $user2->id,
+        ]);
+        $location = Location::factory()->create();
+
+        $video1->locations()->attach($location);
+        $video2->locations()->attach($location);
+
+        $response = $this->actingAs($user1, 'auth0-session')->delete(route('video.destroy', ['video' => $video1]));
+        $response->assertStatus(200);
+
+        // Check that the video is soft deleted
+        $this->assertSoftDeleted('videos', ['id' => $video1->id]);
+
+        // Check that the video is not present in the active records
+        $this->assertDatabaseMissing('videos', ['id' => $video1->id, 'deleted_at' => null]);
+
+        // Assert location is not deleted - with the cureent Bug THIS SHOULD FAIL HERE, because it will be deleting the location when it should not as it belongs on the other users video!
+        $this->assertDatabaseHas('locations', ['id' => $location->id]);
+
+        // Assert other video still has the location attached to it
+        $this->assertTrue(
+            $video2->locations()
+                ->where('locations.id', $location->id)
+                ->exists()
+        );
 
         $response->assertJson(['success' => 'Video deleted successfully']);
     }
