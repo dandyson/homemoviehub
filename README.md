@@ -88,14 +88,14 @@ DB_PASSWORD=
 
 ***IMPORTANT*** Do not skip this step - ensure your env file has these, especially the db_connection and db_host before you start the container later on.
 
-You also need the Auth0 settings, otherwise you won't be able to log in locally. Get these values from the Auth0 dashboard (or copy them from the production environment variables):
+Login uses Auth0, so you also need these settings to log in locally. To run it yourself you'll need your own Auth0 application and API (the free tier works). Use the application's Client ID, Client Secret and Domain, and the API's Identifier as the audience:
 ```
 AUTH0_CLIENT_ID=
 AUTH0_CLIENT_SECRET=
 AUTH0_DOMAIN=
 AUTH0_AUDIENCE=
 ```
-`AUTH0_AUDIENCE` must be the **Identifier** of the API in Auth0 (Applications → APIs). Fill these in **before** your first login. See the Troubleshooting section if you logged in with them missing.
+`AUTH0_AUDIENCE` must be the **Identifier** of your API in Auth0 (Applications → APIs). In your Auth0 application settings, add `http://localhost/callback` to the Allowed Callback URLs and `http://localhost` to the Allowed Logout URLs. Fill these in **before** your first login. See the Troubleshooting section if you logged in with them missing.
 <br>
 
 ## Step 3: Set Up Laravel Sail
